@@ -1,4 +1,4 @@
-# SOLAFY Project     ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/upswp/-Project-HelloProblem&count_bg=%2379C83D&title_bg=%23555555&icon=kyocera.svg&icon_color=%23E7E7E7&title=Hits&edge_flat=false)
+# SOLAFY Project     [![HitCount](http://hits.dwyl.com/upswp/-Project-HelloProblem.svg)](http://hits.dwyl.com/upswp/-Project-HelloProblem)
 
 > SSAFY인들은 위한 문제 공유 사이트 제작 프로젝트입니다.
 
