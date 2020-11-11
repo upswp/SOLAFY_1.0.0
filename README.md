@@ -1,4 +1,4 @@
-# SOLAFY Project     [![HitCount](http://hits.dwyl.com/upswp/-Project-HelloProblem.svg)](http://hits.dwyl.com/upswp/-Project-HelloProblem)
+# SOLAFY Project <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fupswp%2F-Project-HelloProblem&count_bg=%2379C83D&title_bg=%23555555&icon=snapcraft.svg&icon_color=%23EDE11D&title=hits&edge_flat=false"/></a>
 
 > SSAFY인들은 위한 문제 공유 사이트 제작 프로젝트입니다.
 
