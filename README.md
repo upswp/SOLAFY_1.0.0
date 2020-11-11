@@ -1,10 +1,9 @@
 # SOLAFY Project
-> 간략한 프로젝트 소개 문구를 작성합니다.
+> SSAFY인들은 위한 문제 공유 사이트 제작
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Downloads Stats][npm-downloads]][npm-url]
 
-한 두 문단으로 프로젝트 소개 글을 작성합니다.
 
 ![](../header.png)
 
@@ -14,24 +13,24 @@
 모든 개발 의존성 설치 방법과 자동 테스트 슈트 실행 방법을 운영체제 별로 작성합니다.
 
 ```sh
-make install
-npm test
+
 ```
 
 ## 업데이트 내역
 
-* 0.0.1
-    * 설계 진행중
+
 * 0.0.1
     * 설계 진행중
 
 ## 정보
 
-이름 – [ – 이메일주소@example.com
+* 박상우 – [https://github.com/upswp]
+* 윤기현 - [https://github.com/KiHyeonYun]
+* 이아영 - [https://github.com/LeeA0]
+* 서범석 - [https://github.com/callipenguin]
 
-XYZ 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
 
-[https://github.com/yourname/github-link](https://github.com/dbader/)
+X11 License 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
 
 ## 기여 방법
 
