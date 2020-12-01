@@ -24,7 +24,7 @@
 > 박상우 – [https://github.com/upswp] <br/>
 > 윤기현 - [https://github.com/KiHyeonYun] <br/>
 > 이아영 - [https://github.com/LeeA0] <br/>
-> 서범석 - [https://github.com/callipenguin] <br/>
+> 서범석 - [https://github.com/callipenguin] <br/>이주희 - [https://github.com/juheegg] <br/>
 
 
 X11 License 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
