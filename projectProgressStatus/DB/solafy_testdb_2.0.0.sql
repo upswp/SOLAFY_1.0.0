@@ -69,34 +69,50 @@ VALUES("브론즈",10,50),
 ("실버",20,70),
 ("골드",60,30);
 
-INSERT INTO answerbyquestion (articleNo,questionNo,contents,uid)
-VALUES (1, 1 , "당신의 답은 틀렸습니다! 그 이유는!!", "DFEIJC23WOSKXCNSWQ"),
-(2, 2 , "당신은 정말 똑똑 하군요!", "DFEIJC23WOSKXCNSWQ"),
-(3, 3 , "와우 이렇게 생각하시다니 바보같군요!", "DF112C23WOSKXCNSWQ"),
-(4, 4 , "당신 정말 수민스럽습니다!", "DF112C23WOSKXCNSWQ");
-
-INSERT INTO answermodifyboard (articleNo,uid,problemNo,uid_submitter,contents)
-VALUES (1, "DF112C23WOSKXCNSWQ" , 1,"testUIDsubmitter1","당신의 답은 틀렸습니다! 그 이유는!!"),
-(2, "DFEIJC23WOSKXCNSWQ" , 2,"testUIDsubmitter2","정말 이게 답인가요?"),
-(3, "DF112C23WOSKXCNSWQ" , 3,"testUIDsubmitter3","당신은 이론부터 잘못됐어"),
-(4, "DFEIJC23WOSKXCNSWQ" , 4,"testUIDsubmitter4","SSAFY를 나가시는게 좋을것 같습니다."),
-(5, "DFEIJNGRW2SKXCNSWQ" , 5,"testUIDsubmitter5","정말 이게 답인가요? 장난이죠?");
-
-INSERT INTO freeboard (articleNo, title, contents, uid, likeCount, isNotice, isGroup, groupNo, boardNo)
-VALUES (1,"이것은 테스트 프리보드0입니다.","안녕하세요 테스트 1입니다.", "DF112C23WOSKXCNSWQ", 22, 1, 0, 1, 1),
-(2,"이것은 테스트 프리보드1입니다.","안녕하세요 테스트 2입니다.", "DF112C23WOSKXCNSWQ", 101, 0, 0, 2, 2),
-(3,"이것은 테스트 프리보드2입니다.","안녕하세요 테스트 3입니다.", "DFEIJNGRW2SKXCNSWQ", 501, 0, 0, 1, 3),
-(4,"이것은 테스트 프리보드3입니다.","안녕하세요 테스트 4입니다.", "DFEIJC23WOSKXCNSWQ", 1516, 1, 0, 2, 4),
-(5,"이것은 테스트 프리보드4입니다.","안녕하세요 테스트 5입니다.", "DF112C23WOSKXCNSWQ", 2, 1, 0, 1, 5);
-
-
 INSERT INTO `Group` (groupNo, title, type, description)
 VALUES (1, '주희와 친구들', 0, '주희와 친구들이 함께 공부하는 그룹입니다');
+-- delete from questionboard;
+-- ALTER TABLE questionboard AUTO_INCREMENT = 1;
+-- 문제 테이블에 problemNo 있어야 들어감
+insert into questionboard (title,contents,uid,problemNo,point,isGroup,groupNo)
+values("VUE관련 질문입니다.","VUE는 누가 만들었나요?","DFEIJC23WOSKXCNSWQ",1,1000,true,1),
+("JS 질문입니다.","바닐라 자바스트립트에서 id를 가지고 오는 코드는 어떻게 작성하나요?","DF112C23WOSKXCNSWQ",2,1200,true,1),
+("JAVA 질문입니다.","java는 누가 만들었나요? 자바가 왜 OOP인지 이유도 알려주세요.","DFEIJNGRW2SKXCNSWQ",3,1300,true,1),
+("MYsql 질문입니다.","root 비밀번호가 생각나지 않아요ㅠㅠㅠ","DFEIJHRDX8SKXCNSWQ",4,1400,true,1),
+("Spring 질문입니다.","스프링 부트에서 어떻게 mybatis사용하나요?","DFEIJJHGT7SKXCNSWQ",5,1500,true,1);
+
+-- select * from questionboard;
+
+INSERT INTO answerbyquestion (questionNo,contents,uid)
+VALUES ( 1 , "당신의 답은 틀렸습니다! 그 이유는!!", "DFEIJC23WOSKXCNSWQ"),
+(2 , "당신은 정말 똑똑 하군요!", "DFEIJC23WOSKXCNSWQ"),
+(3 , "와우 이렇게 생각하시다니 바보같군요!", "DF112C23WOSKXCNSWQ"),
+(4 , "당신 정말 수민스럽습니다!", "DF112C23WOSKXCNSWQ");
+
+INSERT INTO answermodifyboard (uid,problemNo,uid_submitter,contents)
+VALUES ("DF112C23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","당신의 답은 틀렸습니다! 그 이유는!!"),
+("DFEIJC23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","정말 이게 답인가요?"),
+("DF112C23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","당신은 이론부터 잘못됐어"),
+("DFEIJC23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","SSAFY를 나가시는게 좋을것 같습니다."),
+("DFEIJNGRW2SKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","정말 이게 답인가요? 장난이죠?");
+
+
+
+
+INSERT INTO freeboard (title, contents, uid, likeCount, isNotice, isGroup, groupNo, boardNo)
+VALUES ("이것은 테스트 프리보드0입니다.","안녕하세요 테스트 1입니다.", "DF112C23WOSKXCNSWQ", 22, 1, 0, 1, 1),
+("이것은 테스트 프리보드1입니다.","안녕하세요 테스트 2입니다.", "DF112C23WOSKXCNSWQ", 101, 0, 0, 1, 2),
+("이것은 테스트 프리보드2입니다.","안녕하세요 테스트 3입니다.", "DFEIJNGRW2SKXCNSWQ", 501, 0, 0, 1, 3),
+("이것은 테스트 프리보드3입니다.","안녕하세요 테스트 4입니다.", "DFEIJC23WOSKXCNSWQ", 1516, 1, 0, 1, 4),
+("이것은 테스트 프리보드4입니다.","안녕하세요 테스트 5입니다.", "DF112C23WOSKXCNSWQ", 2, 1, 0, 1, 5);
+
+
+
 
 INSERT INTO `GroupBoard` (boardNo, title, groupNo)
 VALUES (1, '자유게시판', 1);
 
-
+-- *!*!*!*uid 자료형 기존 int --> varchar*!*!*!*
 INSERT INTO `GroupMember` (uid, grade, groupNo)
 VALUES ('DFEIJC23WOSKXCNSWQ', 0, 1),
 	   ('DF112C23WOSKXCNSWQ', 1, 1),
@@ -113,9 +129,8 @@ VALUES(1, 1),
 (1, 2),
 (1, 3),
 (2, 3),
-(3, 3),
-(1, 4),
-(2, 4);
+(3, 3);
+
 
 
 INSERT INTO interestproblemmapping(uid, problemNo)
@@ -124,6 +139,14 @@ VALUES("DFEIJC23WOSKXCNSWQ", 1),
 ("DF112C23WOSKXCNSWQ", 1),
 ("DFEIJHRDX8SKXCNSWQ", 3),
 ("DFEIJJHGT7SKXCNSWQ", 1);
+
+
+INSERT INTO practicetestboard(uid,title,regiTime,isGroup,groupNo,startTime,endTime,limitTime)
+VALUES
+("DFEIJC23WOSKXCNSWQ", "JAVA 필수 개념 모의고사", NOW(), 0, null, null, null, "02:00:00"),
+("DF112C23WOSKXCNSWQ", "Javascript 메서드", NOW(), 1, 1, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR), "02:00:00"),
+("DFEIJNGRW2SKXCNSWQ", "스프링부트 웹 개발 입문", NOW(), 0, null, null, null, "03:00:00"),
+("DFEIJHRDX8SKXCNSWQ", "컴퓨터 구조론", NOW(), 1, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), "02:00:00");
 
 
 INSERT INTO practicetestmapping(articleNo, problemNo)
@@ -136,24 +159,13 @@ VALUES
 
 
 
-INSERT INTO practicetestboard(uid,title,regiTime,isGroup,groupNo,startTime,endTime,limitTime)
-VALUES
-("DFEIJC23WOSKXCNSWQ", "JAVA 필수 개념 모의고사", NOW(), 0, 0, null, null, "02:00:00"),
-("DF112C23WOSKXCNSWQ", "Javascript 메서드", NOW(), 1, 2, NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR), null),
-("DFEIJNGRW2SKXCNSWQ", "스프링부트 웹 개발 입문", NOW(), 0, 0, null, null, "03:00:00"),
-("DFEIJHRDX8SKXCNSWQ", "컴퓨터 구조론", NOW(), 1, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR), null);
+
 
 use solafy;
 SELECT * FROM solafy.questionboard;
 SELECT * FROM solafy.rank;
 
--- 문제 테이블에 problemNo 있어야 들어감
-insert into questionboard (title,contents,uid,problemNo,point,isGroup,groupNo)
-values("VUE관련 질문입니다.","VUE는 누가 만들었나요?","DFEIJC23WOSKXCNSWQ",1,1000,true,1),
-("JS 질문입니다.","바닐라 자바스트립트에서 id를 가지고 오는 코드는 어떻게 작성하나요?","DF112C23WOSKXCNSWQ",2,1200,true,1),
-("JAVA 질문입니다.","java는 누가 만들었나요? 자바가 왜 OOP인지 이유도 알려주세요.","DFEIJNGRW2SKXCNSWQ",3,1300,true,1),
-("MYsql 질문입니다.","root 비밀번호가 생각나지 않아요ㅠㅠㅠ","DFEIJHRDX8SKXCNSWQ",4,1400,true,1),
-("Spring 질문입니다.","스프링 부트에서 어떻게 mybatis사용하나요?","DFEIJJHGT7SKXCNSWQ",5,1500,true,1);
+
 
 -- 그냥 실행 가능
 insert into solafy.rank(uid,nickname)
