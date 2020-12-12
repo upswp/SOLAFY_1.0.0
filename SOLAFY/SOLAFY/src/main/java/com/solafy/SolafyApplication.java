@@ -9,5 +9,4 @@ public class SolafyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SolafyApplication.class, args);
 	}
-
 }
