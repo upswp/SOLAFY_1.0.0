@@ -1,5 +1,5 @@
 -- MySQL Workbench Forward Engineering
-drop schema solafy;
+-- drop schema solafy;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -81,25 +81,11 @@ CREATE TABLE IF NOT EXISTS `solafy`.`problem` (
   `uid` VARCHAR(50) NOT NULL,
   `contents` TEXT NOT NULL,
   `starScore` DOUBLE NOT NULL DEFAULT '0',
-  `categoryLargeNo` INT NOT NULL,
-  `categoryMediumNo` INT NOT NULL,
   `categorySmallNo` INT NOT NULL,
   `type` INT NOT NULL,
   `problemcol` VARCHAR(45) NULL,
   PRIMARY KEY (`problemNo`),
-  INDEX `categoryLargeNo_idx` (`categoryLargeNo` ASC) VISIBLE,
-  INDEX `categoryMediumNo_idx` (`categoryMediumNo` ASC) VISIBLE,
   INDEX `categorySmall_idx` (`categorySmallNo` ASC) VISIBLE,
-  CONSTRAINT `categoryLargeNo`
-    FOREIGN KEY (`categoryLargeNo`)
-    REFERENCES `solafy`.`categoryLarge` (`categoryNo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `categoryMediumNo`
-    FOREIGN KEY (`categoryMediumNo`)
-    REFERENCES `solafy`.`categoryMedium` (`categoryNo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `categorySmallNo`
     FOREIGN KEY (`categorySmallNo`)
     REFERENCES `solafy`.`categorySmall` (`categoryNo`)
