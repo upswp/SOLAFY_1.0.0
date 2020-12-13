@@ -8,48 +8,48 @@ public class ProblemSetDto {
 	 * getter, setter만들어주기
 	 */
 	
+	private int problemSetNo;
 	private String uid;
 	private String title;
 	private String regiTime;
-	
 	public ProblemSetDto() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
-
-	public ProblemSetDto(String uid, String title, String regiTime) {
+	public ProblemSetDto(int problemSetNo, String uid, String title, String regiTime) {
 		super();
+		this.problemSetNo = problemSetNo;
 		this.uid = uid;
 		this.title = title;
 		this.regiTime = regiTime;
 	}
-
+	public int getProblemSetNo() {
+		return problemSetNo;
+	}
+	public void setProblemSetNo(int problemSetNo) {
+		this.problemSetNo = problemSetNo;
+	}
 	public String getUid() {
 		return uid;
 	}
-
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-
 	public String getTitle() {
 		return title;
 	}
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
 	public String getRegiTime() {
 		return regiTime;
 	}
-
 	public void setRegiTime(String regiTime) {
 		this.regiTime = regiTime;
 	}
-
 	@Override
 	public String toString() {
-		return "ProblemSetDto [uid=" + uid + ", title=" + title + ", regiTime=" + regiTime + "]";
+		return "ProblemSetDto [problemSetNo=" + problemSetNo + ", uid=" + uid + ", title=" + title + ", regiTime="
+				+ regiTime + "]";
 	}
-	
 }
