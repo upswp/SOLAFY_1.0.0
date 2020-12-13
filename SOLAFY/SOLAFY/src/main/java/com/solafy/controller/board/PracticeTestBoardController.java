@@ -1,4 +1,4 @@
-package com.solafy.controller;
+package com.solafy.controller.board;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/template") //주소는 알아서 넣기
 
-public class templateController {
-	private static final Logger logger = LoggerFactory.getLogger(templateController.class);
+public class PracticeTestBoardController {
+	private static final Logger logger = LoggerFactory.getLogger(PracticeTestBoardController.class);
 	//아래 string 2개는 사용하지 않는다면 지우기
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
