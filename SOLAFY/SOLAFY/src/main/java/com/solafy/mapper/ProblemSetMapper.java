@@ -6,6 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.solafy.model.ProblemSetDto;
 
+/**
+ * ProblemSet Mapper
+ * @author Park Sangwoo
+ * @since 2020-12-13
+ */
+
 @Mapper
 public interface ProblemSetMapper {
 

@@ -1,5 +1,9 @@
 package com.solafy.model;
-
+/**
+ * problemSetDto
+ * @author Park Sangwoo
+ * @since 2020-12-13
+ */
 public class ProblemSetDto {
 	/* private 설정 
 	 * 타입 잘 보고 설정
