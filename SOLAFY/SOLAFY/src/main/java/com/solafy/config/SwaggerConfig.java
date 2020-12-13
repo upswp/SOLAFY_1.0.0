@@ -23,7 +23,7 @@ public class SwaggerConfig {
 				.apiInfo(apiInfo())
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.solafy.controller"))
-				.paths(PathSelectors.ant("/api/**"))
+				.paths(PathSelectors.ant("/**"))
 				.build();
 	}
 	private ApiInfo apiInfo() {
