@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.solafy.mapper.ProblemSetMapper">
+	<!--ProblemSet xml 파일 : 문제집 관련 sql문
+	author : Park Sangwoo
+	since : 2020-12-14 -->
+	
+	<!-- 전체 문제집 리스트 호출 -->
+	<select id="selectAllProblemSet" resultType="problemSetDto">
+		select problemSetNo, uid, title, regiTime
+		from problemset
+		order by problemSetNo
+	</select>
+	
+	<!-- problemNo에 따른 문제집 호출 -->
+	<select id="selectProblemByNo" resultType="problemSetDto">
+		select problemSetNo, uid, title, regiTime
+		from problemset
+		where problemSetNo = #{problemSetNo}
+	</select>
+	
+	<!-- 문제집 생성 -->
+	<insert id="createProblemSet" parameterType="problemSetDto">
+		insert into problemset (
+								problemSetNo, uid, title, regiTime
+								)
+		values(
+				#{problemSetNo}, #{uid}, #{title}, now()
+			  )
+	</insert>
+	
+	<!-- 문제집 업데이트 -->
+	<update id="updateProblemSet" parameterType="problemSetDto">
+		update problemset
+			set title = #{title},
+		where problemSetNo = #{problemSetNo}	
+	</update>
+	
+	<!-- 문제집 삭제 -->
+	<delete id="deleteProblemSet" parameterType="int">
+		delete
+		from problemset
+		where problemSetNo = #{problemSetNo}
+	</delete>
+	
+
+
+</mapper>
