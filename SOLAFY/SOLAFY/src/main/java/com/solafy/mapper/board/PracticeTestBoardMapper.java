@@ -51,6 +51,15 @@ public interface PracticeTestBoardMapper {
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws SQLException;
 
 	/**
+	 * 검색된 키워드가 제목에 포함된 모의고사들 반환
+	 * 
+	 * @param title - String, 검색된 제목 키워드
+	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
+	 * @throws SQLException
+	 */
+	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws SQLException;
+
+	/**
 	 * 모의고사 정보 업데이트
 	 * 
 	 * @param pDto - PracticeTestBoardDto - 제목, 등록,시작,종료,제한시간, 변경
@@ -69,7 +78,7 @@ public interface PracticeTestBoardMapper {
 	public int deleltePracticeTest(int articleNo) throws SQLException;
 
 	/**
-	 * 모의고사와 해당 모의고사에 포함되는 문제 리스트를 mapping
+	 * 모의고사와 해당 모의고사에 포함되는 문제의 매핑 추가
 	 * 
 	 * @param map - Map<String, Integer> - articleNo, problemNo 포함
 	 * @return int, 등록된 행의 개수 반환
@@ -78,7 +87,7 @@ public interface PracticeTestBoardMapper {
 	public int createPracticeTestMapping(Map<String, Integer> map) throws SQLException;
 
 	/**
-	 * 모의고사 번호로 해당 모의고사와 문제들의 mapping을 모두 삭제
+	 * 모의고사 번호로 해당 모의고사와 문제들의 매핑을 모두 삭제
 	 * 
 	 * @param articleNo - int, 모의고사 번호
 	 * @return int, 삭제된 행의 개수 반환
