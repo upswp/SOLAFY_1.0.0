@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<!-- author : Juhee Lee
+	 since : 2020-12-15 -->
+	
+<mapper namespace="com.solafy.mapper.board.QuestionBoardMapper">
+	
+	<!-- 질문 게시판에 질문을 등록 -->
+	<insert id="createQuestion" parameterType="QuestionBoardDto">
+		INSERT INTO questionboard 
+		( articleNo,    title,    contents,    uid,    problemNo,    point,    regiTime, isGroup )
+		VALUES
+		( #{articleNo}, #{title}, #{contents}, #{uid}, #{problemNo}, #{point}, now(),    0       )
+	</insert>
+	
+	<!-- 모든 질문 글을 반환 -->
+	<select id="selectAllQuestions" resultType="QuestionBoardDto">
+		SELECT articleNo, title, uid, regiTime
+		FROM   questionboard
+	</select>
+	
+	<!-- 질문글 번호로 질문글 상세 내용 반환 -->
+	<select id="selectQuestionsByArticleNo" parameterType="int" resultType="QuestionBoardDto">
+		SELECT articleNo, title, contents, uid, point, regiTime, problemNo
+		FROM   questionboard
+		WHERE  articleNo = #{articleNo}
+	</select>
+	
+	<!-- 검색된 키워드가 제목에 포함된  질문글들 반환 -->
+	<select id="selectQuestionsByTitle" parameterType="String" resultType="QuestionBoardDto">
+		SELECT articleNo, title, uid, regiTime, problemNo
+		FROM   questionboard
+		WHERE  title LIKE #{title}
+	</select>
+	
+	<!-- 검색된 uid와 작성자 uid가 동일한 질문글들 반환 -->
+	<select id="selectQuestionsByWriter" parameterType="String" resultType="QuestionBoardDto">
+		SELECT articleNo, title, uid, regiTime, problemNo
+		FROM   questionboard
+		WHERE  uid = #{uid}
+	</select>
+	
+	<!-- 문제 번호로 검색, 한 문제에 대한 질문글들을 반환 -->
+	<select id="selectQuestionsByProblemNo" parameterType="int" resultType="QuestionBoardDto">
+		SELECT articleNo, title, uid, regiTime, problemNo
+		FROM   questionboard
+		WHERE  problemNo = #{problemNo}
+	</select>
+	
+	<!-- 질문글 수정 -->
+	<update id="updateQuestion" parameterType="QuestionBoardDto">
+		UPDATE questionboard
+		SET    title 	 = #{title},
+			   contents  = #{contents},
+			   regiTime  = now(),
+		WHERE  articleNo = #{articleNo}
+	</update>
+	
+	<!-- 질문글 삭제 -->
+	<delete id="deleteQuestion" parameterType="int">
+		DELETE FROM questionboard
+		WHERE		articleNo = #{articleNo)
+	</delete>
+	
+</mapper>

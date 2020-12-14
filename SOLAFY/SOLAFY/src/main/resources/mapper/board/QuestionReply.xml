@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<!-- author : Juhee Lee
+	 since : 2020-12-15 -->
+	
+<mapper namespace="com.solafy.mapper.board.QuestionReplyMapper">
+	
+	<!-- 질문에 대한 답변 등록 -->
+	<insert id="createAnswer" parameterType="AnswerByQuestionDto">
+		INSERT INTO answerbyquestion 
+		( articleNo,    questionNo,    contents,    uid,    regiTime )
+		VALUES
+		( #{articleNo}, #{questionNo}, #{contents}, #{uid}, now()    )
+	</insert>
+	
+	<!-- 질문 글 번호에 해당하는 답변들 반환 -->
+	<select id="selectAnswersByQuestionNo" parameterType="int" resultType="AnswerByQuestionDto">
+		SELECT articleNo, questionNo, contents, uid, regiTime
+		FROM   answerbyquestion
+		WHERE  qestionNo = #{qestionNo}
+	</select>
+	
+	<!-- 답변 글 번호에 해당하는 답변 -->
+	<select id="selectAnswerByArticleNo" parameterType="int" resultType="AnswerByQuestionDto">
+		SELECT articleNo, questionNo, contents, uid, regiTime
+		FROM   answerbyquestion
+		WHERE  articleNo = #{articleNo}
+	</select>
+	
+	<!-- 답변글 수정 -->
+	<update id="updateAnswer" parameterType="AnswerByQuestionDto">
+		UPDATE answerbyquestion
+		SET    contents  = #{contents},
+			   regiTime  = now(),
+		WHERE  articleNo = #{articleNo}
+	</update>
+	
+	<!-- 답변글 삭제 -->
+	<delete id="deleteAnswer" parameterType="int">
+		DELETE FROM answerbyquestion
+		WHERE		articleNo = #{articleNo)
+	</delete>
+	
+</mapper>
