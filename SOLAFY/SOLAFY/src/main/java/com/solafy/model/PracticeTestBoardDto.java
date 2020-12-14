@@ -15,12 +15,12 @@ public class PracticeTestBoardDto {
 	private String uid;
 	private String title;
 	private String regiTime;
-	private boolean isGroup;
-	private int groupNo;
 	private String startTime;
 	private String endTime;
 	private String limitTime;
 	private List<ProblemDto> problems;
+	private boolean isGroup;
+	private int groupNo;
 
 	public PracticeTestBoardDto() {
 		super();

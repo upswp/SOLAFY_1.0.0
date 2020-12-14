@@ -6,7 +6,7 @@
 <!-- author : Juhee Lee
 	 since : 2020-12-14 -->
 	
-<mapper namespace="com.solafy.mapper.ProblemSetMapper">
+<mapper namespace="com.solafy.mapper.board.PracticeTestBoardMapper">
 	
 	<!-- 모의고사 등록 -->
 	<insert id="createPracticeTest" parameterType="PracticeTestBoardDto">
