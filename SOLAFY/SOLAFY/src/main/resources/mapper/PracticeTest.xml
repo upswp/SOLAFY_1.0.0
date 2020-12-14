@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<!-- author : Juhee Lee
+	 since : 2020-12-14 -->
+	
+<mapper namespace="com.solafy.mapper.ProblemSetMapper">
+	
+	<!-- 모의고사 등록 -->
+	<insert id="createPracticeTest" parameterType="PracticeTestBoardDto">
+		INSERT INTO practicetestboard 
+		( articleNo,    uid,    title,    regiTime, startTime,    endTime,    limitTime,    isGroup )
+		VALUES
+		( #{articleNo}, #{uid}, #{title}, now(),    #{startTime}, #{endTime}, #{limitTime}, 0       )
+	</insert>
+	
+	<!-- 모든 모의고사 반환 -->
+	<select id="selectAllPracticeTest" resultType="PracticeTestBoardDto">
+		SELECT articleNo, uid, title, regiTime, startTime, endTime
+		FROM   practicetestboard
+	</select>
+	
+	<!-- 모의고사 번호로 모의고사 상세 내용 반환 -->
+	<select id="selectPracticeTestByArticleNo" parameterType="int" resultType="PracticeTestBoardDto">
+		SELECT articleNo, uid, title, regiTime, startTime, endTime, limitTime
+		FROM   practicetestboard
+		WHERE  articleNo = #{articleNo}
+	</select>
+	
+	<!-- 검색된 uid와 작성자 uid가 동일한 모의고사들 반환 -->
+	<select id="selectPracticeTestByWriter" parameterType="String" resultType="PracticeTestBoardDto">
+		SELECT articleNo, uid, title, regiTime, startTime, endTime
+		FROM   practicetestboard
+		WHERE  uid = #{uid}
+	</select>
+
+	<!-- 검색된 키워드가 제목에 포함된  모의고사들 반환 -->
+	<select id="selectPracticeTestByTitle" parameterType="String" resultType="PracticeTestBoardDto">
+		SELECT articleNo, uid, title, regiTime, startTime, endTime
+		FROM   practicetestboard
+		WHERE  title LIKE #{title}
+	</select>
+	
+	<!-- 모의고사 정보 업데이트 -->
+	<update id="updatePracticeTest" parameterType="PracticeTestBoardDto">
+		UPDATE practicetestboard
+		SET    title 	 = #{title},
+			   regiTime  = now(),
+			   startTime = #{startTime},
+			   endTime   = #{endTime},
+			   limitTime = #{limitTime},
+		WHERE  articleNo = #{articleNo}
+	</update>
+	
+	<!-- 모의고사 정보 삭제 -->
+	<delete id="deleltePracticeTest" parameterType="int">
+		DELETE FROM practicetestboard
+		WHERE		articleNo = #{articleNo)
+	</delete>
+	
+	<!-- 모의고사와 해당 모의고사에 포함되는 문제의 매핑 추가 -->
+	<insert id="createPracticeTestMapping" parameterType="map">
+		INSERT INTO practicetestmapping ( articleNo,    problemNo    )
+		VALUES							( #{articleNo}, #{problemNo} )
+	</insert>
+	
+	<!-- 모의고사 번호로 해당 모의고사와 문제들의 매핑을 모두 삭제 -->
+	<delete id="deletePracticeTestMapping" parameterType="int">
+		DELETE FROM practicetestmapping
+		WHERE		articleNo = #{articleNo)
+	</delete>
+
+</mapper>
