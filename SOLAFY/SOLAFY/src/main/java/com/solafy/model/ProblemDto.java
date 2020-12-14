@@ -13,14 +13,13 @@ public class ProblemDto {
 	private double starScore;
 	private int categorySmallNo;
 	private int type;
-	private String problemcol;
 	
 	public ProblemDto() {
 		super();
 	}
 
 	public ProblemDto(int problemNo, String multipleChoice, String title, String uid, String contents, double starScore,
-			int categorySmallNo, int type, String problemcol) {
+			int categorySmallNo, int type) {
 		super();
 		this.problemNo = problemNo;
 		this.multipleChoice = multipleChoice;
@@ -30,7 +29,6 @@ public class ProblemDto {
 		this.starScore = starScore;
 		this.categorySmallNo = categorySmallNo;
 		this.type = type;
-		this.problemcol = problemcol;
 	}
 
 	public int getProblemNo() {
@@ -97,18 +95,10 @@ public class ProblemDto {
 		this.type = type;
 	}
 
-	public String getProblemcol() {
-		return problemcol;
-	}
-
-	public void setProblemcol(String problemcol) {
-		this.problemcol = problemcol;
-	}
-
 	@Override
 	public String toString() {
 		return "ProblemDto [problemNo=" + problemNo + ", multipleChoice=" + multipleChoice + ", title=" + title
 				+ ", uid=" + uid + ", contents=" + contents + ", starScore=" + starScore + ", categorySmallNo="
-				+ categorySmallNo + ", type=" + type + ", problemcol=" + problemcol + "]";
+				+ categorySmallNo + ", type=" + type + "]";
 	}
 }
