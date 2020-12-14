@@ -1,10 +1,119 @@
 package com.solafy.model;
 
+/**
+ * 
+ * @author Juhee Lee
+ * @since 2020-12-14
+ *
+ */
+
 public class PracticeTestBoardDto {
-	/* private 설정 
-	 * 타입 잘 보고 설정
-	 * toString 만들어주기
-	 * 생성자는 기본 + 모든 맴버변수 용 만들기(총 2개)
-	 * getter, setter만들어주기
-	 */
+
+	private int articleNo;
+	private String uid;
+	private String title;
+	private String regiTime;
+	private boolean isGroup;
+	private int groupNo;
+	private String startTime;
+	private String endTime;
+	private String limitTime;
+
+	public PracticeTestBoardDto() {
+		super();
+	}
+
+	public PracticeTestBoardDto(int articleNo, String uid, String title, String regiTime, boolean isGroup, int groupNo,
+			String startTime, String endTime, String limitTime) {
+		super();
+		this.articleNo = articleNo;
+		this.uid = uid;
+		this.title = title;
+		this.regiTime = regiTime;
+		this.isGroup = isGroup;
+		this.groupNo = groupNo;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.limitTime = limitTime;
+	}
+
+	public int getArticleNo() {
+		return articleNo;
+	}
+
+	public void setArticleNo(int articleNo) {
+		this.articleNo = articleNo;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getRegiTime() {
+		return regiTime;
+	}
+
+	public void setRegiTime(String regiTime) {
+		this.regiTime = regiTime;
+	}
+
+	public boolean isGroup() {
+		return isGroup;
+	}
+
+	public void setGroup(boolean isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	public int getGroupNo() {
+		return groupNo;
+	}
+
+	public void setGroupNo(int groupNo) {
+		this.groupNo = groupNo;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getLimitTime() {
+		return limitTime;
+	}
+
+	public void setLimitTime(String limitTime) {
+		this.limitTime = limitTime;
+	}
+
+	@Override
+	public String toString() {
+		return "PracticeTestBoardDto [articleNo=" + articleNo + ", uid=" + uid + ", title=" + title + ", regiTime="
+				+ regiTime + ", isGroup=" + isGroup + ", groupNo=" + groupNo + ", startTime=" + startTime + ", endTime="
+				+ endTime + ", limitTime=" + limitTime + "]";
+	}
+
 }
