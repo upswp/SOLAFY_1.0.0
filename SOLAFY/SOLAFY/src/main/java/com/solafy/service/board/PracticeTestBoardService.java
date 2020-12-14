@@ -1,5 +1,6 @@
 package com.solafy.service.board;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.solafy.model.PracticeTestBoardDto;
@@ -47,6 +48,15 @@ public interface PracticeTestBoardService {
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws Exception;
 
+	/**
+	 * 검색된 키워드가 제목에 포함된 모의고사들 반환
+	 * 
+	 * @param title - String, 검색된 제목 키워드
+	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
+	 * @throws Exception
+	 */
+	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception;
+	
 	/**
 	 * 모의고사 정보 수정 및 문제 mapping 갱신
 	 * 

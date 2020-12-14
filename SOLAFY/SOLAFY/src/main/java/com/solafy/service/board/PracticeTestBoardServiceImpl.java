@@ -59,6 +59,13 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Transactional
 	@Override
+	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception {
+		title = "%" + title + "%";
+		return sqlSession.getMapper(PracticeTestBoardMapper.class).selectPracticeTestByTitle(title);
+	}
+
+	@Transactional
+	@Override
 	public boolean updatePracticeTest(PracticeTestBoardDto pDto) throws Exception {
 		if (pDto.getProblems().size() <= 0)
 			return false;
@@ -68,7 +75,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 		// 모의고사와 문제들 매핑 삭제
 		sqlSession.getMapper(PracticeTestBoardMapper.class).deletePracticeTestMapping(pDto.getArticleNo());
-		
+
 		// 모의고사와 문제들 매핑 등록
 		Map<String, Integer> map = new HashMap<>();
 		map.put("articleNo", pDto.getArticleNo());
@@ -86,10 +93,10 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	public boolean deleltePracticeTest(int articleNo) throws Exception {
 		// 모의고사와 문제들 매핑 삭제
 		sqlSession.getMapper(PracticeTestBoardMapper.class).deletePracticeTestMapping(articleNo);
-		
+
 		// 모의고사 삭제
 		sqlSession.getMapper(PracticeTestBoardMapper.class).deleltePracticeTest(articleNo);
-		
+
 		return true;
 	}
 
