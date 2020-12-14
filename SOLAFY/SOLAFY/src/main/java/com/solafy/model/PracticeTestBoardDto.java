@@ -1,5 +1,7 @@
 package com.solafy.model;
 
+import java.util.List;
+
 /**
  * 
  * @author Juhee Lee
@@ -18,13 +20,14 @@ public class PracticeTestBoardDto {
 	private String startTime;
 	private String endTime;
 	private String limitTime;
+	private List<ProblemDto> problems;
 
 	public PracticeTestBoardDto() {
 		super();
 	}
 
 	public PracticeTestBoardDto(int articleNo, String uid, String title, String regiTime, boolean isGroup, int groupNo,
-			String startTime, String endTime, String limitTime) {
+			String startTime, String endTime, String limitTime, List<ProblemDto> problems) {
 		super();
 		this.articleNo = articleNo;
 		this.uid = uid;
@@ -35,6 +38,7 @@ public class PracticeTestBoardDto {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.limitTime = limitTime;
+		this.problems = problems;
 	}
 
 	public int getArticleNo() {
@@ -109,11 +113,19 @@ public class PracticeTestBoardDto {
 		this.limitTime = limitTime;
 	}
 
+	public List<ProblemDto> getProblems() {
+		return problems;
+	}
+
+	public void setProblems(List<ProblemDto> problems) {
+		this.problems = problems;
+	}
+
 	@Override
 	public String toString() {
 		return "PracticeTestBoardDto [articleNo=" + articleNo + ", uid=" + uid + ", title=" + title + ", regiTime="
 				+ regiTime + ", isGroup=" + isGroup + ", groupNo=" + groupNo + ", startTime=" + startTime + ", endTime="
-				+ endTime + ", limitTime=" + limitTime + "]";
+				+ endTime + ", limitTime=" + limitTime + ", problems=" + problems + "]";
 	}
 
 }
