@@ -10,7 +10,7 @@ import com.solafy.model.FreeBoardDto;
 
 /**
  * FreeboardServiceImpl
- * 자유게시판 Interface
+ * 자유게시판 ServiceImpl
  * @author BUMSEOK SEO
  * @since 2020-12-15
  */
