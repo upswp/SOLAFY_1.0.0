@@ -1,16 +1,16 @@
-package com.solafy.service.board;
+package com.solafy.mapper.board;
 
 import java.util.List;
 
 import com.solafy.model.FreeBoardDto;
 
 /**
- * FreeboardService
- * 자유게시판 Interface
+ * 
  * @author BUMSEOK SEO
  * @since 2020-12-14
  */
-public interface FreeBoardService {
+
+public interface FreeBoardMapper {
 	/**
 	 * 자유게시판에 게시글 등록
 	 * @param freeBoardDto
@@ -51,14 +51,14 @@ public interface FreeBoardService {
 	/**
 	 * 자유게시판 게시글을 수정
 	 * @param freeBoardDto
-	 * @return boolean, 성공적으로 수정 되었을 경우 true 반환
+	 * @return boolean, 정상적으로 수정 되었을 경우 true 반환
 	 */
 	public boolean updateArticle(FreeBoardDto freeBoardDto);
 
 	/**
 	 * 자유게시판 게시글 삭제
 	 * @param ArticleNo
-	 * @return boolean, 성공적으로 삭제 되었을 경우 true 반환
+	 * @return boolean, 정상적으로 삭제 되었을 경우 true 반환
 	 */
 	public boolean deleteArticle(int ArticleNo);
 }
