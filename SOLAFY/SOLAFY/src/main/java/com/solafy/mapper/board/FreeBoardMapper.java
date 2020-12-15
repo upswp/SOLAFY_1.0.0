@@ -16,7 +16,7 @@ public interface FreeBoardMapper {
 	 * @param freeBoardDto
 	 * @return boolean, 성공적으로 등록 되었을 경우 true 반환
 	 */
-	public boolean createArticle(FreeBoardDto freeBoardDto);
+	public int createArticle(FreeBoardDto freeBoardDto);
 	
 	/**
 	 * 자유게시판의 모든 게시글들을 반환
@@ -53,12 +53,12 @@ public interface FreeBoardMapper {
 	 * @param freeBoardDto
 	 * @return boolean, 정상적으로 수정 되었을 경우 true 반환
 	 */
-	public boolean updateArticle(FreeBoardDto freeBoardDto);
+	public int updateArticle(FreeBoardDto freeBoardDto);
 
 	/**
 	 * 자유게시판 게시글 삭제
 	 * @param ArticleNo
 	 * @return boolean, 정상적으로 삭제 되었을 경우 true 반환
 	 */
-	public boolean deleteArticle(int ArticleNo);
+	public int deleteArticle(int ArticleNo);
 }
