@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solafy.mapper.ProblemMapper">
+	<!--problem.xml 파일 : 문제 관련 sql문 
+	author : Lee AYoung
+	since : 2020-12-15 -->
+	
+	<!-- 문제의 정보 반환(상세보기 용) -->
+	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
+		select problemNo, multipleChoice, title, uid, contents, starScore, categorySmallNo, type  
+		from problem
+		where problemNo = #{problemNo}
+	</select>
+	
+	<!-- 문제의 소분류 카테고리 반환(상세보기 용) -->
+	<select id="selectCategorySmall" parameterType="int" resultType="CategorySmallDto">
+		select categoryNo, categoryName, categoryMediumNo
+		from categorysmall
+		where categoryNo = #{categorySmallNo}
+	</select>
+	
+	<!-- 문제의 중분류 카테고리 반환(상세보기 용) -->
+	<select id="selectCategoryMedium" parameterType="int" resultType="CategoryMediumDto">
+		select categoryNo, categoryName, categoryLargeNo
+		from categorymedium
+		where categoryNo = #{categoryMediumNo}
+	</select>
+	
+	<!-- 문제의 대분류 카테고리 반환(상세보기 용) -->
+	<select id="selectCategoryLarge" parameterType="int" resultType="CategoryLargeDto">
+		select categoryNo, categoryName, categoryMediumNo
+		from categorylarge
+		where categoryNo = #{categoryLargeNo}
+	</select>
+	
+	<!-- 문제의 해시태그 반환 : hashtagmapping테이블에서 문제 번호를 받아 반환 -->
+	<select id="selectHashtagList" parameterType="int" resultType="HashTagDto">
+		select h.hashTagNo, h.hashTag
+		from hashtag h join hashtagmapping m
+		on h.hashTagNo = m.hashTagNo
+		where m.problemNo = #{problemNo}
+	</select>
+	
+	<!-- 해시태그번호로 문제 검색 -->
+	<select id="selectProblemByHashTag" parameterType="int" resultType="ProblemDto">
+		select p.problemNo, p.title, p.uid, p.starScore
+		from hashtagmapping m join problem p
+		on m.problemNo = p.problemNo
+		where m.hashTagNo = #{hashTagNo}
+	</select>
+	
+	<!-- 문제이름(일부)으로 검색 -->
+	<select id="selectProblemByName" parameterType="String" resultType="ProblemDto">
+		select problemNo, title, uid, starScore 
+		from problem
+		where title like concat('%', #{title}, '%')
+	</select>
+	
+	<!-- 소분류 카테고리를 이용한 문제 검색 -->
+	<select id="selectProblemByCategoryScmall" parameterType="int" resultType="ProblemDto">
+		select problemNo, title, uid, starScore 
+		from problem
+		where categorySmallNo = #{categorySmallNo}
+	</select>
+	
+	<!-- 문제 평가하기 -->
+	<update id="updateStarScore" parameterType="ProblemDto">
+		update problem
+		set starScore = #{starScore}
+		where problemNo = #{problemNo}	
+	</update>
+	
+	<!-- 문제 등록 -->
+	<insert id="insertProblem" parameterType="problemDto">
+		insert into problem (multipleChoice, title, uid, contents, categorySmallNo, type)
+		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categorySmallNo},#{type})
+	</insert>
+	
+	<!-- 문제 수정 -->
+	<update id="updateProblem" parameterType="ProblemDto">
+		update problem
+		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categorySmallNo=#{categorySmallNo},type=#{type}
+		where problemNo = #{problemNo}	
+	</update>
+	
+	<!-- 문제 삭제 -->
+	<delete id="deleteProblem" parameterType="int">
+		delete from problem
+		where problemNo = #{problemNo}
+	</delete>
+</mapper>
