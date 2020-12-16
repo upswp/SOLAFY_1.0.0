@@ -1,4 +1,4 @@
-package com.solafy.mapper;
+package com.solafy.mapper.problem;
 
 import java.util.List;
 
