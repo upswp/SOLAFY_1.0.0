@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.solafy.mapper.ProblemMapper">
-	<!--problem.xml 파일 : 문제 관련 sql문 
+<mapper namespace="com.solafy.mapper.problem.ProblemMapper">
+	<!-- Problem.xml 파일 : 문제 관련 sql문 
 	author : Lee AYoung
 	since : 2020-12-15 -->
 	
@@ -15,21 +15,21 @@
 	
 	<!-- 문제의 소분류 카테고리 반환(상세보기 용) -->
 	<select id="selectCategorySmall" parameterType="int" resultType="CategorySmallDto">
-		select categoryNo, categoryName, categoryMediumNo
+		select categoryNo, categoryName
 		from categorysmall
 		where categoryNo = #{categorySmallNo}
 	</select>
 	
 	<!-- 문제의 중분류 카테고리 반환(상세보기 용) -->
 	<select id="selectCategoryMedium" parameterType="int" resultType="CategoryMediumDto">
-		select categoryNo, categoryName, categoryLargeNo
+		select categoryNo, categoryName
 		from categorymedium
 		where categoryNo = #{categoryMediumNo}
 	</select>
 	
 	<!-- 문제의 대분류 카테고리 반환(상세보기 용) -->
 	<select id="selectCategoryLarge" parameterType="int" resultType="CategoryLargeDto">
-		select categoryNo, categoryName, categoryMediumNo
+		select categoryNo, categoryName
 		from categorylarge
 		where categoryNo = #{categoryLargeNo}
 	</select>
@@ -63,13 +63,6 @@
 		from problem
 		where categorySmallNo = #{categorySmallNo}
 	</select>
-	
-	<!-- 문제 평가하기 -->
-	<update id="updateStarScore" parameterType="ProblemDto">
-		update problem
-		set starScore = #{starScore}
-		where problemNo = #{problemNo}	
-	</update>
 	
 	<!-- 문제 등록 -->
 	<insert id="insertProblem" parameterType="problemDto">
