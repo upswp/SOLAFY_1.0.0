@@ -1,9 +1,5 @@
-package com.solafy.mapper;
-/**
- * ProblemMapper
- * @author Lee AYoung
- * @since 2020-12-13
- */
+package com.solafy.mapper.problem;
+
 import java.util.List;
 
 import com.solafy.model.CategoryLargeDto;
@@ -12,14 +8,13 @@ import com.solafy.model.CategorySmallDto;
 import com.solafy.model.HashTagDto;
 import com.solafy.model.ProblemDto;
 
+/**
+ * ProblemMapper
+ * @author Lee AYoung
+ * @since 2020-12-13
+ */
+
 public interface ProblemMapper {
-//	/**
-//	 * 문제집에 포함되는 문제리스트 반환
-//	 * @param problemSetNo - 한 문제집 번호
-//	 * @return 문제집에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-//	 */
-//	List<ProblemDto> selectProblemList(int problemSetNo);
-	
 	/**
 	 * 문제의 정보 반환(상세보기 용)
 	 * @param problemNo - 한 문제 번호
@@ -75,14 +70,6 @@ public interface ProblemMapper {
 	 * @return categorySmallNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
 	 */ 
 	List<ProblemDto> selectProblemByCategoryScmall(int categorySmallNo);
-	
-
-	/**
-	 * 문제 평가하기
-	 * @param problemDto - 문제번호와 이미 계산된 별점 평균 (서비스단에서 계산)
-	 * @return int : 수정된 행의 개수 반환 
-	 */ 
-	int updateStarScore(ProblemDto problemDto);
 	
 	/**
 	 * 문제 등록

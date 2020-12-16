@@ -1,11 +1,12 @@
-package com.solafy.mapper;
+package com.solafy.mapper.problem;
+
+import com.solafy.model.ProblemAnswerDto;
 
 /**
  * ProblemAnswerMapper
  * @author Lee AYoung
  * @since 2020-12-13
  */
-import com.solafy.model.ProblemAnswerDto;
 
 public interface ProblemAnswerMapper {
 	/**
