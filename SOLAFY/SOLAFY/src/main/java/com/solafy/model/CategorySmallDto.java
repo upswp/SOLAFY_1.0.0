@@ -7,15 +7,13 @@ package com.solafy.model;
 public class CategorySmallDto {
 	private int categoryNo;
 	private String categoryName;
-	private int categoryMediumNo;
 	public CategorySmallDto() {
 		super();
 	}
-	public CategorySmallDto(int categoryNo, String categoryName, int categoryMediumNo) {
+	public CategorySmallDto(int categoryNo, String categoryName) {
 		super();
 		this.categoryNo = categoryNo;
 		this.categoryName = categoryName;
-		this.categoryMediumNo = categoryMediumNo;
 	}
 	public int getCategoryNo() {
 		return categoryNo;
@@ -29,15 +27,8 @@ public class CategorySmallDto {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	public int getCategoryMediumNo() {
-		return categoryMediumNo;
-	}
-	public void setCategoryMediumNo(int categoryMediumNo) {
-		this.categoryMediumNo = categoryMediumNo;
-	}
 	@Override
 	public String toString() {
-		return "CategorySmallDto [categoryNo=" + categoryNo + ", categoryName=" + categoryName + ", categoryMediumNo="
-				+ categoryMediumNo + "]";
+		return "CategorySmallDto [categoryNo=" + categoryNo + ", categoryName=" + categoryName + "]";
 	}
 }

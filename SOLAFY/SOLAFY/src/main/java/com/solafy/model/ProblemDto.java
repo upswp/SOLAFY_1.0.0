@@ -1,4 +1,7 @@
 package com.solafy.model;
+
+import java.util.List;
+
 /**
  * ProblemDto
  * @author Lee AYoung
@@ -11,15 +14,17 @@ public class ProblemDto {
 	private String uid;
 	private String contents;
 	private double starScore;
-	private int categorySmallNo;
+	private int categoryNo;
 	private int type;
+	private List<HashTagDto> hashtags;
+	private ProblemAnswerDto answer;
 	
 	public ProblemDto() {
 		super();
 	}
 
 	public ProblemDto(int problemNo, String multipleChoice, String title, String uid, String contents, double starScore,
-			int categorySmallNo, int type) {
+			int categoryNo, int type, List<HashTagDto> hashtags, ProblemAnswerDto answer) {
 		super();
 		this.problemNo = problemNo;
 		this.multipleChoice = multipleChoice;
@@ -27,8 +32,10 @@ public class ProblemDto {
 		this.uid = uid;
 		this.contents = contents;
 		this.starScore = starScore;
-		this.categorySmallNo = categorySmallNo;
+		this.categoryNo = categoryNo;
 		this.type = type;
+		this.hashtags = hashtags;
+		this.answer = answer;
 	}
 
 	public int getProblemNo() {
@@ -79,12 +86,12 @@ public class ProblemDto {
 		this.starScore = starScore;
 	}
 
-	public int getCategorySmallNo() {
-		return categorySmallNo;
+	public int getCategoryNo() {
+		return categoryNo;
 	}
 
-	public void setCategorySmallNo(int categorySmallNo) {
-		this.categorySmallNo = categorySmallNo;
+	public void setCategoryNo(int categoryNo) {
+		this.categoryNo = categoryNo;
 	}
 
 	public int getType() {
@@ -95,10 +102,26 @@ public class ProblemDto {
 		this.type = type;
 	}
 
+	public List<HashTagDto> getHashtags() {
+		return hashtags;
+	}
+
+	public void setHashtags(List<HashTagDto> hashtags) {
+		this.hashtags = hashtags;
+	}
+
+	public ProblemAnswerDto getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(ProblemAnswerDto answer) {
+		this.answer = answer;
+	}
+
 	@Override
 	public String toString() {
 		return "ProblemDto [problemNo=" + problemNo + ", multipleChoice=" + multipleChoice + ", title=" + title
-				+ ", uid=" + uid + ", contents=" + contents + ", starScore=" + starScore + ", categorySmallNo="
-				+ categorySmallNo + ", type=" + type + "]";
+				+ ", uid=" + uid + ", contents=" + contents + ", starScore=" + starScore + ", categoryNo=" + categoryNo
+				+ ", type=" + type + ", hashtags=" + hashtags + ", answer=" + answer + "]";
 	}
 }
