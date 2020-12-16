@@ -8,7 +8,7 @@
 	
 	<!-- 문제의 정보 반환(상세보기 용) -->
 	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
-		select problemNo, multipleChoice, title, uid, contents, starScore, categorySmallNo, type  
+		select problemNo, multipleChoice, title, uid, contents, categorySmallNo, type  
 		from problem
 		where problemNo = #{problemNo}
 	</select>
@@ -44,7 +44,7 @@
 	
 	<!-- 해시태그번호로 문제 검색 -->
 	<select id="selectProblemByHashTag" parameterType="int" resultType="ProblemDto">
-		select p.problemNo, p.title, p.uid, p.starScore
+		select p.problemNo, p.title, p.uid
 		from hashtagmapping m join problem p
 		on m.problemNo = p.problemNo
 		where m.hashTagNo = #{hashTagNo}
@@ -52,16 +52,34 @@
 	
 	<!-- 문제이름(일부)으로 검색 -->
 	<select id="selectProblemByName" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid, starScore 
+		select problemNo, title, uid
 		from problem
 		where title like concat('%', #{title}, '%')
 	</select>
 	
 	<!-- 소분류 카테고리를 이용한 문제 검색 -->
-	<select id="selectProblemByCategoryScmall" parameterType="int" resultType="ProblemDto">
-		select problemNo, title, uid, starScore 
+	<select id="selectProblemByCategorySmall" parameterType="int" resultType="ProblemDto">
+		select problemNo, title, uid
 		from problem
-		where categorySmallNo = #{categorySmallNo}
+		where categoryNo = #{categoryNo}
+	</select>
+	
+	<!-- MEMO : CategoryNo를 varchar로 cast하면 like가 가능!(아래처럼)
+	그러나 CategoryLargeNo가 01이 될 걸 생각하면 전부 varchar로 바꾸는게 좋다고 생각함(0이 날아가지않게)
+	-> 근데 이러면 AI가 적용이 안된다........-->
+	
+	<!-- 중분류 카테고리를 이용한 문제 검색 -->
+	<select id="selectProblemByCategoryMedium" parameterType="int" resultType="ProblemDto">
+		select problemNo, title, uid
+		from problem
+		where cast(categoryNo as char) like concat(cast(#{categoryLargeMediumNo} as char), '%')
+	</select>
+	
+	<!-- 대분류 카테고리를 이용한 문제 검색 -->
+	<select id="selectProblemByCategoryLarge" parameterType="int" resultType="ProblemDto">
+		select problemNo, title, uid
+		from problem
+		where where cast(categoryNo as char) like concat(cast(#{categoryLargeNo} as char), '%')
 	</select>
 	
 	<!-- 문제 등록 -->
