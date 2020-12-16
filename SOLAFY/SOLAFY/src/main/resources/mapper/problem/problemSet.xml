@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.solafy.mapper.ProblemSetMapper">
+<mapper namespace="com.solafy.mapper.problem.ProblemSetMapper">
 	<!--ProblemSet xml 파일 : 문제집 관련 sql문
 	author : Park Sangwoo
 	since : 2020-12-14 -->
