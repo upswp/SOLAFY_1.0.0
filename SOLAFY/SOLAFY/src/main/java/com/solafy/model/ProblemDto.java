@@ -16,8 +16,13 @@ public class ProblemDto {
 	private double starScore;
 	private int categoryNo;
 	private int type;
+	// MEMO : 지금와서 생각해보니 굳이 포함할 필요 없겠다 싶음..ㅎ
+	// vue에서 백엔드를 6번 호출하는 거 vs 5개를 하나에 몰빵하는 처리를 백엔드에서
+	// 그냥 vue에서 여러번 호출하면 문제가 될까? ㅎㅋ 아 왔다갔다하는 내가 싫다.....(별)
 	private List<HashTagDto> hashtags;
 	private ProblemAnswerDto answer;
+	// 만약 위에가 효율성때문에 추가된다면
+	// categoryDto 3형제도 추가하는게 좋아보임!
 	
 	public ProblemDto() {
 		super();
