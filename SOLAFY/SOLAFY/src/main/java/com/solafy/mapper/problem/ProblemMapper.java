@@ -63,13 +63,29 @@ public interface ProblemMapper {
 	 * @return title에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
 	 */ 
 	List<ProblemDto> selectProblemByName(String title);
-	 
+	
+	// MEMO :카테고리 관련 mapper를 따로 뺄까?
+	
 	/**
 	 * 소분류 카테고리를 이용한 문제 검색
-	 * @param categorySmallNo - 문제의 소분류 카테고리 숫자
+	 * @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
 	 * @return categorySmallNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
 	 */ 
-	List<ProblemDto> selectProblemByCategoryScmall(int categorySmallNo);
+	List<ProblemDto> selectProblemByCategorySmall(int categoryNo);
+	
+	/**
+	 * 중분류 카테고리를 이용한 문제 검색
+	 * @param categoryMediumNo - 문제의 대,중분류 카테고리 숫자
+	 * @return categoryMediumNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 */
+	List<ProblemDto> selectProblemByCategoryMedium(int categoryLargeMediumNo);
+	
+	/**
+	 * 대분류 카테고리를 이용한 문제 검색
+	 * @param categoryLargeNo - 문제의 대분류 카테고리 숫자
+	 * @return categoryLargeNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 */
+	List<ProblemDto> selectProblemByCategoryLarge(int categoryLargeNo);
 	
 	/**
 	 * 문제 등록
