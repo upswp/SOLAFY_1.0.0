@@ -11,6 +11,66 @@
 <mapper namespace="com.solafy.mapper.board.FreeBoardMapper">
 	<!-- 게시물 등록 -->
 	<insert id="createArticle" parameterType="FreeBoardDto">
+		insert into freeboard (title, contents, uid, likeCount, isNotice, regiTime, isGroup, groupNo, boardNo)
+		values(#{title}, #{contents}, #{uid}, #{likeCount}, #{isNotice}, now(), #{isGroup}, #{groupNo}, #{boardNo});
 	</insert>
 	
+	<!--
+		모든 게시물을 반환.
+		게시글번호, UID(닉네임), 등록시간, 종아요 갯수만 가져온다.
+	-->
+	<select id="selectArticles" resultType="FreeBoardDto">
+		select articleNo, uid, regiTime, likeCount
+		from freeboard
+		order by articleNo desc
+	</select>
+	
+	<!--
+		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+	-->
+	<select id="selectArticleByNo" parameterType="int" resultType="FreeBoardDto">
+		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		from freeboard
+		where articleNo = #{articleNo}
+	</select>
+
+	<!--
+		인자값으로 가져온 제목에 맞는 게시글을 반환.
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+	-->
+	<select id="selectArticleByTitle" parameterType="String" resultType="FreeBoardDto">
+		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		from freeboard
+		where title = #{title}
+	</select>
+	
+	<!--
+		인자값으로 가져온 UID에 맞는 게시글을 반환.
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+	-->
+	<select id="selectArticleByUid" parameterType="String" resultType="FreeBoardDto">
+		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		from freeboard
+		where uid = #{uid}
+	</select>
+	
+	<!--
+		게시물 수정.
+		수정가능한 내용은 제목(title), 내용(contents), 공지사항여부(isNotice).
+	-->
+	<update id="updateArticle" parameterType="FreeBoardDto">
+		update freeboard 
+		set title = #{title}, contents = #{contents}, isNotice = #isNotice
+		where articleNo = #{articleNo}
+	</update>
+	
+	<!--
+		게시물 삭제.
+		인자값으로 가져온 게시불 번호에 해당하는 게시물을 삭제.
+	-->
+	<delete id="deleteArticle" parameterType="int">
+		delete from freeboard
+		where articleNo = #{no}
+	</delete>	
 </mapper>
