@@ -1,12 +1,15 @@
 package com.solafy.model;
 
 import java.util.List;
-
 /**
- * problemSetDto
- * @author Park Sangwoo
- * @since 2020-12-13
- * @since 2020-12-19 problems 추가
+ * 
+* @FileName : ProblemSetDto.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 20
+* @작성자 : Park Sangwoo
+
+* @변경이력 :
+* @프로그램 설명 : 문제집 관련 Dto
  */
 public class ProblemSetDto {
 	/* private 설정 
@@ -20,8 +23,6 @@ public class ProblemSetDto {
 	private String uid;
 	private String title;
 	private String regiTime;
-	private List<ProblemDto> problems;
-	
 	
 	public ProblemSetDto() {
 		super();
@@ -50,15 +51,9 @@ public class ProblemSetDto {
 	public void setRegiTime(String regiTime) {
 		this.regiTime = regiTime;
 	}
-	public List<ProblemDto> getProblems() {
-		return problems;
-	}
-	public void setProblems(List<ProblemDto> problems) {
-		this.problems = problems;
-	}
 	@Override
 	public String toString() {
 		return "ProblemSetDto [problemSetNo=" + problemSetNo + ", uid=" + uid + ", title=" + title + ", regiTime="
-				+ regiTime + ", problems=" + problems + "]";
+				+ regiTime + "]";
 	}
 }
