@@ -1,30 +1,188 @@
 package com.solafy.controller.problem;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.solafy.model.CategoryLargeDto;
+import com.solafy.model.CategoryMediumDto;
+import com.solafy.model.CategorySmallDto;
+import com.solafy.model.HashTagDto;
+import com.solafy.model.ProblemDto;
+import com.solafy.service.problem.ProblemService;
 
+import io.swagger.annotations.ApiOperation;
 
+/**
+* @FileName : ProblemController.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 18.
+* @작성자 : Lee Ayoung
+
+* @변경이력 :
+* @프로그램 설명 : Problem Controller
+*/
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/template") //주소는 알아서 넣기
-
+@RequestMapping("/problem")
 public class ProblemController {
 	private static final Logger logger = LoggerFactory.getLogger(ProblemController.class);
-	//아래 string 2개는 사용하지 않는다면 지우기
+
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 	
-	//@Autowired
-	//private ___Service ___Service;
+	@Autowired
+	private ProblemService problemService;
 	
-//	@ApiOperation(value = "~~~~를 반환한다", response = List.class)
-//	@GetMapping(value = "/판단해서 필요하면 value 넣기")
-//	public ResponseEntity<List<DTO 넣어주기>> retrieveBoard() throws Exception {
-//		logger.debug("retrieveBoard - 호출");
-//		return new ResponseEntity<List<DTO 넣어주기>>>(boardService.retrieveBoard(), HttpStatus.OK);
-//	}
+	/**
+	* @Method Name : selectProblem
+	* @작성일 : 2020. 12. 18.
+	* @작성자 : Lee Ayoung
+	* @param problemNo
+	* @return
+	* @throws Exception
+	* @Method 설명 : 문제 정보를 반환한다 (상세보기 용)
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "문제 번호에 해당하는 문제 정보를 반환한다", response = ProblemDto.class)
+	@GetMapping(value = "/{problemNo}")
+	public ResponseEntity<ProblemDto> selectProblem(@PathVariable int problemNo){
+		logger.debug("selectProblem - 호출");
+		return new ResponseEntity<ProblemDto>(problemService.selectProblem(problemNo), HttpStatus.OK);
+	}
+	
+	// 지금 방식 
+	// 1. 문제를 클릭 -> selectProblem(problemNo)호출 -> ProblemDto를 반환 
+	// -> (vue)ProblemDto에서 categoryNo를  뽑음 -> select대,중,소(categoryNo)호출 -> 각 카테고리Dto반환
+	// 2. selectHashTag(problemNo)호출 -> HashTagDto List반환
+	
+	// 다른 방식
+	// 1. 문제를 클릭 -> selectProblem(problemNo)호출 -> ProblemDto를 반환
+	// 2. select대,중,소(problemNo)호출 -> 각 카테고리Dto반환  *query문의 join을 이용해서 problemNo로 카테고리 dto를 뽑아옴
+	// 3. selectHashTag(problemNo)호출 -> HashTagDto List반환
+	
+	@ApiOperation(value = "문제의 카테고리번호에 해당하는  소분류 카테고리 반환한다.", response = CategorySmallDto.class)
+	@GetMapping(value = "/category/small/{categoryNo}")
+	public ResponseEntity<CategorySmallDto> selectCategorySmall(@PathVariable String categoryNo){
+		logger.debug("selectCategorySmall - 호출");
+		return new ResponseEntity<CategorySmallDto>(problemService.selectCategorySmall(categoryNo), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "문제의 카테고리번호에 해당하는 중분류 카테고리 반환한다.", response = CategoryMediumDto.class)
+	@GetMapping(value = "/category/medium/{categoryNo}")
+	public ResponseEntity<CategoryMediumDto> selectCategoryMedium(@PathVariable String categoryNo){
+		logger.debug("selectCategoryMedium - 호출");
+		return new ResponseEntity<CategoryMediumDto>(problemService.selectCategoryMedium(categoryNo), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "문제의 카테고리번호에 해당하는 대분류 카테고리 반환한다.", response = CategoryLargeDto.class)
+	@GetMapping(value = "/category/Large/{categoryNo}")
+	public ResponseEntity<CategoryLargeDto> selectCategoryLarge(@PathVariable String categoryNo) {
+		logger.debug("selectCategoryLarge - 호출");
+		return new ResponseEntity<CategoryLargeDto>(problemService.selectCategoryLarge(categoryNo), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "문제번호에 해당 하는 해시태그를 반환한다.", response = List.class)
+	@GetMapping(value = "/{problemNo}/hashtag")
+	public ResponseEntity<List<HashTagDto>> selectHashTagList(@PathVariable int problemNo){
+		logger.debug("selectHashtagList - 호출");
+		return new ResponseEntity<List<HashTagDto>>(problemService.selectHashTagList(problemNo), HttpStatus.OK);
+	}
+	
+	/**
+	* @Method Name : selectProblemByHashTag
+	* @작성일 : 2020. 12. 19.
+	* @작성자 : Lee Ayoung
+	* @param problemNo
+	* @return
+	* @throws Exception
+	* @Method 설명 : 해시태그번호로 문제 검색(해시태그를 클릭했을 때)
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "해시태그번호에 해당하는 문제들을 반환한다.", response = List.class)
+	@GetMapping(value = "/hashtag/{hashTagNo}")
+	public ResponseEntity<List<ProblemDto>> selectProblemByHashTag(@PathVariable int hashTagNo) {
+		logger.debug("selectProblemByHashTag - 호출");
+		return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByHashTag(hashTagNo), HttpStatus.OK);
+	}
+	
+	/**
+	* @Method Name : selectProblemByCategory
+	* @작성일 : 2020. 12. 19.
+	* @작성자 : Lee Ayoung
+	* @param categoryNo
+	* @return
+	* @throws Exception
+	* @Method 설명 : 카테고리 번호(소+중+대/중+대/대)에 해당하는 문제들을 반환
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "카테고리 번호(소+중+대/중+대/대)에 해당하는 문제들을 반환한다.", response = List.class)
+	@GetMapping(value = "/category/{categoryNo}")
+	public ResponseEntity<List<ProblemDto>> selectProblemByCategory(String categoryNo) {
+		// 소분류 카테고리를 이용한 문제 검색 (소+중+대 번호 전달)
+		if(categoryNo.length()==10) {
+			logger.debug("selectProblemByCategorySmall - 호출");
+			return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByCategorySmall(categoryNo), HttpStatus.OK);
+		}
+		// 중분류 카테고리를 이용한 문제 검색 (중+대 번호 전달)
+		else if(categoryNo.length()==5) {
+			logger.debug("selectProblemByCategoryMedium - 호출");
+			return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByCategoryMedium(categoryNo),HttpStatus.OK);
+		}
+		// 대분류 카테고리를 이용한 문제 검색 (대 번호 전달)
+		else {
+			logger.debug("selectProblemByCategoryLarge - 호출");
+			return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByCategoryLarge(categoryNo),HttpStatus.OK);
+		}
+	}
+	
+	@ApiOperation(value = "검색조건과 검색키워드에 해당하는 문제를 반환한다.", response = List.class)
+	@GetMapping(value = "/search/{type}/{keyword}")
+	public ResponseEntity<List<ProblemDto>> selectProblemByKeyword(@PathVariable String type, @PathVariable String keyword) {
+		logger.debug("selectProblemByKeyword - 호출");
+		return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByKeyword(type,keyword), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "문제를 등록한다. 그리고 DB등록 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	@PostMapping(value = "/create")
+	public ResponseEntity<String> createProblem(@RequestBody ProblemDto problemDto){
+		logger.debug("createProblem - 호출");
+		if(problemService.createProblem(problemDto)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+	
+	@ApiOperation(value = "문제를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	@PutMapping(value = "/update")
+	public ResponseEntity<String> updateProblem(@RequestBody ProblemDto problemDto){
+		logger.debug("updateProblem - 호출");
+		if(problemService.updateProblem(problemDto)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+	
+	@ApiOperation(value = "문제를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	@DeleteMapping(value = "/delete")
+	public ResponseEntity<String> deleteProblem(@RequestBody int problemNo){
+		logger.debug("updateProblem - 호출");
+		if(problemService.deleteProblem(problemNo)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
 }
