@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.solafy.mapper.board.FreeBoardMapper;
 import com.solafy.model.FreeBoardDto;
@@ -14,6 +15,8 @@ import com.solafy.model.FreeBoardDto;
  * @author BUMSEOK SEO
  * @since 2020-12-15
  */
+
+@Service
 public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Autowired
