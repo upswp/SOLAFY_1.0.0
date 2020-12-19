@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solafy.mapper.group.GroupMapper">
+ 
+ <insert id="createGroup" parameterType="GroupDto">
+ 	insert into group (title, type, description)
+ 	values(#{title}, #{type}, #{description})
+ </insert>
+ 
+ <insert id="createApplyGroupSignUp" parameterType="GroupMemberDto">
+ 	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
+ 	values(#{uid}, #{groupNo}, #{grade}, #{statusMessage}, #{regiMessage})
+ </insert>
+ 
+ <insert id="createGroupInvitation" parameterType="GroupMemberDto">
+ 	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
+ 	values(#{uid}, #{groupNo}, #{grade}, #{statusMessage}, #{regiMessage})
+ </insert>
+
+
+ <select id="selectAllGroup" resultType="GroupDto">
+ 	select title, type, description from group
+ </select>
+ 
+ <select id="selectGroupByNo" parameterType="int" resultType="GroupDto"> 
+ 	select title, type, description from group
+ 	where groupNo = #{groupNo}
+ </select>
+ <select id="checkDuplicateName" parameterType="String">
+	select count(*) from solafy.group
+	where title = #{title};
+ </select>
+
+ <update id="updateGroup" parameterType="GropuDto" >
+ 	update solafy.group 
+ 	set title=#{title}, type=#{type}, description=#{description}  
+ 	where groupNo=#{groupNo}
+ </update>
+ 
+ <update id="updatePermissionOfMember" parameterType="GroupMemberDto">
+ 
+ </update>
+ <update id="updateGroupApplyConfirm" parameterType="GroupMemberDto">
+ 
+ </update>
+ <update id="updateGroupInvitationConfirm" parameterType="GroupMemberDto">
+ 
+ </update>
+ 
+ <delete id="deleteGroup" parameterType="int">
+ 
+ </delete>
+ <delete id="deleteGroupMember" parameterType="String">
+ 
+ </delete>
+ <delete id="deleteGroupMemberself" parameterType="String">
+ 
+ </delete>
+
+</mapper>
