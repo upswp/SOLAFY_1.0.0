@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.solafy.mapper.problem.HashTagMapper;
 import com.solafy.mapper.problem.ProblemAnswerMapper;
 import com.solafy.mapper.problem.ProblemMapper;
 import com.solafy.model.HashTagDto;
@@ -27,9 +28,12 @@ public class ProblemServiceImpl implements ProblemService {
 
 	@Autowired
 	private ProblemMapper problemMapper;
-	
+
 	@Autowired
 	private ProblemAnswerMapper problemAnswerMapper;
+
+	@Autowired
+	private HashTagMapper hashTagMapper;
 
 	@Override
 	public Map<String, Object> selectProblem(int problemNo) {
@@ -97,7 +101,7 @@ public class ProblemServiceImpl implements ProblemService {
 			return problemMapper.selectProblemByCategoryMedium(categoryNo);
 		}
 		// 대분류 카테고리를 이용한 문제 검색 (대 번호 전달)
-		else if (categoryNo.length() == 2){
+		else if (categoryNo.length() == 2) {
 			return problemMapper.selectProblemByCategoryLarge(categoryNo);
 		}
 		// 다른 길이
@@ -105,21 +109,6 @@ public class ProblemServiceImpl implements ProblemService {
 			return null;
 		}
 	}
-
-//	@Override
-//	public List<ProblemDto> selectProblemByCategorySmall(String categoryNo) {
-//		return problemMapper.selectProblemByCategorySmall(categoryNo);
-//	}
-//
-//	@Override
-//	public List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo) {
-//		return problemMapper.selectProblemByCategoryMedium(categoryLargeMediumNo);
-//	}
-//
-//	@Override
-//	public List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo) {
-//		return problemMapper.selectProblemByCategoryLarge(categoryLargeNo);
-//	}
 
 	@Override
 	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) {
@@ -134,19 +123,29 @@ public class ProblemServiceImpl implements ProblemService {
 		}
 	}
 
-	// TODO : 해쉬태그관련
-	// 없는 걸 등록했다 -> 해쉬태그 생성
-	// 있는 걸 등록했다 -> mappingtable연결
-	// 이미 등록 되어있는 해쉬태그를 없앤다 -> mappingtable삭제
-	
+	// 해쉬태그관련
+	// 없는 걸 등록한다 -> 해쉬태그 생성
+	// 있는 걸 등록한다 -> mappingtable연결
 	@Override
-	public boolean createProblem(ProblemDto problemDto, List<HashTagDto> hashTagList, ProblemAnswerDto problemAnswerDto) {
+	public boolean createProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList) {
+		// 문제 등록
 		boolean result = (problemMapper.createProblem(problemDto) > 0);
-		for (HashTagDto hashTagDto : hashTagList) {
-			result &= (problemMapper.createHashTagMapping(hashTagDto) > 0);
-		}
-		result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto)>0);
 		
+		// 문제 답 등록
+		result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
+		
+		// 해시태그 매핑
+		for (String hashTag : hashTagList) {
+			HashTagDto hashTagDto;
+			// hashTag 테이블에 존재하지 않으면 hashTag 테이블에 등록
+			if ((hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag)) == null) {
+				result &= (hashTagMapper.createHashTag(hashTag) > 0);
+				hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag);
+			}
+			// 문제와 해시태그를 mapping 테이블을 통해 연결
+			result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
+		}
+
 		return result;
 	}
 

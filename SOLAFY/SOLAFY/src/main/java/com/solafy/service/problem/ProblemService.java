@@ -3,7 +3,6 @@ package com.solafy.service.problem;
 import java.util.List;
 import java.util.Map;
 
-import com.solafy.model.HashTagDto;
 import com.solafy.model.ProblemAnswerDto;
 import com.solafy.model.ProblemDto;
 
@@ -97,14 +96,14 @@ public interface ProblemService {
 	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) ;
 	
 	/**
-	* @param problemDto - 문제 정보
-	 * @param problemAnswerDto 
-	 * @param hashTagList 
+	* @param problemDto - 문제정보
+	* @param problemAnswerDto - 문제 정답 정보
+	* @param hashTagList(List<String>) - 해시태그명 리스트
 	* @return boolean - 성공,실패 여부
 	* @Method 설명 : 문제 등록
 	* @변경이력 :
 	*/
-	public boolean createProblem(ProblemDto problemDto, List<HashTagDto> hashTagList, ProblemAnswerDto problemAnswerDto);
+	public boolean createProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto,List<String> hashTagList);
 	
 	/**
 	* @Method Name : updateProblem
