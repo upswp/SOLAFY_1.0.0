@@ -19,100 +19,127 @@ import com.solafy.model.ProblemDto;
 * @변경이력 :
 * @프로그램 설명 : Problem Mapper
 */
-
 @Mapper
 public interface ProblemMapper {
 	/**
-	 * 문제의 정보 반환(상세보기 용)
-	 * @param problemNo - 한 문제 번호
-	 * @return problemNo에 해당하는 ProblemDto 반환 - 전체 column
-	 */
-	ProblemDto selectProblem(int problemNo);
+	* @param problemNo - 문제 번호
+	* @return ProblemDto - 문제 : problemNo, multipleChoice, title, uid, contents, categorySmallNo, type 
+	* @Method 설명 : 문제의 정보 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public ProblemDto selectProblem(int problemNo);
 	
 	/**
-	 * 문제의 소분류 카테고리 반환(상세보기 용)
-	 * @param categorySmallNo - 문제의 소분류 카테고리 숫자
-	 * @return categorySmallNo에 해당하는 CategorySmallDto반환 - 전체 column
-	 */
-	
-	CategorySmallDto selectCategorySmall(int categorySmallNo);
-	
-	/**
-	 * 문제의 중분류 카테고리 반환(상세보기 용)
-	 * @param categoryMediumNo - 문제의 중분류 카테고리 숫자
-	 * @return categoryMediumNo에 해당하는 CategoryMediumDto반환 - 전체 column
-	 */
-	CategoryMediumDto selectCategoryMedium(int categoryMediumNo);
+	* @param categorySmallNo - 문제의 소분류 카테고리 숫자
+	* @return CategorySmallDto - 소분류 카테고리 : categoryNo, categoryName
+	* @Method 설명 : 문제의 소분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategorySmallDto selectCategorySmall(int categorySmallNo);
 	
 	/**
-	 * 문제의 대분류 카테고리 반환(상세보기 용)
-	 * @param categoryLargeNo - 문제의 대분류 카테고리 숫자
-	 * @return categoryLargeNo에 해당하는 CategoryLargeDto반환 - 전체 column
-	 */
-	CategoryLargeDto selectCategoryLarge(int categoryLargeNo);
+	* @param categoryMediumNo - 문제의 중분류 카테고리 숫자
+	* @return CategoryMediumDto - 중분류 카테고리 : categoryNo, categoryName
+	* @Method 설명 : 문제의 중분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategoryMediumDto selectCategoryMedium(int categoryMediumNo);
 	
 	/**
-	 * 문제의 해시태그 반환 : hashtagmapping테이블에서 문제 번호를 받아 반환
-	 * @param problemNo - 한 문제 번호
-	 * @return problemNo에 해당하는 HashTagDto반환 - 전체 column
-	 */
-	List<HashTagDto> selectHashTagList(int problemNo);
+	* @param categoryLargeNo - 문제의 대분류 카테고리 숫자
+	* @return CategoryLargeDto - 대분류 카테고리 : categoryNo, categoryName
+	* @Method 설명 : 문제의 대분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategoryLargeDto selectCategoryLarge(int categoryLargeNo);
 	
 	/**
-	 * 해시태그번호로 문제 검색
-	 * @param hashTagNo - 한 해시태그 번호
-	 * @return hashTag에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */ 
-	List<ProblemDto> selectProblemByHashTag(int hashTagNo);
+	* @param problemNo
+	* @return List<HashTagDto> - 해시태그 리스트 : hashTagNo, hashTag
+	* @Method 설명 : 문제의 해시태그리스트를 반환
+	* @변경이력 :
+	*/
+	public List<HashTagDto> selectHashTagList(int problemNo);
 	
 	/**
-	 * 소분류 카테고리를 이용한 문제 검색
-	 * @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
-	 * @return categorySmallNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */ 
-	List<ProblemDto> selectProblemByCategorySmall(String categoryNo);
+	* @param hashTagNo - 해시태그 번호
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid 
+	* @Method 설명 : 해시태그번호로 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByHashTag(int hashTagNo);
 	
 	/**
-	 * 중분류 카테고리를 이용한 문제 검색
-	 * @param categoryMediumNo - 문제의 대,중분류 카테고리 숫자
-	 * @return categoryMediumNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */
-	List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo);
+	* @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 소분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategorySmall(String categoryNo);
 	
 	/**
-	 * 대분류 카테고리를 이용한 문제 검색
-	 * @param categoryLargeNo - 문제의 대분류 카테고리 숫자
-	 * @return categoryLargeNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */
-	List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo);
+	* @param categoryLargeMediumNo - 문제의 대,중분류 카테고리 숫자
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 중분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo);
 	
 	/**
-	 * 문제이름(일부)으로 검색
-	 * @param title - 문제이름의 일부
-	 * @return title에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */ 
-	List<ProblemDto> selectProblemByName(String title);
+	* @param categoryLargeNo - 문제의 대분류 카테고리 숫자
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 대분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo);
 	
 	/**
-	 * 문제번호로 검색
-	 * @param problemNo - 문제이름의 일부
-	 * @return problemNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */
-	List<ProblemDto> selectProblemByProblemNo(int problemNo);
+	* @param title - 문제이름(일부)
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 문제이름(일부)으로 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByName(String title);
 	
 	/**
-	 * 문제 등록
-	 * @param problemDto - 문제정보
-	 * @return int : 등록된 행의 개수 반환 
-	 */ 
-	int createProblem(ProblemDto problemDto);
+	* @param problemNo - 문제번호
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 문제번호로 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByProblemNo(int problemNo);
 	
 	/**
-	 * 문제 수정
-	 * @param problemDto - 문제정보
-	 * @return int : 수정된 행의 개수 반환 
-	 */ 
-	int updateProblem(ProblemDto problemDto);
+	* @param userNickname - 유저 닉네임
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 유저닉네임으로 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByUserNickname(String nickname);
+	
+	/**
+	* @param problemDto - 문제
+	* @return int - 등록된 행의 개수 반환
+	* @Method 설명 : 문제 등록
+	* @변경이력 :
+	*/
+	public int createProblem(ProblemDto problemDto);
+	
+	/**
+	* @param hashTagDto - 해시태그
+	* @return int - 등록된 행의 개수 반환
+	* @Method 설명 : 문제와 해시태그를 연결
+	* @변경이력 :
+	*/
+	public int createHashTagMapping(int problemNo, int hashTagNo);
+	
+	/**
+	* @param problemDto - 문제
+	* @return int - 수정된 행의 개수 반환 
+	* @Method 설명 : 문제 수정
+	* @변경이력 :
+	*/
+	public int updateProblem(ProblemDto problemDto);
 	
 	// TODO : 해쉬태그관련
 	// 없는 걸 등록했다 -> 해쉬태그 생성
@@ -128,10 +155,10 @@ public interface ProblemMapper {
 	//int updateProblemHashTag(HashTagDto hashTagDto);
 	
 	/**
-	 * 문제 삭제
-	 * @param problemNo - 문제번호
-	 * @return int : 삭제된 행의 개수 반환 
-	 */ 
-	int deleteProblem(int problemNo);
-	
+	* @param problemNo - 문제
+	* @return int - 삭제된 행의 개수 
+	* @Method 설명 : 문제 삭제
+	* @변경이력 :
+	*/
+	public int deleteProblem(int problemNo);
 }
