@@ -1,5 +1,6 @@
 package com.solafy.service.problem;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,24 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	private ProblemSetMapper problemSetMapper;
 
 	@Override
-	public List<ProblemSetDto> selectAllProblemSet() {
+	public List<ProblemSetDto> selectAllProblemSet(){
 		return problemSetMapper.selectAllProblemSet();
 	}
 
 	@Override
-	public ProblemSetDto selectProblemByNo(int problemSetNo) {
+	public List<ProblemSetDto> selectProblemByWriter(String uid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ProblemSetDto> selectProblemByTitle(String title) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public ProblemSetDto selectProblemByNo(int problemSetNo){
 		return problemSetMapper.selectProblemByNo(problemSetNo);
 	}
 
@@ -36,7 +49,7 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 
 	@Override
-	public boolean updateProblemSet(ProblemSetDto problemSet) {
+	public boolean updateProblemSet(ProblemSetDto problemSet){
 		return problemSetMapper.updateProblemSet(problemSet) == 1;
 	}
 
@@ -44,5 +57,7 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	public boolean deleteProblemSet(int problemSetNo) {
 		return problemSetMapper.deleteProblemSet(problemSetNo) == 1;
 	}
+
+	
 
 }
