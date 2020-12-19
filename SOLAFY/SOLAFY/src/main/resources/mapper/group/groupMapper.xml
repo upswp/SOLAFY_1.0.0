@@ -33,7 +33,7 @@
 	where title = #{title};
  </select>
 
- <update id="updateGroup" parameterType="GropuDto" >
+ <update id="updateGroup" parameterType="GroupDto" >
  	update solafy.group 
  	set title=#{title}, type=#{type}, description=#{description}  
  	where groupNo=#{groupNo}

@@ -2,6 +2,8 @@ package com.solafy.mapper.board;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.FreeBoardDto;
 
 /**
@@ -9,7 +11,7 @@ import com.solafy.model.FreeBoardDto;
  * @author BUMSEOK SEO
  * @since 2020-12-14
  */
-
+@Mapper
 public interface FreeBoardMapper {
 	/**
 	 * 자유게시판에 게시글 등록

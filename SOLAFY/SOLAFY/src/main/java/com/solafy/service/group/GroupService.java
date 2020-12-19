@@ -17,7 +17,15 @@ import com.solafy.model.GroupMemberDto;
 */
 public interface GroupService {
 	
+	/**
+	* @Method Name : createGroup
+	* @작성일 : 2020. 12. 19
+	* @작성자 : Yun Kihyeon
+	* @Method 설명 :ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
+	* @변경이력 :
+	*/
 	boolean createGroup(GroupDto group)throws Exception;
+
 	boolean createApplyGroupSignUp(GroupMemberDto groupMember)throws Exception;
 	boolean createGroupInvitation(GroupMemberDto groupMember)throws Exception;
 	
