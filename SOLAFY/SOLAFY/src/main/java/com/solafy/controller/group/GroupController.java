@@ -91,16 +91,16 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
+
+	//TODO : Message를 통해 초대 회원에게 메세지 전송
+	
 	/**
-	* @Method Name : createGroupInvitation
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
 	* @param groupMember
 	* @return
-	* @Method 설명 :그룹 초대에서 DB에 등록한다.
+	* @throws Exception
+	* @Method 설명 :
 	* @변경이력 :
 	*/
-	//TODO : Message를 통해 초대 회원에게 메세지 전송
 	@ApiOperation(value = "그룹에 회원을 초대한다.", response = String.class)
 	@PutMapping(value="/createGroupInvitation")
 	public ResponseEntity<String> createGroupInvitation(@RequestBody GroupMemberDto groupMember)throws Exception{
@@ -237,16 +237,7 @@ public class GroupController {
 	}
 	
 
-	/**
-	* @Method Name : updateGroupInvitationConfirm
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
-	* @param groupMember
-	* @return
-	* @throws Exception
-	* @Method 설명 :
-	* @변경이력 :
-	*/
+
 	@ApiOperation(value = "회원이 그룹 초대를 수락한다.", response = String.class)
 	@PutMapping(value="/updateGroupInvitationConfirm")
 	public ResponseEntity<String> updateGroupInvitationConfirm(@RequestBody GroupMemberDto groupMember)throws Exception{
