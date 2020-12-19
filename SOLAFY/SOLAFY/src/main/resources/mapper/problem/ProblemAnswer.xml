@@ -20,7 +20,7 @@
 	</select>
 	
 	<!-- 문제 정답 등록 -->
-	<insert id="insertProblemAnswer" parameterType="ProblemAnswerDto">
+	<insert id="createProblemAnswer" parameterType="ProblemAnswerDto">
 		insert into problemanswer (answer, solution, keyword)
 		values(#{answer}, #{solution}, #{keyword})
 	</insert>

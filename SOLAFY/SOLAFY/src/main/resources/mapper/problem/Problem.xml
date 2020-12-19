@@ -56,20 +56,6 @@
 		where m.hashTagNo = #{hashTagNo}
 	</select>
 	
-	<!-- 문제이름(일부)으로 검색 -->
-	<select id="selectProblemByName" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where title like concat('%', #{title}, '%')
-	</select>
-	
-	<!-- 문제번호로 검색 -->
-	<select id="selectProblemByProblemNo" parameterType="int" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where problemNo = #{problemNo}
-	</select>
-	
 	<!-- 소분류 카테고리를 이용한 문제 검색 -->
 	<select id="selectProblemByCategorySmall" parameterType="String" resultType="ProblemDto">
 		select problemNo, title, uid
@@ -91,8 +77,30 @@
 		where categoryNo like concat(#{categoryLargeNo, '%')
 	</select>
 	
+	<!-- 문제이름(일부)으로 검색 -->
+	<select id="selectProblemByName" parameterType="String" resultType="ProblemDto">
+		select problemNo, title, uid
+		from problem
+		where title like concat('%', #{title}, '%')
+	</select>
+	
+	<!-- 문제번호로 검색 -->
+	<select id="selectProblemByProblemNo" parameterType="int" resultType="ProblemDto">
+		select problemNo, title, uid
+		from problem
+		where problemNo = #{problemNo}
+	</select>
+	
+	<!-- 유저닉네임으로 검색 -->
+	<select id="selectProblemByUserNickname" parameterType="int" resultType="ProblemDto">
+		select p.problemNo, p.title, p.uid
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where u.nickname = #{nickname}
+	</select>
+	
 	<!-- 문제 등록 -->
-	<insert id="createProblem" parameterType="problemDto">
+	<insert id="createProblem" parameterType="ProblemDto">
 		insert into problem (multipleChoice, title, uid, contents, categorySmallNo, type)
 		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categorySmallNo},#{type})
 	</insert>
