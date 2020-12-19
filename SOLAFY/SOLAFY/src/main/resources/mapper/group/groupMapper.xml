@@ -40,23 +40,34 @@
  </update>
  
  <update id="updatePermissionOfMember" parameterType="GroupMemberDto">
- 
+ 	update groupmember 
+ 	set grade=#{grade} 
+ 	where uid=#{uid}
  </update>
  <update id="updateGroupApplyConfirm" parameterType="GroupMemberDto">
- 
+ 	update groupmember 
+ 	set grade=#{grade}
+ 	where uid=#{uid}
  </update>
  <update id="updateGroupInvitationConfirm" parameterType="GroupMemberDto">
- 
+ 	update groupmember 
+ 	set grade=#{grade} 
+ 	where uid=#{uid}
  </update>
  
  <delete id="deleteGroup" parameterType="int">
- 
+ 	delete group
+ 	where groupNo=#{groupNo}
  </delete>
- <delete id="deleteGroupMember" parameterType="String">
  
+ 
+ <delete id="deleteGroupMember" parameterType="String">
+ 	delete groupmember
+ 	where uid=#{uid}
  </delete>
  <delete id="deleteGroupMemberself" parameterType="String">
- 
+ 	delete groupmember
+ 	where uid=#{uid}
  </delete>
 
 </mapper>
