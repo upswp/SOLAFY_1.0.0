@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solafy.mapper.problem.HashTagMapper">
+	<!--
+	@FileName : HashTag.xml
+	@Project : SOLAFY
+	@Date : 2020. 12. 20.
+	@작성자 : Lee Ayoung
+	
+	@변경이력 :
+	@프로그램 설명 : HashTag SQL 
+	-->
+	
+	<!-- 해시태그 정보반환 -->
+	<select id="selectHashTagNoByHashTag" parameterType="String" resultType="HashTagDto">
+		select hashTagNo, hashTag
+		from hashtag
+		where hashTag = #{hashTag}
+	</select>
+	
+	<!-- 해시태그 등록 -->
+	<insert id="createHashTag" parameterType="String">
+		insert into hashtag (hashTag)
+		values(#{hashTag})
+	</insert>
+</mapper>
