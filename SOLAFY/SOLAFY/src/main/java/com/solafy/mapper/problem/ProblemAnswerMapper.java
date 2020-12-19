@@ -1,13 +1,19 @@
 package com.solafy.mapper.problem;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.ProblemAnswerDto;
 
 /**
- * ProblemAnswerMapper
- * @author Lee AYoung
- * @since 2020-12-13
- */
+* @FileName : ProblemAnswerMapper.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 13.
+* @작성자 : Lee Ayoung
 
+* @변경이력 :
+* @프로그램 설명 : Problem Answer Mapper
+*/
+@Mapper
 public interface ProblemAnswerMapper {
 	/**
 	 * 문제 정답 반환
@@ -22,7 +28,7 @@ public interface ProblemAnswerMapper {
 	 * @return int : 등록된 행의 개수 반환
 	 */
 	int insertProblemAnswer(ProblemAnswerDto problemAnswerDto);
-
+	
 	/**
 	 * 문제 정답 수정
 	 * @param problemAnswerDto - 한 문제의 정답

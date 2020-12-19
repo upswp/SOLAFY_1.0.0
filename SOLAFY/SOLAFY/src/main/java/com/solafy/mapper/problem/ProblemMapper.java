@@ -2,6 +2,8 @@ package com.solafy.mapper.problem;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.CategoryLargeDto;
 import com.solafy.model.CategoryMediumDto;
 import com.solafy.model.CategorySmallDto;
@@ -9,11 +11,16 @@ import com.solafy.model.HashTagDto;
 import com.solafy.model.ProblemDto;
 
 /**
- * ProblemMapper
- * @author Lee AYoung
- * @since 2020-12-13
- */
+* @FileName : ProblemMapper.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 13.
+* @작성자 : Lee Ayoung
 
+* @변경이력 :
+* @프로그램 설명 : Problem Mapper
+*/
+
+@Mapper
 public interface ProblemMapper {
 	/**
 	 * 문제의 정보 반환(상세보기 용)
@@ -27,6 +34,7 @@ public interface ProblemMapper {
 	 * @param categorySmallNo - 문제의 소분류 카테고리 숫자
 	 * @return categorySmallNo에 해당하는 CategorySmallDto반환 - 전체 column
 	 */
+	
 	CategorySmallDto selectCategorySmall(int categorySmallNo);
 	
 	/**
@@ -48,7 +56,7 @@ public interface ProblemMapper {
 	 * @param problemNo - 한 문제 번호
 	 * @return problemNo에 해당하는 HashTagDto반환 - 전체 column
 	 */
-	List<HashTagDto> selectHashtagList(int problemNo);
+	List<HashTagDto> selectHashTagList(int problemNo);
 	
 	/**
 	 * 해시태그번호로 문제 검색
@@ -56,7 +64,28 @@ public interface ProblemMapper {
 	 * @return hashTag에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
 	 */ 
 	List<ProblemDto> selectProblemByHashTag(int hashTagNo);
-	 
+	
+	/**
+	 * 소분류 카테고리를 이용한 문제 검색
+	 * @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
+	 * @return categorySmallNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 */ 
+	List<ProblemDto> selectProblemByCategorySmall(String categoryNo);
+	
+	/**
+	 * 중분류 카테고리를 이용한 문제 검색
+	 * @param categoryMediumNo - 문제의 대,중분류 카테고리 숫자
+	 * @return categoryMediumNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 */
+	List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo);
+	
+	/**
+	 * 대분류 카테고리를 이용한 문제 검색
+	 * @param categoryLargeNo - 문제의 대분류 카테고리 숫자
+	 * @return categoryLargeNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 */
+	List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo);
+	
 	/**
 	 * 문제이름(일부)으로 검색
 	 * @param title - 문제이름의 일부
@@ -64,35 +93,19 @@ public interface ProblemMapper {
 	 */ 
 	List<ProblemDto> selectProblemByName(String title);
 	
-	// MEMO :카테고리 관련 mapper를 따로 뺄까?
-	
 	/**
-	 * 소분류 카테고리를 이용한 문제 검색
-	 * @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
-	 * @return categorySmallNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */ 
-	List<ProblemDto> selectProblemByCategorySmall(int categoryNo);
-	
-	/**
-	 * 중분류 카테고리를 이용한 문제 검색
-	 * @param categoryMediumNo - 문제의 대,중분류 카테고리 숫자
-	 * @return categoryMediumNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
+	 * 문제번호로 검색
+	 * @param problemNo - 문제이름의 일부
+	 * @return problemNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
 	 */
-	List<ProblemDto> selectProblemByCategoryMedium(int categoryLargeMediumNo);
-	
-	/**
-	 * 대분류 카테고리를 이용한 문제 검색
-	 * @param categoryLargeNo - 문제의 대분류 카테고리 숫자
-	 * @return categoryLargeNo에 해당하는 ProblemDto의 List 반환 - problemNo, title, uid, starScore
-	 */
-	List<ProblemDto> selectProblemByCategoryLarge(int categoryLargeNo);
+	List<ProblemDto> selectProblemByProblemNo(int problemNo);
 	
 	/**
 	 * 문제 등록
 	 * @param problemDto - 문제정보
 	 * @return int : 등록된 행의 개수 반환 
 	 */ 
-	int insertProblem(ProblemDto problemDto);
+	int createProblem(ProblemDto problemDto);
 	
 	/**
 	 * 문제 수정
@@ -101,10 +114,24 @@ public interface ProblemMapper {
 	 */ 
 	int updateProblem(ProblemDto problemDto);
 	
+	// TODO : 해쉬태그관련
+	// 없는 걸 등록했다 -> 해쉬태그 생성
+	// 있는 걸 등록했다 -> mappingtable연결
+	// 이미 등록 되어있는 해쉬태그를 없앤다 -> mappingtable삭제
+	
+	/**
+	 * 문제의 해시태그 수정
+	 * 
+	 * @param hashTagDto - 문제에 등록되는 해쉬 태그
+	 * @return int : 수정된 행의 개수 반환 
+	 */
+	//int updateProblemHashTag(HashTagDto hashTagDto);
+	
 	/**
 	 * 문제 삭제
 	 * @param problemNo - 문제번호
 	 * @return int : 삭제된 행의 개수 반환 
 	 */ 
 	int deleteProblem(int problemNo);
+	
 }
