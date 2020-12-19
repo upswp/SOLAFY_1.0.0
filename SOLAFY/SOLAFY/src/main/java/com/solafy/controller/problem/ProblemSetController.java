@@ -1,4 +1,4 @@
-package com.solafy.controller.problem;
+ package com.solafy.controller.problem;
 
 import java.util.List;
 
@@ -56,10 +56,11 @@ public class ProblemSetController {
 	 * 지정한 문제집 No에 따른 문제집 정보 반환
 	 * @param problemSetNo 지정한 문제집 번호
 	 * @return
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "문제집번호에 해당하는 문제집 정보를 반환한다.", response = ProblemSetDto.class)
 	@GetMapping("/problemSetSelect/{problemSetNo}")
-	public ResponseEntity<ProblemSetDto> selectProblemByNo(@PathVariable int problemSetNo){
+	public ResponseEntity<ProblemSetDto> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("selectProblemByNo -- 호출");
 		return new ResponseEntity<ProblemSetDto> (problemsetService.selectProblemByNo(problemSetNo), HttpStatus.OK);
 	}
@@ -68,10 +69,11 @@ public class ProblemSetController {
 	 * 새롭게 생성하고자 하는 문제집 등록
 	 * @param problemSet 새롭게 만들고자 하는 문제집 번호
 	 * @return
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "새로운 문제집 정보를 입력한다. 그리고 DB 입력 성공 여부에 따라 'success' 또는 'fail' 반환한다.")
 	@PostMapping("/createProblemSet")
-	public ResponseEntity<String> createProblemSet(@RequestBody ProblemSetDto problemSet){
+	public ResponseEntity<String> createProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
 		logger.debug("createProblemSet -- 호출");
 		if (problemsetService.createProblemSet(problemSet)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -84,10 +86,11 @@ public class ProblemSetController {
 	 * 수정하고자 하는 문제집 수정
 	 * @param problemSet 수정하고자 하는 문제집 번호
 	 * @return
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
 	@PutMapping("/updateProblemSet/{problemSetNo}")
-	public ResponseEntity<String> updateProblemSet(@RequestBody ProblemSetDto problemSet){
+	public ResponseEntity<String> updateProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
 		logger.debug("updateProblemSet -- 호출");
 		if (problemsetService.updateProblemSet(problemSet)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -100,10 +103,11 @@ public class ProblemSetController {
 	 * 삭제하고자 하는 문제집 삭제
 	 * @param problemSetNo 삭제하고자 하는 문제집 번호
 	 * @return
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
 	@DeleteMapping("/deleteProblemSet/{problemSetNo}")
-	public ResponseEntity<String> deleteProblemSet(@PathVariable int problemSetNo){
+	public ResponseEntity<String> deleteProblemSet(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("deleteProblemSet -- 호출");
 		if(problemsetService.deleteProblemSet(problemSetNo)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

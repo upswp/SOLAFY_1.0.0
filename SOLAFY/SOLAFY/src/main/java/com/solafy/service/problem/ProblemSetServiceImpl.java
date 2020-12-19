@@ -22,39 +22,37 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	private ProblemSetMapper problemSetMapper;
 
 	@Override
-	public List<ProblemSetDto> selectAllProblemSet(){
+	public List<ProblemSetDto> selectAllProblemSet() throws Exception{
 		return problemSetMapper.selectAllProblemSet();
 	}
 
 	@Override
-	public List<ProblemSetDto> selectProblemByWriter(String uid) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProblemSetDto> selectProblemByWriter(String uid) throws Exception{
+		return problemSetMapper.selectProblemByWriter(uid);
 	}
 
 	@Override
-	public List<ProblemSetDto> selectProblemByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProblemSetDto> selectProblemByTitle(String title) throws Exception {
+		return problemSetMapper.selectProblemByTitle(title);
 	}
 	
 	@Override
-	public ProblemSetDto selectProblemByNo(int problemSetNo){
+	public ProblemSetDto selectProblemByNo(int problemSetNo) throws Exception{
 		return problemSetMapper.selectProblemByNo(problemSetNo);
 	}
 
 	@Override
-	public boolean createProblemSet(ProblemSetDto problemSet) {
+	public boolean createProblemSet(ProblemSetDto problemSet) throws Exception {
 		return problemSetMapper.createProblemSet(problemSet) == 1;
 	}
 
 	@Override
-	public boolean updateProblemSet(ProblemSetDto problemSet){
+	public boolean updateProblemSet(ProblemSetDto problemSet) throws Exception{
 		return problemSetMapper.updateProblemSet(problemSet) == 1;
 	}
 
 	@Override
-	public boolean deleteProblemSet(int problemSetNo) {
+	public boolean deleteProblemSet(int problemSetNo) throws Exception {
 		return problemSetMapper.deleteProblemSet(problemSetNo) == 1;
 	}
 
