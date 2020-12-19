@@ -1,11 +1,10 @@
 package com.solafy.service.problem;
 
 import java.util.List;
+import java.util.Map;
 
-import com.solafy.model.CategoryLargeDto;
-import com.solafy.model.CategoryMediumDto;
-import com.solafy.model.CategorySmallDto;
 import com.solafy.model.HashTagDto;
+import com.solafy.model.ProblemAnswerDto;
 import com.solafy.model.ProblemDto;
 
 /**
@@ -21,127 +20,91 @@ import com.solafy.model.ProblemDto;
 public interface ProblemService {
 	
 	/**
-	* @Method Name : selectProblem
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param problemNo
-	* @return
-	* @Method 설명 : 문제 정보 반환(상세보기 용)
+	* @param problemNo - 문제 번호
+	* @return Map<String,Object> - DTO이름과 DTO : ProblemDto, CategorySmallDto, CategoryMediumDto, CategoryLargeDto, List<HashTagDto>
+	* @Method 설명 : 문제 번호에 해당하는 문제 정보를 반환(문제+해쉬태그+카테고리)(상세보기 용)
 	* @변경이력 :
 	*/
-	public ProblemDto selectProblem(int problemNo);
+	public Map<String, Object> selectProblem(int problemNo);
 	
-	/**
-	* @Method Name : selectCategorySmall
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param categoryNo
-	* @return
-	* @Method 설명 : 문제의 소분류 카테고리 반환(상세보기 용)
-	* @변경이력 :
-	*/
-	public CategorySmallDto selectCategorySmall(String categoryNo);
-	
-	/**
-	* @Method Name : selectCategoryMedium
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param categoryNo
-	* @return
-	* @Method 설명 : 문제의 중분류 카테고리 반환(상세보기 용)
-	* @변경이력 :
-	*/
-	public CategoryMediumDto selectCategoryMedium(String categoryNo);
-	
-	/**
-	* @Method Name : selectCategoryLarge
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param categoryNo
-	* @return
-	* @Method 설명 : 문제의 대분류 카테고리 반환(상세보기 용)
-	* @변경이력 :
-	*/
-	public CategoryLargeDto selectCategoryLarge(String categoryNo);
-	
-	/**
-	* @Method Name : selectHashTagList
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param problemNo
-	* @return
-	* @Method 설명 : 문제의 해시태그 반환
-	* @변경이력 :
-	*/
-	public List<HashTagDto> selectHashTagList(int problemNo);
+//	/**
+//	* @Method Name : selectCategorySmall
+//	* @작성일 : 2020. 12. 16.
+//	* @작성자 : Lee Ayoung
+//	* @param categoryNo
+//	* @return
+//	* @Method 설명 : 문제의 소분류 카테고리 반환(상세보기 용)
+//	* @변경이력 :
+//	*/
+//	public CategorySmallDto selectCategorySmall(String categoryNo);
+//	
+//	/**
+//	* @Method Name : selectCategoryMedium
+//	* @작성일 : 2020. 12. 16.
+//	* @작성자 : Lee Ayoung
+//	* @param categoryNo
+//	* @return
+//	* @Method 설명 : 문제의 중분류 카테고리 반환(상세보기 용)
+//	* @변경이력 :
+//	*/
+//	public CategoryMediumDto selectCategoryMedium(String categoryNo);
+//	
+//	/**
+//	* @Method Name : selectCategoryLarge
+//	* @작성일 : 2020. 12. 16.
+//	* @작성자 : Lee Ayoung
+//	* @param categoryNo
+//	* @return
+//	* @Method 설명 : 문제의 대분류 카테고리 반환(상세보기 용)
+//	* @변경이력 :
+//	*/
+//	public CategoryLargeDto selectCategoryLarge(String categoryNo);
+//	
+//	/**
+//	* @Method Name : selectHashTagList
+//	* @작성일 : 2020. 12. 16.
+//	* @작성자 : Lee Ayoung
+//	* @param problemNo
+//	* @return
+//	* @Method 설명 : 문제의 해시태그 반환
+//	* @변경이력 :
+//	*/
+//	public List<HashTagDto> selectHashTagList(int problemNo);
 	 
 	/**
-	* @Method Name : selectProblemByHashTag
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param hashTagNo
-	* @return
+	* @param hashTagNo - 해시태그 번호
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
 	* @Method 설명 : 해시태그번호로 문제 검색
 	* @변경이력 :
 	*/
 	public List<ProblemDto> selectProblemByHashTag(int hashTagNo);
 	
 	/**
-	* @Method Name : selectProblemByCategorySmall
-	* @작성일 : 2020. 12. 17.
-	* @작성자 : Lee Ayoung
-	* @param categoryNo
-	* @return
-	* @Method 설명 : 소분류 카테고리를 이용한 문제 검색
+	* @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 카테고리 번호(소+중+대/중+대/대)에 해당하는 문제 검색
 	* @변경이력 :
 	*/
-	public List<ProblemDto> selectProblemByCategorySmall(String categoryNo);
-
-	/**
-	* @Method Name : selectProblemByCategoryMedium
-	* @작성일 : 2020. 12. 17.
-	* @작성자 : Lee Ayoung
-	* @param categoryLargeMediumNo
-	* @return
-	* @Method 설명 : 중분류 카테고리를 이용한 문제 검색
-	* @변경이력 :
-	*/
-	public List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo);
-	 
-	/**
-	* @Method Name : selectProblemByCategoryLarge
-	* @작성일 : 2020. 12. 17.
-	* @작성자 : Lee Ayoung
-	* @param categoryLargeNo
-	* @return
-	* @Method 설명 :대분류 카테고리를 이용한 문제 검색
-	* @변경이력 :
-	*/
-	public List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo);
+	public List<ProblemDto> selectProblemByCategory(String categoryNo);
 	
-	// type, keyword로 문제 검색
 	/**
-	* @Method Name : selectProblemByKeyword
-	* @작성일 : 2020. 12. 18.
-	* @작성자 : Lee Ayoung
-	* @param type
-	* @param keyword
-	* @return
-	* @Method 설명 :
+	* @param type - 검색조건
+	* @param keyword - 검색키워드
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @Method 설명 : 검색조건과 검색키워드에 해당하는 문제 검색
 	* @변경이력 :
 	*/
 	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) ;
 	
 	/**
-	* @Method Name : createProblem
-	* @작성일 : 2020. 12. 16.
-	* @작성자 : Lee Ayoung
-	* @param problemDto
-	* @return
+	* @param problemDto - 문제 정보
+	 * @param problemAnswerDto 
+	 * @param hashTagList 
+	* @return boolean - 성공,실패 여부
 	* @Method 설명 : 문제 등록
 	* @변경이력 :
 	*/
-	public boolean createProblem(ProblemDto problemDto);
+	public boolean createProblem(ProblemDto problemDto, List<HashTagDto> hashTagList, ProblemAnswerDto problemAnswerDto);
 	
 	/**
 	* @Method Name : updateProblem
