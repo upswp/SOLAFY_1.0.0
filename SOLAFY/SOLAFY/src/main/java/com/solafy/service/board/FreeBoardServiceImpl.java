@@ -20,11 +20,11 @@ import com.solafy.model.FreeBoardDto;
 public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Autowired
-	private SqlSession sqlSession;
+	private FreeBoardMapper freeBoardMapper;
 	
 	@Override
 	public boolean createArticle(FreeBoardDto freeBoardDto) {
-		int result = sqlSession.getMapper(FreeBoardMapper.class).createArticle(freeBoardDto);
+		int result = freeBoardMapper.createArticle(freeBoardDto);
 		if(result == 1) {
 			return true;
 		}else {
@@ -34,31 +34,31 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Override
 	public List<FreeBoardDto> selectArticles() {
-		List<FreeBoardDto> list = sqlSession.getMapper(FreeBoardMapper.class).selectArticles();
+		List<FreeBoardDto> list = freeBoardMapper.selectArticles();
 		return list;
 	}
 
 	@Override
 	public FreeBoardDto selectArticleByNo(int ArticleNo) {
-		FreeBoardDto freeBoardDto = sqlSession.getMapper(FreeBoardMapper.class).selectArticleByNo(ArticleNo);
+		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByNo(ArticleNo);
 		return freeBoardDto;
 	}
 
 	@Override
 	public FreeBoardDto selectArticleByTitle(String title) {
-		FreeBoardDto freeBoardDto = sqlSession.getMapper(FreeBoardMapper.class).selectArticleByTitle(title);
+		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByTitle(title);
 		return freeBoardDto;
 	}
 
 	@Override
 	public FreeBoardDto selectArticleByUid(String uid) {
-		FreeBoardDto freeBoardDto = sqlSession.getMapper(FreeBoardMapper.class).selectArticleByUid(uid);
+		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByUid(uid);
 		return freeBoardDto;
 	}
 
 	@Override
 	public boolean updateArticle(FreeBoardDto freeBoardDto) {
-		int result = sqlSession.getMapper(FreeBoardMapper.class).updateArticle(freeBoardDto);
+		int result = freeBoardMapper.updateArticle(freeBoardDto);
 		if(result == 1) {
 			return true;
 		}
@@ -67,7 +67,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
 	@Override
 	public boolean deleteArticle(int ArticleNo) {
-		int result = sqlSession.getMapper(FreeBoardMapper.class).deleteArticle(ArticleNo);
+		int result = freeBoardMapper.deleteArticle(ArticleNo);
 		if(result == 1) {
 			return true;
 		}else{
