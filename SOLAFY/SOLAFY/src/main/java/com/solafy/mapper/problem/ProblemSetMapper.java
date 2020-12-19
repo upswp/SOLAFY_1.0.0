@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.solafy.model.ProblemDto;
 import com.solafy.model.ProblemSetDto;
 
 /**
@@ -88,16 +89,15 @@ public interface ProblemSetMapper {
 	 */
 	public int deleteProblemSet(int problemSetNo) throws SQLException;
 
-	//TODO : 반환값이 int가 맞는가?
 	/**
 	 * 
 	* @param map - Map<String, Integer> - problemSetNo, problemNo 포함
-	* @return 문제집의 리스트에 해당하는 ProblemSetDto를 가져온다.
+	* @return List<ProblemDto> problemSetNo, problemNo이 서로 맞는 List 반환
 	* @throws SQLException
-	* @Method 설명 : 문제집에서 문제들의 리스트를 조회한다.
+	* @Method 설명 :
 	* @변경이력 :
 	 */
-	public int selectProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	public List<ProblemDto> selectProblemSetMapping(Map<String, Integer> map) throws SQLException;
 
 	/**
 	 * 
