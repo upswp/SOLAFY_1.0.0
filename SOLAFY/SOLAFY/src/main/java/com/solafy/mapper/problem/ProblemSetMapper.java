@@ -12,7 +12,7 @@ import com.solafy.model.ProblemSetDto;
  * ProblemSet Mapper
  * @author Park Sangwoo
  * @since 2020-12-13 최초생성 / 문제집에 대한 CRUD 생성 
- * @sicne 문제집의 문제들에 대한 CRUD 생성
+ * @sicne 2020-12-19 문제집의 문제들에 대한 CRUD 생성
  */
 
 @Mapper
@@ -28,11 +28,27 @@ public interface ProblemSetMapper {
 	/**
 	 * 문제집 번호에 해당하는 문제집을 가져온다.
 	 * @param problemSetNo
-	 * @return
+	 * @return 
 	 * @throws SQLException
 	 */
 	public ProblemSetDto selectProblemByNo(int problemSetNo)throws SQLException;
 
+	/**
+	 * 문제집 작성자에 해당하는 문제집을 가져온다.
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ProblemSetDto> selectProblemByWriter(String uid)throws SQLException;
+	
+	/**
+	 * 검색된 키워드가 제목에 포함된 문제집을 가져온다.
+	 * @param title
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ProblemSetDto> selectProblemByTitle(String title)throws SQLException;
+	
 	/**
 	 * 문제집을 생성한다.
 	 * @param problemSet
