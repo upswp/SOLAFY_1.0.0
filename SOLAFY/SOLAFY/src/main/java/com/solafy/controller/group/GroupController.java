@@ -77,7 +77,7 @@ public class GroupController {
 	* @param groupNo
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 :그룹 가입 신청
 	* @변경이력 :
 	*/
 	//TODO : Message를 통해 그룹 관리자에게 메세지 전송
@@ -97,7 +97,7 @@ public class GroupController {
 	* @작성자 : Yun Kihyeon
 	* @param groupMember
 	* @return
-	* @Method 설명 :
+	* @Method 설명 :그룹 초대에서 DB에 등록한다.
 	* @변경이력 :
 	*/
 	//TODO : Message를 통해 초대 회원에게 메세지 전송
@@ -123,7 +123,7 @@ public class GroupController {
 	* @작성자 : Yun Kihyeon
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "전체 그룹 리스트 정보를 받아온다.", response = List.class)
