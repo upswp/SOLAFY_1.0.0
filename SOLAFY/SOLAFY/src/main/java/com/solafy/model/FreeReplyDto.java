@@ -1,14 +1,14 @@
 package com.solafy.model;
 
 /**
- * ReplyByFreeDto
+ * FreeReplyDto
  * 자유게시판 댓글 DTO
  * @author BUMSEOK SEO
  * @since 2020-12-14
  * 
  */
 
-public class ReplyByFreeDto {
+public class FreeReplyDto {
 
 	private int replyNo;
 	private int articleNo;
@@ -16,10 +16,10 @@ public class ReplyByFreeDto {
 	private String uid;
 	private String regiTime;
 
-	public ReplyByFreeDto() {
+	public FreeReplyDto() {
 	}
 
-	public ReplyByFreeDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
+	public FreeReplyDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
 		super();
 		this.replyNo = replyNo;
 		this.articleNo = articleNo;
@@ -70,7 +70,7 @@ public class ReplyByFreeDto {
 
 	@Override
 	public String toString() {
-		return "ReplyByFreeDto [replyNo=" + replyNo + ", articleNo=" + articleNo + ", contents=" + contents + ", uid="
+		return "FreeReplyDto [replyNo=" + replyNo + ", articleNo=" + articleNo + ", contents=" + contents + ", uid="
 				+ uid + ", regiTime=" + regiTime + "]";
 	}
 
