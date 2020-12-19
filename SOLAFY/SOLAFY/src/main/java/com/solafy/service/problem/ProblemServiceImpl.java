@@ -3,6 +3,7 @@ package com.solafy.service.problem;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.solafy.mapper.problem.ProblemMapper;
 import com.solafy.model.CategoryLargeDto;
@@ -12,10 +13,15 @@ import com.solafy.model.HashTagDto;
 import com.solafy.model.ProblemDto;
 
 /**
- * ProblemService
- * @author Lee AYoung
- * @since 2020-12-16
- */
+* @FileName : ProblemServiceImpl.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 16.
+* @작성자 : Lee Ayoung
+
+* @변경이력 :
+* @프로그램 설명 : Problem Service Implement Class
+*/
+@Service
 public class ProblemServiceImpl implements ProblemService {
 
 	@Autowired
@@ -27,74 +33,78 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
-	public CategorySmallDto selectCategorySmall(int categorySmallNo) {
+	public CategorySmallDto selectCategorySmall(String categoryNo) {
+		int categorySmallNo = Integer.parseInt(categoryNo.substring(5, 10));
 		return problemMapper.selectCategorySmall(categorySmallNo);
 	}
 
 	@Override
-	public CategoryMediumDto selectCategoryMedium(int categoryMediumNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public CategoryMediumDto selectCategoryMedium(String categoryNo) {
+		int categoryMediumNo = Integer.parseInt(categoryNo.substring(2, 5));
+		return problemMapper.selectCategoryMedium(categoryMediumNo);
 	}
 
 	@Override
-	public CategoryLargeDto selectCategoryLarge(int categoryLargeNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public CategoryLargeDto selectCategoryLarge(String categoryNo) {
+		int categoryLargeNo = Integer.parseInt(categoryNo.substring(0, 2));
+		return problemMapper.selectCategoryLarge(categoryLargeNo);
 	}
 
 	@Override
-	public List<HashTagDto> selectHashtagList(int problemNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<HashTagDto> selectHashTagList(int problemNo) {
+		return problemMapper.selectHashTagList(problemNo);
 	}
-
+	
 	@Override
 	public List<ProblemDto> selectProblemByHashTag(int hashTagNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return problemMapper.selectProblemByHashTag(hashTagNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByName(String title) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProblemDto> selectProblemByCategorySmall(String categoryNo) {
+		return problemMapper.selectProblemByCategorySmall(categoryNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByCategorySmall(int categoryNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo) {
+		return problemMapper.selectProblemByCategoryMedium(categoryLargeMediumNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByCategoryMedium(int categoryLargeMediumNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo) {
+		return problemMapper.selectProblemByCategoryLarge(categoryLargeNo);
+	}
+	
+	@Override
+	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) {
+		List<ProblemDto> list;
+		if("제목".contains(type)) {
+			list = problemMapper.selectProblemByName(keyword);
+		}
+		else if("문제번호".contains(type)) {
+			list = problemMapper.selectProblemByProblemNo(Integer.parseInt(keyword));
+		}
+		else {
+			list = null;
+		}
+		return list;
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByCategoryLarge(int categoryLargeNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean createProblem(ProblemDto problemDto) {
+		return problemMapper.createProblem(problemDto) > 0;
 	}
 
 	@Override
-	public int insertProblem(ProblemDto problemDto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean updateProblem(ProblemDto problemDto) {
+		return problemMapper.updateProblem(problemDto) > 0;
 	}
+
+	// TODO : 문제 삭제했을 때 다른것도 삭제되도록 불러와야할거 같음
+	// ex)모의고사, 대회, 문제집 ...
 
 	@Override
-	public int updateProblem(ProblemDto problemDto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean deleteProblem(int problemNo) {
+		return problemMapper.deleteProblem(problemNo) > 0;
 	}
-
-	@Override
-	public int deleteProblem(int problemNo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

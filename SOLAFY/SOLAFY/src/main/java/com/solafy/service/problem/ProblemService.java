@@ -9,47 +9,159 @@ import com.solafy.model.HashTagDto;
 import com.solafy.model.ProblemDto;
 
 /**
- * ProblemService
- * @author Lee AYoung
- * @since 2020-12-16
- */
+* @FileName : ProblemService.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 16.
+* @작성자 : Lee Ayoung
+
+* @변경이력 :
+* @프로그램 설명 : Problem Service Interface
+*/
+
 public interface ProblemService {
-	// 문제의 정보 반환(상세보기 용)
+	
+	/**
+	* @Method Name : selectProblem
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param problemNo
+	* @return
+	* @Method 설명 : 문제 정보 반환(상세보기 용)
+	* @변경이력 :
+	*/
 	public ProblemDto selectProblem(int problemNo);
 	
-	// 문제의 소분류 카테고리 반환(상세보기 용)
-	public CategorySmallDto selectCategorySmall(int categorySmallNo);
+	/**
+	* @Method Name : selectCategorySmall
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param categoryNo
+	* @return
+	* @Method 설명 : 문제의 소분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategorySmallDto selectCategorySmall(String categoryNo);
 	
-	// 문제의 중분류 카테고리 반환(상세보기 용)
-	public CategoryMediumDto selectCategoryMedium(int categoryMediumNo);
+	/**
+	* @Method Name : selectCategoryMedium
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param categoryNo
+	* @return
+	* @Method 설명 : 문제의 중분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategoryMediumDto selectCategoryMedium(String categoryNo);
 	
-	// 문제의 대분류 카테고리 반환(상세보기 용)
-	public CategoryLargeDto selectCategoryLarge(int categoryLargeNo);
+	/**
+	* @Method Name : selectCategoryLarge
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param categoryNo
+	* @return
+	* @Method 설명 : 문제의 대분류 카테고리 반환(상세보기 용)
+	* @변경이력 :
+	*/
+	public CategoryLargeDto selectCategoryLarge(String categoryNo);
 	
-	// 문제의 해시태그 반환
-	public List<HashTagDto> selectHashtagList(int problemNo);
-	
-	// 해시태그번호로 문제 검색
+	/**
+	* @Method Name : selectHashTagList
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param problemNo
+	* @return
+	* @Method 설명 : 문제의 해시태그 반환
+	* @변경이력 :
+	*/
+	public List<HashTagDto> selectHashTagList(int problemNo);
+	 
+	/**
+	* @Method Name : selectProblemByHashTag
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param hashTagNo
+	* @return
+	* @Method 설명 : 해시태그번호로 문제 검색
+	* @변경이력 :
+	*/
 	public List<ProblemDto> selectProblemByHashTag(int hashTagNo);
 	
-	// 문제이름(일부)으로 검색
-	public List<ProblemDto> selectProblemByName(String title);
+	/**
+	* @Method Name : selectProblemByCategorySmall
+	* @작성일 : 2020. 12. 17.
+	* @작성자 : Lee Ayoung
+	* @param categoryNo
+	* @return
+	* @Method 설명 : 소분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategorySmall(String categoryNo);
+
+	/**
+	* @Method Name : selectProblemByCategoryMedium
+	* @작성일 : 2020. 12. 17.
+	* @작성자 : Lee Ayoung
+	* @param categoryLargeMediumNo
+	* @return
+	* @Method 설명 : 중분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategoryMedium(String categoryLargeMediumNo);
+	 
+	/**
+	* @Method Name : selectProblemByCategoryLarge
+	* @작성일 : 2020. 12. 17.
+	* @작성자 : Lee Ayoung
+	* @param categoryLargeNo
+	* @return
+	* @Method 설명 :대분류 카테고리를 이용한 문제 검색
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByCategoryLarge(String categoryLargeNo);
 	
-	// 소분류 카테고리를 이용한 문제 검색
-	public List<ProblemDto> selectProblemByCategorySmall(int categoryNo);
+	// type, keyword로 문제 검색
+	/**
+	* @Method Name : selectProblemByKeyword
+	* @작성일 : 2020. 12. 18.
+	* @작성자 : Lee Ayoung
+	* @param type
+	* @param keyword
+	* @return
+	* @Method 설명 :
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) ;
 	
-	// 중분류 카테고리를 이용한 문제 검색
-	public List<ProblemDto> selectProblemByCategoryMedium(int categoryLargeMediumNo);
+	/**
+	* @Method Name : createProblem
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param problemDto
+	* @return
+	* @Method 설명 : 문제 등록
+	* @변경이력 :
+	*/
+	public boolean createProblem(ProblemDto problemDto);
 	
-	// 대분류 카테고리를 이용한 문제 검색
-	public List<ProblemDto> selectProblemByCategoryLarge(int categoryLargeNo);
+	/**
+	* @Method Name : updateProblem
+	* @작성일 : 2020. 12. 16.
+	* @작성자 : Lee Ayoung
+	* @param problemDto
+	* @return
+	* @Method 설명 : 문제 수정
+	* @변경이력 :
+	*/
+	public boolean updateProblem(ProblemDto problemDto);
 	
-	// 문제 등록
-	public int insertProblem(ProblemDto problemDto);
-	
-	// 문제 수정
-	public int updateProblem(ProblemDto problemDto);
-	
-	// 문제 삭제
-	public int deleteProblem(int problemNo);
+	/**
+	* @Method Name : deleteProblem
+	* @작성일 : 2020. 12. 19.
+	* @작성자 : Lee Ayoung
+	* @param problemNo
+	* @return
+	* @Method 설명 : 문제 삭제
+	* @변경이력 :
+	*/
+	public boolean deleteProblem(int problemNo);
 }
