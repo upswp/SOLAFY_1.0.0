@@ -9,49 +9,76 @@
 	
 	<!-- 전체 문제집 리스트 호출 -->
 	<select id="selectAllProblemSet" resultType="problemSetDto">
-		select problemSetNo, uid, title, regiTime
-		from problemset
-		order by problemSetNo
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		ORDER BY problemSetNo
 	</select>
 	
 	<!-- problemNo에 따른 문제집 호출 -->
 	<select id="selectProblemByNo" resultType="problemSetDto">
-		select problemSetNo, uid, title, regiTime
-		from problemset
-		where problemSetNo = #{problemSetNo}
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		WHERE problemSetNo = #{problemSetNo}
 	</select>
+	
+	<!-- 문제집 작성자에 따른 문제집 리스트 반환 -->
+	<!-- 작성자 uid로 검색하게 할것인가? -->
+	<select id="selectProblemByWriter" resultType="problemSetDto">
+		SELECT p.problemSetNo, p.uid, p.title, p.regiTime
+		FROM problem p join usernickname u
+		ON p.uid = u.uid
+		WHERE u.nickname = #{nickname}
+		ORDER BY problemSetNo
+	</select>
+	
+	<!-- 문제집 제목 키워드 포함여부에 따른 문제집 리스트 반환 -->
+	<select id="selectProblemByTitle" resultType="problemSetDto">
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		WHERE title LIKE concat('%', #{title}, '%')
+		ORDER BY problemSetNo		
+	</select>
+	
 	
 	<!-- 문제집 생성 -->
 	<insert id="createProblemSet" parameterType="problemSetDto">
-		insert into problemset (
+		INSERT INTO problemset (
 								problemSetNo, uid, title, regiTime
 								)
-		values(
+		VALUES(
 				#{problemSetNo}, #{uid}, #{title}, now()
 			  )
 	</insert>
 	
 	<!-- 문제집 업데이트 -->
 	<update id="updateProblemSet" parameterType="problemSetDto">
-		update problemset
+		UPDATE problemset
 			set title = #{title},
-		where problemSetNo = #{problemSetNo}	
+		WHERE problemSetNo = #{problemSetNo}	
 	</update>
 	
 	<!-- 문제집 삭제 -->
 	<delete id="deleteProblemSet" parameterType="int">
-		delete
-		from problemset
-		where problemSetNo = #{problemSetNo}
+		DELETE
+		FROM problemset
+		WHERE problemSetNo = #{problemSetNo}
 	</delete>
 	
 	<!-- 문제집에 해당하는 문제 리스트 불러오기 -->
 	<select id="selectProblemSetMapping" parameterType="int" resultType="ProblemDto">
-		select p.problemNo,p.title
-		from problemsetmapping m join problem p
-		on m.problemNo = p.problemNo
-		where m.problemSetNo = #{problemSetNo}
+		SELECT p.problemNo,p.title
+		FROM problemsetmapping m join problem p
+		ON m.problemNo = p.problemNo
+		WHERE m.problemSetNo = #{problemSetNo}
 	</select>
 
-
+	<insert id="createProblemSetMapping" parameterType="map">
+		INSERT INTO problemsetmapping 	(problemSetNo, problemNo)
+		VALUES							(#{problemSetNo},#{problemNo})
+	</insert>
+	
+	<delete id="deleteProblemSetMapping" parameterType="int">
+		DELETE FROM problemsetmapping
+		WHERE		problemSetNo = #{problemSetNo}
+	</delete>
 </mapper>
