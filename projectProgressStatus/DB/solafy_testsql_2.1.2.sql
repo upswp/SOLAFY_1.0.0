@@ -7,7 +7,7 @@ INSERT INTO categorymedium (categoryName)
 VALUES('HTML'),('Pattern'),('Java'),('그래프탐색');
 
 -- categorysmall Table
-INSERT INTO categorsmall (categoryName)
+INSERT INTO categorysmall (categoryName)
 VALUES('tag'),('MVC'),('이론'),('그래프'),('입출력');
 
 
