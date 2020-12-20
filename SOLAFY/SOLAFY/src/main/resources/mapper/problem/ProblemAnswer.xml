@@ -21,8 +21,8 @@
 	
 	<!-- 문제 정답 등록 -->
 	<insert id="createProblemAnswer" parameterType="ProblemAnswerDto">
-		insert into problemanswer (answer, solution, keyword)
-		values(#{answer}, #{solution}, #{keyword})
+		insert into problemanswer (problemNo, answer, solution, keyword)
+		values(#{problemNo}, #{answer}, #{solution}, #{keyword})
 	</insert>
 	
 	<!-- 문제 정답 수정 -->

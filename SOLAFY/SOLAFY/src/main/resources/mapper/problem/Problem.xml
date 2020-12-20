@@ -11,10 +11,12 @@
 	@변경이력 :
 	@프로그램 설명 : Problem SQL 
 	-->
+	<!-- TODO: uid 대신 닉네임 나오게 바꾸기 -->
+	
 	
 	<!-- 문제의 정보 반환(상세보기 용) -->
 	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
-		select problemNo, multipleChoice, title, uid, contents, categorySmallNo, type  
+		select problemNo, multipleChoice, title, uid, contents, categoryNo, type  
 		from problem
 		where problemNo = #{problemNo}
 	</select>
@@ -74,7 +76,7 @@
 	<select id="selectProblemByCategoryLarge" parameterType="String" resultType="ProblemDto">
 		select problemNo, title, uid
 		from problem
-		where categoryNo like concat(#{categoryLargeNo, '%')
+		where categoryNo like concat(#{categoryLargeNo}, '%')
 	</select>
 	
 	<!-- 문제이름(일부)으로 검색 -->
@@ -100,22 +102,22 @@
 	</select>
 	
 	<!-- 문제 등록 -->
-	<insert id="createProblem" parameterType="ProblemDto">
-		insert into problem (multipleChoice, title, uid, contents, categorySmallNo, type)
-		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categorySmallNo},#{type})
+	<!-- useGeneratedKeys="true" keyProperty="값을 받아올컬럼명"을 써주면 insert문 실행 후 ProblemDto의 해당 컬럼에 값을 넣어준다 -->
+	<insert id="createProblem" parameterType="ProblemDto" useGeneratedKeys="true" keyProperty="problemNo">
+		insert into problem (multipleChoice, title, uid, contents, categoryNo, type)
+		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categoryNo},#{type})
+	</insert>
+	
+	<!-- 문제와 해시태그를 연결 -->
+	<insert id="createHashTagMapping" parameterType="int">
+		insert into hashtagmapping (problemNo,hashTagNo)
+		values(#{problemNo}, #{hashTagNo})
 	</insert>
 	
 	<!-- 문제 수정 -->
 	<update id="updateProblem" parameterType="ProblemDto">
 		update problem
-		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categorySmallNo=#{categorySmallNo},type=#{type}
-		where problemNo = #{problemNo}	
-	</update>
-	
-	<!-- 문제의 해시태그 수정 -->
-	<update id="updateProblemHashTag" parameterType="ProblemDto">
-		update problem
-		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categorySmallNo=#{categorySmallNo},type=#{type}
+		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categoryNo=#{categoryNo},type=#{type}
 		where problemNo = #{problemNo}	
 	</update>
 	
