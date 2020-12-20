@@ -8,17 +8,17 @@ package com.solafy.model;
  *
  */
 
-public class ReplyByAnswerModifyDto {
+public class AnswerModifyReplyDto {
 	private int replyNo;
 	private int articleNo;
 	private String contents;
 	private String uid;
 	private String regiTime;
 
-	public ReplyByAnswerModifyDto() {
+	public AnswerModifyReplyDto() {
 	}
 
-	public ReplyByAnswerModifyDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
+	public AnswerModifyReplyDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
 		super();
 		this.replyNo = replyNo;
 		this.articleNo = articleNo;
