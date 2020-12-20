@@ -53,7 +53,7 @@ public class ProblemSetController {
 	* @변경이력 :
 	 */
 	@ApiOperation(value = "모든 문제집의 정보를 반환한다.", response = List.class)
-	@GetMapping("/problemSetSelect")
+	@GetMapping(value = "/problemSetSelect")
 	public ResponseEntity<List<ProblemSetDto>> selectAllProblemSet() throws Exception{
 		logger.debug("selectAllProblemSet -- 호출");
 		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectAllProblemSet(), HttpStatus.OK);
@@ -67,8 +67,8 @@ public class ProblemSetController {
 	* @Method 설명 : 지정한 문제집 No에 따른 문제집 정보 반환
 	* @변경이력 :
 	 */
-	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 반환한다.", response = ProblemSetDto.class)
-	@GetMapping("/problemSetSelect/{problemSetNo}")
+	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 반환한다.")
+	@GetMapping(value = "/problemSetSelectByNo/{problemSetNo}")
 	public ResponseEntity<Map<String,Object>> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("selectProblemByNo -- 호출");
 		return new ResponseEntity<Map<String,Object>> (problemsetService.selectProblemByNo(problemSetNo), HttpStatus.OK);
@@ -83,7 +83,7 @@ public class ProblemSetController {
 	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 작성자에 해당하는 문제집 정보를 반환한다.",response = List.class)
-	@GetMapping("/problemSetSelect/{uid}")
+	@GetMapping(value = "/problemSetSelectByWriter/{uid}")
 	public ResponseEntity<List<ProblemSetDto>> selectProblemByWriter(@PathVariable String uid) throws Exception{
 		logger.debug("selectProblemByWriter -- 호출");
 		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByWriter(uid), HttpStatus.OK);
@@ -98,7 +98,7 @@ public class ProblemSetController {
 	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 제목 키워드에 해당하는 문제집 정보를 반환한다.",response = List.class)
-	@GetMapping("/problemSetSelect/{title}")
+	@GetMapping(value = "/problemSetSelectByTitle/{title}")
 	public ResponseEntity<List<ProblemSetDto>> selectProblemByTitle(@PathVariable String title) throws Exception{
 		logger.debug("selectProblemByTitle -- 호출");
 		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByTitle(title), HttpStatus.OK);
@@ -112,8 +112,8 @@ public class ProblemSetController {
 	* @Method 설명 : 새롭게 생성하고자 하는 문제집 등록
 	* @변경이력 :
 	 */
-	@ApiOperation(value = "새로운 문제집 정보를 입력한다. 그리고 DB 입력 성공 여부에 따라 'success' 또는 'fail' 반환한다.")
-	@PostMapping("/createProblemSet")
+	@ApiOperation(value = "새로운 문제집 정보를 입력한다. 그리고 DB 입력 성공 여부에 따라 'success' 또는 'fail' 반환한다." , response = String.class)
+	@PostMapping(value = "/createProblemSet")
 	public ResponseEntity<String> createProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
 		logger.debug("createProblemSet -- 호출");
 		if (problemsetService.createProblemSet(problemSet)) {
@@ -131,8 +131,8 @@ public class ProblemSetController {
 	* @Method 설명 : 수정하고자 하는 문제집 수정
 	* @변경이력 :
 	 */
-	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
-	@PutMapping("/updateProblemSet/{problemSetNo}")
+	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@PutMapping(value = "/updateProblemSet/{problemSetNo}")
 	public ResponseEntity<String> updateProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
 		logger.debug("updateProblemSet -- 호출");
 		if (problemsetService.updateProblemSet(problemSet)) {
@@ -150,8 +150,8 @@ public class ProblemSetController {
 	* @Method 설명 : 삭제하고자 하는 문제집 삭제
 	* @변경이력 :
 	 */
-	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
-	@DeleteMapping("/deleteProblemSet/{problemSetNo}")
+	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@DeleteMapping(value = "/deleteProblemSet/{problemSetNo}")
 	public ResponseEntity<String> deleteProblemSet(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("deleteProblemSet -- 호출");
 		if(problemsetService.deleteProblemSet(problemSetNo)) {
