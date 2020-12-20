@@ -51,6 +51,13 @@ public interface AnswerModifyMapper {
 	 */
 	public AnswerModifyBoardDto selectArticleByUid(String uid);
 
+	/**
+	 * 입력한 uid와 일치하는 작성자의 게시글 반환
+	 * @param uid
+	 * @return AnswerModifyBoardDto
+	 */
+	public AnswerModifyBoardDto selectArticleByProblemNo(int problemNo);
+
 	// TODO: 공지사항 검색이 필요할지? : 이후에 추가하도록 하겠습니다.
 	// public AnswerModifyBoardDto selectNotice(ArticleNo);
 
