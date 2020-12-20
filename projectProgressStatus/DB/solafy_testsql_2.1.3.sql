@@ -77,11 +77,11 @@ VALUES (7,'answer2','solution2','keyword1,keyword2,keyword5,keyword6');
 -- problemset
 INSERT INTO problemset (uid,title,flag)
 VALUES ('DFEIJC23WOSKXCNSWQ','html 문제집',1);
-INSERT INTO problemset (uid,title)
+INSERT INTO problemset (uid,title,flag)
 VALUES ('DF112C23WOSKXCNSWQ','Spring 문제집',1);
-INSERT INTO problemset (uid,title)
+INSERT INTO problemset (uid,title,flag)
 VALUES ('DFEIJNGRW2SKXCNSWQ','Java',1);
-INSERT INTO problemset (uid,title)
+INSERT INTO problemset (uid,title,flag)
 VALUES ('DFEIJHRDX8SKXCNSWQ','알고리즘',1);
 
 -- problemsetmapping
@@ -134,16 +134,16 @@ VALUES ( 1 , "당신의 답은 틀렸습니다! 그 이유는!!", "DFEIJC23WOSKX
 (4 , "당신 정말 기현스럽습니다!", "DF112C23WOSKXCNSWQ"),
 (1 , "당신 정말 아영스럽습니다!", "DF112C23WOSKXCNSWQ");
 
-INSERT INTO answermodifyboard (uid,problemNo,uid_submitter,contents)
-VALUES ("DF112C23WOSKXCNSWQ" , 1,"DF112C23WOSKXCNSWQ","당신의 답은 틀렸습니다! 그 이유는!!"),
-("DFEIJC23WOSKXCNSWQ" , 2,"DFEIJC23WOSKXCNSWQ","정말 이게 답인가요?"),
-("DF112C23WOSKXCNSWQ" , 3,"DFEIJC23WOSKXCNSWQ","당신은 이론부터 잘못됐어"),
-("DFEIJC23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","SSAFY를 나가시는게 좋을것 같습니다."),
-("DFEIJNGRW2SKXCNSWQ" , 4,"DF112C23WOSKXCNSWQ","정말 이게 답인가요? 장난이죠?"),
-("DFEIJNGRW2SKXCNSWQ" , 1,"DFEIJJHGT7SKXCNSWQ","정말 이게 답인가요? 장난이죠?"),
-("DFEIJNGRW2SKXCNSWQ" , 6,"DF112C23WOSKXCNSWQ","정말 이게 답인가요? 장난이죠?"),
-("DFEIJNGRW2SKXCNSWQ" , 1,"DFEIJJHGT7SKXCNSWQ","정말 이게 답인가요? 장난이죠?"),
-("DFEIJNGRW2SKXCNSWQ" , 7,"DF112C23WOSKXCNSWQ","정말 이게 답인가요? 장난이죠?");
+INSERT INTO answermodifyboard (uid,problemNo,uid_submitter,title,contents)
+VALUES ("DF112C23WOSKXCNSWQ" , 1,"DF112C23WOSKXCNSWQ","이유는 알려주지 않지","당신의 답은 틀렸습니다! 그 이유는!!"),
+("DFEIJC23WOSKXCNSWQ" , 2,"DFEIJC23WOSKXCNSWQ","납득 못해","정말 이게 답인가요?"),
+("DF112C23WOSKXCNSWQ" , 3,"DFEIJC23WOSKXCNSWQ","이건 근본 부터","당신은 이론부터 잘못됐어"),
+("DFEIJC23WOSKXCNSWQ" , 1,"DFEIJC23WOSKXCNSWQ","새로운 미래","SSAFY를 나가시는게 좋을것 같습니다."),
+("DFEIJNGRW2SKXCNSWQ" , 4,"DF112C23WOSKXCNSWQ","장난인가","정말 이게 답인가요? 장난이죠?"),
+("DFEIJNGRW2SKXCNSWQ" , 1,"DFEIJJHGT7SKXCNSWQ","이게 어딜봐서 정답일까요","정말 이게 답인가요? 장난이죠?"),
+("DFEIJNGRW2SKXCNSWQ" , 6,"DF112C23WOSKXCNSWQ","내 사전에 없는 답인데","정말 이게 답인가요? 장난이죠?"),
+("DFEIJNGRW2SKXCNSWQ" , 1,"DFEIJJHGT7SKXCNSWQ","어제 밤샌게 뭐가 되나요","정말 이게 답인가요? 장난이죠?"),
+("DFEIJNGRW2SKXCNSWQ" , 7,"DF112C23WOSKXCNSWQ","어제 교수님께 여쭈어 봤는데","정말 이게 답인가요? 장난이죠?");
 
 
 
@@ -264,7 +264,7 @@ where uid = 'DFEIJJHGT7SKXCNSWQ';
 
 
 -- answerModifyboard 있어야함
-insert into solafy.replybyanswermodify(replyNo,articleNo,contents,uid)
+insert into solafy.answermodifyreply(replyNo,articleNo,contents,uid)
 values
 (1,1,"VXUE가 아니고 Vuex입니다만? 수정좀 부탁", "DFEIJC23WOSKXCNSWQ"),
 (2,1,"답 틀린거 같습니다. 10이 답입니다.", "DF112C23WOSKXCNSWQ"),
@@ -278,7 +278,7 @@ values
 (10,5,"5번 문제 답안 수정 부탁드려요", "DF112C23WOSKXCNSWQ");
 
 -- freeBoard 정보 있어야함
-insert into solafy.replybyfree(replyNo,articleNo,contents,uid)
+insert into solafy.freereply(replyNo,articleNo,contents,uid)
 values
 (1,1, "나는 견2", "DFEIJC23WOSKXCNSWQ"),
 (2,1, "나는 호랑돌이!", "DF112C23WOSKXCNSWQ"),
@@ -290,5 +290,3 @@ values
 (8,1, "나는 쥬희hhhhhhhhhhhhh!", "DFEIJNGRW2SKXCNSWQ"),
 (9,1, "나는 냥집사 야옹oooooooooooooooooooo!", "DFEIJHRDX8SKXCNSWQ"),
 (10,1, "나는 상우!!!!!!!!!!!!!!!!!!", "DFEIJJHGT7SKXCNSWQ");
-
-
