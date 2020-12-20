@@ -7,6 +7,15 @@ import org.apache.ibatis.annotations.Mapper;
 import com.solafy.model.GroupDto;
 import com.solafy.model.GroupMemberDto;
 
+/**
+* @FileName : GroupMapper.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 18
+* @작성자 : Yun Kihyeon
+
+* @변경이력 :
+* @프로그램 설명 :
+*/
 @Mapper
 public interface GroupMapper {
 	int createGroup(GroupDto group)throws Exception;

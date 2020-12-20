@@ -50,9 +50,6 @@ public class GroupController {
 	
 //	===============================CREATE=============================== //
 	/**
-	* @Method Name : createGroup
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @param group
 	* @return
 	* @throws Exception
@@ -69,18 +66,14 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
+	//TODO : Message를 통해 그룹 관리자에게 메세지 전송
 	/**
-	* @Method Name : createApplyGroupSignUp
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
-	* @param uid
-	* @param groupNo
+	* @param groupMember
 	* @return
 	* @throws Exception
-	* @Method 설명 :그룹 가입 신청
+	* @Method 설명 : 일반회원이 그룹에 가입을 신청한다(신청한 그룹 관리자에게 메시지를 보낸다. 서비스 방향 결정x)
 	* @변경이력 :
 	*/
-	//TODO : Message를 통해 그룹 관리자에게 메세지 전송
 	@ApiOperation(value = "그룹 가입을 신청한다.", response = String.class)
 	@PostMapping(value="/createApplyGroupSignUp")
 	public ResponseEntity<String> createApplyGroupSignUp(@RequestBody GroupMemberDto groupMember)throws Exception{
@@ -98,7 +91,7 @@ public class GroupController {
 	* @param groupMember
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 그룹에 회원을 초대하고 초대 메세지를 전송한다.(메세지 전송은 아직 방향을 결정하지 않았음)
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹에 회원을 초대한다.", response = String.class)
@@ -117,13 +110,11 @@ public class GroupController {
 	
 //	===============================SELECT=============================== //	
 
+
 	/**
-	* @Method Name : selectAllGroup
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @return
 	* @throws Exception
-	* @Method 설명 : 
+	* @Method 설명 : 전체 그룹 리스트의 정보를 받아온다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "전체 그룹 리스트 정보를 받아온다.", response = List.class)
@@ -133,15 +124,11 @@ public class GroupController {
 		return new ResponseEntity<List<GroupDto>>(groupService.selectAllGroup(), HttpStatus.OK);
 	}
 	
-
 	/**
-	* @Method Name : selectGroupByNo
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @param groupNo
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 그룹 리스트에서 선택된 그룹의 정보를 받아온다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "선택한 그룹의 정보를 받아온다.", response = GroupDto.class)
@@ -152,13 +139,10 @@ public class GroupController {
 	}
 	
 	/**
-	* @Method Name : checkDuplicateName
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @param title
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 그룹 이름의 중복을 확인한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹 이름 중복을 확인한다.", response = String.class)
@@ -175,14 +159,12 @@ public class GroupController {
 	
 	
 //	===============================UPDATE=============================== //	
+
 	/**
-	* @Method Name : updateGroup
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @param group
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 관리자가 그룹의 정보를 수정한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹 정보를 수정한다.", response = String.class)
@@ -195,14 +177,12 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL,HttpStatus.NO_CONTENT);
 	}
 	
+
 	/**
-	* @Method Name : updatePermissionOfMember
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
-	* @param uid
+	* @param groupMember
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 관리자가 그룹원 권한을 수정한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹원 권한을 수정한다.", response = String.class)
@@ -216,14 +196,12 @@ public class GroupController {
 	}
 	
 
+
 	/**
-	* @Method Name : updateGroupApplyConfirm
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
 	* @param groupMember
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 관리자가 가입 신청을 수락한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹 가입을 수락한다.", response = String.class)
@@ -238,6 +216,13 @@ public class GroupController {
 	
 
 
+	/**
+	* @param groupMember
+	* @return
+	* @throws Exception
+	* @Method 설명 : 일반회원이 초대된 그룹의 초대를 수락한다.
+	* @변경이력 :
+	*/
 	@ApiOperation(value = "회원이 그룹 초대를 수락한다.", response = String.class)
 	@PutMapping(value="/updateGroupInvitationConfirm")
 	public ResponseEntity<String> updateGroupInvitationConfirm(@RequestBody GroupMemberDto groupMember)throws Exception{
@@ -253,14 +238,12 @@ public class GroupController {
 	
 	
 //	===============================DELETE=============================== //
+
 	/**
-	* @Method Name : deleteGroup
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
 	* @param groupNo
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 관리자가 그룹을 삭제한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹을 삭제한다.", response = String.class)
@@ -273,14 +256,12 @@ public class GroupController {
 				
 	}
 
+
 	/**
-	* @Method Name : deleteGroupMember
-	* @작성일 : 2020. 12. 16
-	* @작성자 : Yun Kihyeon
 	* @param uid
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 그룹 관리자가 그룹원을 탈퇴시킨다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹원을 삭제한다.", response = String.class)
@@ -292,14 +273,12 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+
 	/**
-	* @Method Name : deleteGroupMemberself
-	* @작성일 : 2020. 12. 18
-	* @작성자 : Yun Kihyeon
 	* @param uid
 	* @return
 	* @throws Exception
-	* @Method 설명 :
+	* @Method 설명 : 맴버가 스스로 그룹을 탈퇴한다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹을 탈퇴한다.", response = String.class)
