@@ -8,10 +8,79 @@
  	@since 2020-12-20
  -->
 	
-<mapper namespace="com.solafy.mapper.board.FreeBoardMapper">
+<mapper namespace="com.solafy.mapper.board.AnswerModifyBoardMapper">
 	<!-- 답안 수정 게시판에 게시물 등록 -->
-	<insert id="createArticle" parameterType="FreeBoardDto">
-		insert into answermodifyboard (uid, problemNo, uid_submitter, contents, regiTime)
-		values(#{uid}, #{problemNo}, #{uid_submitter}, #{contents}, #{regiTime});
+	<insert id="createArticle" parameterType="AnswerModifyBoardDto">
+		insert into answermodifyboard (uid, problemNo, uid_submitter,title, contents, regiTime)
+		values(#{uid}, #{problemNo}, #{uid_submitter},#{title}, #{contents}, #{regiTime});
 	</insert>
+	
+	<!--
+		모든 게시물을 반환.
+		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+	-->
+	<select id="selectArticles" resultType="AnswerModifyBoardDto">
+		select articleNo, uid, problemNo,title, regiTime
+		from answermodifyboard
+		order by articleNo desc
+	</select>
+	
+	<!--
+		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,uid, problemNo, uid_submitter,title, contents, regiTime)
+	-->
+	<select id="selectArticleByNo" parameterType="int" resultType="AnswerModifyBoardDto">
+		select articleNo,uid, problemNo, uid_submitter, title, contents, regiTime 
+		from answermodifyboard
+		where articleNo = #{articleNo}
+	</select>
+
+	<!--
+		인자값으로 가져온 검색어를 포함하는 제목을 가진 게시글을 반환.
+		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+	-->
+	<select id="selectArticleByTitle" parameterType="String" resultType="AnswerModifyBoardDto">
+		select articleNo, uid, problemNo, title, regiTime 
+		from answermodifyboard
+		where title LIKE '%#{title}%'
+	</select>
+	
+	<!--
+		인자값으로 가져온 UID에 맞는 게시글을 반환.
+		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+	-->
+	<select id="selectArticleByUid" parameterType="String" resultType="AnswerModifyBoardDto">
+		select articleNo, uid, problemNo, title, regiTime 
+		from answermodifyboard
+		where uid = #{uid}
+	</select>
+	
+	<!--
+		인자값으로 가져온 문제번호에 맞는 게시글을 반환.
+		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+	-->
+	<select id="selectArticleByProblemNo" parameterType="String" resultType="AnswerModifyBoardDto">
+		select articleNo, uid, problemNo, title, regiTime 
+		from answermodifyboard
+		where problemNo = #{problemNo}
+	</select>
+	
+	<!--
+		게시물 수정.
+		수정가능한 내용은 제목(title), 내용(contents)
+	-->
+	<update id="updateArticle" parameterType="AnswerModifyBoardDto">
+		update answermodifyboard 
+		set title = #{title}, contents = #{contents}
+		where articleNo = #{articleNo}
+	</update>
+	
+	<!--
+		게시물 삭제.
+		인자값으로 가져온 게시불 번호에 해당하는 게시물을 삭제.
+	-->
+	<delete id="deleteArticle" parameterType="int">
+		delete from answermodifyboard
+		where articleNo = #{no}
+	</delete>	
 </mapper>

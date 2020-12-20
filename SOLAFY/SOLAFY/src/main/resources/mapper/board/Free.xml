@@ -20,7 +20,7 @@
 		게시글번호, UID(닉네임), 등록시간, 종아요 갯수만 가져온다.
 	-->
 	<select id="selectArticles" resultType="FreeBoardDto">
-		select articleNo, uid, regiTime, likeCount
+		select articleNo, uid,title, regiTime, likeCount
 		from freeboard
 		order by articleNo desc
 	</select>
@@ -36,13 +36,13 @@
 	</select>
 
 	<!--
-		인자값으로 가져온 제목에 맞는 게시글을 반환.
+		인자값으로 가져온 검색어를 포함하는 제목을 가진 게시글을 반환.
 		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="FreeBoardDto">
-		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		select articleNo, uid,title, regiTime, likeCount
 		from freeboard
-		where title = #{title}
+		where title LIKE '%#{title}%'
 	</select>
 	
 	<!--
@@ -50,7 +50,7 @@
 		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
 	-->
 	<select id="selectArticleByUid" parameterType="String" resultType="FreeBoardDto">
-		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		select articleNo, uid,title, regiTime, likeCount 
 		from freeboard
 		where uid = #{uid}
 	</select>
@@ -61,7 +61,7 @@
 	-->
 	<update id="updateArticle" parameterType="FreeBoardDto">
 		update freeboard 
-		set title = #{title}, contents = #{contents}, isNotice = #isNotice
+		set title = #{title}, contents = #{contents}, isNotice = #{isNotice}
 		where articleNo = #{articleNo}
 	</update>
 	

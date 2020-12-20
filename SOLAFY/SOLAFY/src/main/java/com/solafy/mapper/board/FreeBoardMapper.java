@@ -7,10 +7,14 @@ import org.apache.ibatis.annotations.Mapper;
 import com.solafy.model.FreeBoardDto;
 
 /**
- * 
- * @author BUMSEOK SEO
- * @since 2020-12-14
- */
+* @FileName : FreeBoardMapper.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 20
+* @작성자 : BUMSEOK SEO
+
+* @변경이력 :
+* @프로그램 설명 : 자유게시판 Mapper
+*/
 @Mapper
 public interface FreeBoardMapper {
 	/**
