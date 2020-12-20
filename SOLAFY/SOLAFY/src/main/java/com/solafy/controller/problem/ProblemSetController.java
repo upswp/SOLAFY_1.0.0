@@ -28,10 +28,14 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/problem/problemset") 
 /**
- * 문제집 관련 컨트롤러
- * problemSet Controller
- * @author Park Sangwoo
- * @since 2020-12-14
+ * 
+* @FileName : ProblemSetController.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 14
+* @작성자 : Park Sangwoo
+
+* @변경이력 :
+* @프로그램 설명 : 문제집 관련 컨트롤러
  */
 public class ProblemSetController {
 	private static final Logger logger = LoggerFactory.getLogger(ProblemSetController.class);
@@ -42,9 +46,11 @@ public class ProblemSetController {
 	private ProblemSetService problemsetService;
 
 	/**
-	 * 모든 문제집 정보 반환
-	 * @return
-	 * @throws Exception
+	 * 
+	* @return ProblemSetDto 의 List - 번호, 작성자, 제목, 등록시간 포함
+	* @throws Exception
+	* @Method 설명 : 모든 문제집 정보 반환
+	* @변경이력 :
 	 */
 	@ApiOperation(value = "모든 문제집의 정보를 반환한다.", response = List.class)
 	@GetMapping("/problemSetSelect")
@@ -54,12 +60,14 @@ public class ProblemSetController {
 	}
 	
 	/**
-	 * 지정한 문제집 No에 따른 문제집 정보 반환
-	 * @param problemSetNo 지정한 문제집 번호
-	 * @return
-	 * @throws Exception 
+	 * 
+	* @param problemSetNo 지정한 문제집 번호
+	* @return ProblemSetDto의 - 번호, 작성자, 제목, 등록시간, 문제 리스트 포함
+	* @throws Exception
+	* @Method 설명 : 지정한 문제집 No에 따른 문제집 정보 반환
+	* @변경이력 :
 	 */
-	@ApiOperation(value = "문제집번호에 해당하는 문제집 정보를 반환한다.", response = ProblemSetDto.class)
+	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 반환한다.", response = ProblemSetDto.class)
 	@GetMapping("/problemSetSelect/{problemSetNo}")
 	public ResponseEntity<Map<String,Object>> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("selectProblemByNo -- 호출");
@@ -67,10 +75,42 @@ public class ProblemSetController {
 	}
 	
 	/**
-	 * 새롭게 생성하고자 하는 문제집 등록
-	 * @param problemSet 새롭게 만들고자 하는 문제집 번호
-	 * @return
-	 * @throws Exception 
+	 * 
+	* @param uid - String, 검색된 uid
+	* @return ProblemSetDto 의 List - 번호, 작성자, 제목, 등록시간 포함
+	* @throws Exception
+	* @Method 설명 : 문제집 작성자에 해당하는 문제집을 가져온다.
+	* @변경이력 :
+	 */
+	@ApiOperation(value = "문제집 작성자에 해당하는 문제집 정보를 반환한다.",response = List.class)
+	@GetMapping("/problemSetSelect/{uid}")
+	public ResponseEntity<List<ProblemSetDto>> selectProblemByWriter(@PathVariable String uid) throws Exception{
+		logger.debug("selectProblemByWriter -- 호출");
+		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByWriter(uid), HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	* @param title - String, 검색된 제목 키워드
+	* @return ProblemSetDto 의 List - 번호, 작성자, 제목, 등록시간 포함
+	* @throws Exception
+	* @Method 설명 : 문제집 키워드가 포함이된 문제집을 가져온다.
+	* @변경이력 :
+	 */
+	@ApiOperation(value = "문제집 제목 키워드에 해당하는 문제집 정보를 반환한다.",response = List.class)
+	@GetMapping("/problemSetSelect/{title}")
+	public ResponseEntity<List<ProblemSetDto>> selectProblemByTitle(@PathVariable String title) throws Exception{
+		logger.debug("selectProblemByTitle -- 호출");
+		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByTitle(title), HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	* @param problemSet 새롭게 만들고자 하는 문제집 번호
+	* @return boolean, 정상적으로 등록 시 SUCCESS 반환
+	* @throws Exception
+	* @Method 설명 : 새롭게 생성하고자 하는 문제집 등록
+	* @변경이력 :
 	 */
 	@ApiOperation(value = "새로운 문제집 정보를 입력한다. 그리고 DB 입력 성공 여부에 따라 'success' 또는 'fail' 반환한다.")
 	@PostMapping("/createProblemSet")
@@ -84,10 +124,12 @@ public class ProblemSetController {
 	}
 	
 	/**
-	 * 수정하고자 하는 문제집 수정
-	 * @param problemSet 수정하고자 하는 문제집 번호
-	 * @return
-	 * @throws Exception 
+	 * 
+	* @param problemSet 수정하고자 하는 문제집 번호
+	* @return boolean, 정상적으로 수정 시 SUCCESS 반환
+	* @throws Exception
+	* @Method 설명 : 수정하고자 하는 문제집 수정
+	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
 	@PutMapping("/updateProblemSet/{problemSetNo}")
@@ -101,10 +143,12 @@ public class ProblemSetController {
 	}
 	
 	/**
-	 * 삭제하고자 하는 문제집 삭제
-	 * @param problemSetNo 삭제하고자 하는 문제집 번호
-	 * @return
-	 * @throws Exception 
+	 * 
+	* @param problemSetNo 삭제하고자 하는 문제집 번호
+	* @return boolean, 정상적으로 삭제 시 SUCCESS 반환
+	* @throws Exception
+	* @Method 설명 : 삭제하고자 하는 문제집 삭제
+	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다.")
 	@DeleteMapping("/deleteProblemSet/{problemSetNo}")
