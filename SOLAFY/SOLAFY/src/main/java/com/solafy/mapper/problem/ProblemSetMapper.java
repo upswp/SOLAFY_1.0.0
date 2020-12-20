@@ -97,18 +97,19 @@ public interface ProblemSetMapper {
 	* @Method 설명 :
 	* @변경이력 :
 	 */
-	public List<ProblemDto> selectProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	public List<ProblemDto> selectProblemSetMapping(int problemSetNo) throws SQLException;
 
 	/**
 	 * 
 	* @param map - Map<String, Integer> - problemSetNo, problemNo 포함
-	* @return int 수정된 행의 갯수 반환
+	* @return int 등록된 행의 갯수 반환
 	* @throws SQLException
 	* @Method 설명 : 문제집에서 문제들을 등록한다.
 	* @변경이력 :
 	 */
 	public int createProblemSetMapping(Map<String, Integer> map) throws SQLException;
 
+	//TODO : 문제집에서 문제에 대한 수정은 등록/삭제 만 이뤄지므로 따로 update 부분은 불필요.
 	/**
 	 * 
 	* @param map - Map<String, Integer> - problemSetNo, problemNo 포함
@@ -117,7 +118,7 @@ public interface ProblemSetMapper {
 	* @Method 설명 : 문제집의 문제들의 문제 리스트를 수정한다.
 	* @변경이력 :
 	 */
-	public int updateProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	//public int updateProblemSetMapping(Map<String, Integer> map) throws SQLException;
 
 	/**
 	 * 
