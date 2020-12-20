@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solafy.mapper.problem.HashTagMapper;
 import com.solafy.mapper.problem.ProblemAnswerMapper;
 import com.solafy.mapper.problem.ProblemMapper;
@@ -36,8 +38,8 @@ public class ProblemServiceImpl implements ProblemService {
 	private HashTagMapper hashTagMapper;
 
 	@Override
-	public Map<String, Object> selectProblem(int problemNo) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public HashMap<String, Object> selectProblem(int problemNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		// ProbleDto
 		ProblemDto problem = problemMapper.selectProblem(problemNo);
@@ -126,11 +128,21 @@ public class ProblemServiceImpl implements ProblemService {
 	// 해쉬태그관련
 	// 없는 걸 등록한다 -> 해쉬태그 생성
 	// 있는 걸 등록한다 -> mappingtable연결
+	//@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList
 	@Override
-	public boolean createProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList) {
+	public boolean createProblem(HashMap<String, Object> map) {
+		ObjectMapper mapper = new ObjectMapper();
+		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
+		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
+		List<String> hashTagList = mapper.convertValue(map.get("hashTag"),new TypeReference<List<String>>() {});
+		
 		// 문제 등록
 		boolean result = (problemMapper.createProblem(problemDto) > 0);
+		//System.out.println("problemNo : "+problemDto.getProblemNo());
 		
+		// 문제 번호를 받아서 정답에 넣어줘야하는데 어떻게 받아올 것인가? --> answer : problem.xml참고
+		problemDto.setProblemNo(problemDto.getProblemNo());
+		problemAnswerDto.setProblemNo(problemDto.getProblemNo());
 		// 문제 답 등록
 		result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
 		
@@ -149,8 +161,10 @@ public class ProblemServiceImpl implements ProblemService {
 		return result;
 	}
 
+	// TODO : 새로운 DB 넣고, update구성하고, create부분하기
 	@Override
-	public boolean updateProblem(ProblemDto problemDto) {
+	public boolean updateProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList) {
+		
 		return problemMapper.updateProblem(problemDto) > 0;
 	}
 

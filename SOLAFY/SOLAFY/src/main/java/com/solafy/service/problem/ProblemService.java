@@ -1,5 +1,6 @@
 package com.solafy.service.problem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public interface ProblemService {
 	* @Method 설명 : 문제 번호에 해당하는 문제 정보를 반환(문제+해쉬태그+카테고리)(상세보기 용)
 	* @변경이력 :
 	*/
-	public Map<String, Object> selectProblem(int problemNo);
+	public HashMap<String, Object> selectProblem(int problemNo);
 	
 //	/**
 //	* @Method Name : selectCategorySmall
@@ -103,18 +104,20 @@ public interface ProblemService {
 	* @Method 설명 : 문제 등록
 	* @변경이력 :
 	*/
-	public boolean createProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto,List<String> hashTagList);
+	public boolean createProblem(HashMap<String, Object> map);
 	
 	/**
 	* @Method Name : updateProblem
 	* @작성일 : 2020. 12. 16.
 	* @작성자 : Lee Ayoung
 	* @param problemDto
+	* @param hashTagList 
+	* @param problemAnswerDto 
 	* @return
 	* @Method 설명 : 문제 수정
 	* @변경이력 :
 	*/
-	public boolean updateProblem(ProblemDto problemDto);
+	public boolean updateProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList);
 	
 	/**
 	* @Method Name : deleteProblem
