@@ -1,30 +1,111 @@
 package com.solafy.controller.board;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.solafy.model.PracticeTestBoardDto;
+import com.solafy.service.board.PracticeTestBoardService;
 
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * 
+ * @FileName PracticeTestBoardController.java
+ * @Project SOLAFY
+ * @Date 2020. 12. 18.
+ * @Author 이주희
+ * 
+ * @변경이력 :
+ */
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/template") //주소는 알아서 넣기
+@RequestMapping("/practicetest")
 
 public class PracticeTestBoardController {
 	private static final Logger logger = LoggerFactory.getLogger(PracticeTestBoardController.class);
-	//아래 string 2개는 사용하지 않는다면 지우기
+
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
-	
-	//@Autowired
-	//private ___Service ___Service;
-	
-//	@ApiOperation(value = "~~~~를 반환한다", response = List.class)
-//	@GetMapping(value = "/판단해서 필요하면 value 넣기")
-//	public ResponseEntity<List<DTO 넣어주기>> retrieveBoard() throws Exception {
-//		logger.debug("retrieveBoard - 호출");
-//		return new ResponseEntity<List<DTO 넣어주기>>>(boardService.retrieveBoard(), HttpStatus.OK);
-//	}
+
+	@Autowired
+	private PracticeTestBoardService practiceService;
+
+	@ApiOperation(value = "새로운 모의고사를 생성하고 생성의 결과를 반환한다.", response = String.class)
+	@PostMapping(value = "/create")
+	public ResponseEntity<String> createPracticeTest(@RequestBody PracticeTestBoardDto pDto) throws Exception {
+		logger.debug("createPracticeTest");
+		if (practiceService.createPracticeTest(pDto))
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+
+	@ApiOperation(value = "모든 모의고사 목록을 반환한다.", response = List.class)
+	@GetMapping(value = "/selectall")
+	public ResponseEntity<List<PracticeTestBoardDto>> selectAllPracticeTest() throws Exception {
+		logger.debug("selectAllPracticeTest");
+		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectAllPracticeTest(), HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "모의고사 번호로 검색한 결과를 반환한다.", response = PracticeTestBoardDto.class)
+	@GetMapping(value = "/selectbyno/{articleNo}")
+	public ResponseEntity<PracticeTestBoardDto> selectPracticeTestByArticleNo(@PathVariable int articleNo)
+			throws Exception {
+		logger.debug("selectPracticeTestByArticleNo");
+		return new ResponseEntity<PracticeTestBoardDto>(practiceService.selectPracticeTestByArticleNo(articleNo),
+				HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "모의고사 작성자 uid로 검색한 결과를 반환한다.", response = List.class)
+	@GetMapping(value = "/selectbywriter/{uid}")
+	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByWriter(@PathVariable String uid)
+			throws Exception {
+		logger.debug("selectPracticeTestByWriter");
+		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByWriter(uid),
+				HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "검색된 키워드가 모의고사 제목에 포함된 결과를 반환한다.", response = List.class)
+	@GetMapping(value = "/selectbytitle/{title}")
+	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByTitle(@PathVariable String title)
+			throws Exception {
+		logger.debug("selectPracticeTestByTitle");
+		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByTitle(title),
+				HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "모의고사 정보를 수정한다.", response = String.class)
+	@PutMapping(value = "/update")
+	public ResponseEntity<String> updatePracticeTest(@RequestBody PracticeTestBoardDto pDto) throws Exception {
+		logger.debug("updatePracticeTest");
+		if (practiceService.updatePracticeTest(pDto))
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+
+	@ApiOperation(value = "모의고사를 삭제한다.", response = String.class)
+	@DeleteMapping(value = "/delete/{articleNo}")
+	public ResponseEntity<String> deleltePracticeTest(@PathVariable int articleNo) throws Exception {
+		logger.debug("updatePracticeTest");
+		if (practiceService.deleltePracticeTest(articleNo))
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
 }
