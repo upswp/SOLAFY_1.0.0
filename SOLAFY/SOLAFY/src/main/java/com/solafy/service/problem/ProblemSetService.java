@@ -1,6 +1,7 @@
 package com.solafy.service.problem;
 
 import java.util.List;
+import java.util.Map;
 
 import com.solafy.model.ProblemDto;
 import com.solafy.model.ProblemSetDto;
@@ -31,7 +32,7 @@ public interface ProblemSetService {
 	* @Method 설명 : 문제집 번호에 해당하는 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public ProblemSetDto selectProblemByNo(int problemSetNo) throws Exception;
+	public Map<String,Object> selectProblemByNo(int problemSetNo) throws Exception;
 	
 	/**
 	 * 
