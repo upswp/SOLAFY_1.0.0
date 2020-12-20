@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/template") //주소는 알아서 넣기
+@RequestMapping("/answermodify") //주소는 알아서 넣기
 
 public class AnswerModifyBoardController {
 	private static final Logger logger = LoggerFactory.getLogger(AnswerModifyBoardController.class);

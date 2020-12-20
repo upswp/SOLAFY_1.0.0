@@ -32,8 +32,7 @@ import io.swagger.annotations.ApiOperation;
 */
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/template") //주소는 알아서 넣기
-
+@RequestMapping("/freereply") //주소는 알아서 넣기
 public class FreeReplyController {
 	private static final Logger logger = LoggerFactory.getLogger(FreeReplyController.class);
 	//아래 string 2개는 사용하지 않는다면 지우기

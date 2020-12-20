@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 */
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/template") //주소는 알아서 넣기
+@RequestMapping("/answermodifyreply") //주소는 알아서 넣기
 
 public class AnswerModifyReplyController {
 	private static final Logger logger = LoggerFactory.getLogger(AnswerModifyReplyController.class);
