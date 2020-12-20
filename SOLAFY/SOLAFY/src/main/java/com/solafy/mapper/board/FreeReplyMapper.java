@@ -23,7 +23,7 @@ public interface FreeReplyMapper {
 	* @Method 설명 : 자유게시판 댓글을 등록한다
 	* @변경이력 : 
 	*/
-	void createReply(FreeReplyDto freeReplyDto);
+	int createReply(FreeReplyDto freeReplyDto);
 	
 	/**
 	* @param articleNo (댓글을 조회할 게시글 번호)
