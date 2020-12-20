@@ -28,7 +28,7 @@ public interface ProblemSetService {
 	/**
 	 * 
 	* @param problemSetNo - int, 문제집 번호
-	* @return ProblemSetDto의 - 번호, 작성자, 제목, 등록시간 포함
+	* @return ProblemSetDto의 - 번호, 작성자, 제목, 등록시간, 문제 리스트 포함
 	* @Method 설명 : 문제집 번호에 해당하는 문제집을 가져온다.
 	* @변경이력 :
 	 */
@@ -47,7 +47,7 @@ public interface ProblemSetService {
 	 * 
 	* @param title - String, 검색된 제목 키워드
 	* @return ProblemSetDto 의 List - 번호, 작성자, 제목, 등록시간 포함
-	* @Method 설명 : 문제집 작성자에 해당하는 문제집을 가져온다.
+	* @Method 설명 : 문제집 키워드가 포함이된 문제집을 가져온다.
 	* @변경이력 :
 	 */
 	public List<ProblemSetDto> selectProblemByTitle(String title) throws Exception;
@@ -55,7 +55,7 @@ public interface ProblemSetService {
 	/**
 	 * 
 	* @param problemSet
-	* @return boolean, 정상적으로 삭제 시 true 반환
+	* @return boolean, 정상적으로 등록 시 true 반환
 	* @Method 설명 : 문제집 등록 및 문제 mapping
 	* @변경이력 : 
 	 */
@@ -64,7 +64,7 @@ public interface ProblemSetService {
 	/**
 	 * 
 	* @param problemSet
-	* @return boolean, 정상적으로 삭제 시 true 반환
+	* @return boolean, 정상적으로 수정 시 true 반환
 	* @Method 설명 : 문제집 수정 및 문제 mapping 갱신
 	* @변경이력 :
 	 */
