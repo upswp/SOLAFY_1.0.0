@@ -8,13 +8,13 @@
  	@since 2020-12-20
  -->
 	
-<mapper namespace="com.solafy.mapper.board.FreeReplyMapper">
+<mapper namespace="com.solafy.mapper.board.AnswerModifyReplyMapper">
 	<!-- 
 		댓글 등록
 		댓글이 달린 게시글 번호, 내용, uid, 현재시간이 등록된다.
 	 -->
-	<insert id="createReply" parameterType="FreeReplyDto">
-		insert into replybyfree(articleNo, contents, uid, regiTime)
+	<insert id="createReply" parameterType="AnswerModifyReplyDto">
+		insert into replybyanswermodify(articleNo, contents, uid, regiTime)
 		values (#{articleNo}, #{contents}, #{uid}, now())
 	</insert>
 	
@@ -22,9 +22,9 @@
 		모든 댓글 반환.
 		댓글번호, 내용, 댓글 등록한 사람의 UID, 등록시간을 반환
 	-->
-	<select id="selectReplies" parameterType="int" resultType="FreeReplyDto">
+	<select id="selectReplies" parameterType="int" resultType="AnswerModifyReplyDto">
 		select replyNo, contents, uid, regiTime
-		from replybyfree
+		from replybyanswermodify
 		where articleNo = #{articleNo}
 		order by regiTime desc
 	</select>
@@ -33,8 +33,8 @@
 		댓글 수정 - 수정한 DTO엔 게시물 번호와 댓글 번호가 담겨있어야 한다.
 		수정가능한 내용은 내용(contents)
 	-->
-	<update id="updateReply" parameterType="FreeReplyDto">
-		update replybyfree
+	<update id="updateReply" parameterType="AnswerModifyReplyDto">
+		update replybyanswermodify
 		set contents = #{contents}
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</update>
@@ -43,8 +43,8 @@
 		댓글 삭제.
 		인자값으로 가져온 게시불 번호와 댓글 번호가 동시에 일치하는 댓글 삭제.
 	-->
-	<delete id="deleteReply" parameterType="FreeReplyDto">
-		delete from replybyfree
+	<delete id="deleteReply" parameterType="AnswerModifyReplyDto">
+		delete from replybyanswermodify
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</delete>
 </mapper>
