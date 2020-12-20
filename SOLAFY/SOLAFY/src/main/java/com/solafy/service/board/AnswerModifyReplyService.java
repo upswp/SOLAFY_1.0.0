@@ -27,7 +27,7 @@ public interface AnswerModifyReplyService {
 	* @Method 설명 : 해당 댓글을 수정
 	* @변경이력 :
 	*/
-	boolean updateReply(AnswerModifyReplyDto freeReplyDto);
+	boolean updateReply(AnswerModifyReplyDto answerModifyReplyDto);
 	
 	/**
 	* @param answerModifytReplyDto
@@ -35,5 +35,5 @@ public interface AnswerModifyReplyService {
 	* @Method 설명 : 해당 댓글을 삭제
 	* @변경이력 :
 	*/
-	boolean deleteReply(AnswerModifyReplyDto freeReplyDto);
+	boolean deleteReply(AnswerModifyReplyDto answerModifyReplyDto);
 }

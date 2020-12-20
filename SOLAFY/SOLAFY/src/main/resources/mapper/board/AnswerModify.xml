@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+ <!--
+ 	@author BUMSEOK SEO
+ 	@since 2020-12-20
+ -->
+	
+<mapper namespace="com.solafy.mapper.board.FreeBoardMapper">
+	<!-- 답안 수정 게시판에 게시물 등록 -->
+	<insert id="createArticle" parameterType="FreeBoardDto">
+		insert into answermodifyboard (uid, problemNo, uid_submitter, contents, regiTime)
+		values(#{uid}, #{problemNo}, #{uid_submitter}, #{contents}, #{regiTime});
+	</insert>
+</mapper>
