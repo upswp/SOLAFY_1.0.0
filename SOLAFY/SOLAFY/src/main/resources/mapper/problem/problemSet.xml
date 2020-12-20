@@ -46,7 +46,7 @@
 	</delete>
 	
 	<!-- 문제집에 해당하는 문제 리스트 불러오기 -->
-	<select id="selectProblemSetMapping" parameterType="problemSetNo" resultType="ProblemDto">
+	<select id="selectProblemSetMapping" parameterType="int" resultType="ProblemDto">
 		select p.problemNo,p.title
 		from problemsetmapping m join problem p
 		on m.problemNo = p.problemNo
