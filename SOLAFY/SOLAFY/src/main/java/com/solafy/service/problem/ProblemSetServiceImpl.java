@@ -79,7 +79,7 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 		return problemSetMapper.updateProblemSet(problemSet) == 1;
 	}
 
-	//TODO : 삭제시 mappingtable 에서도 같이 삭제가 되는지 확인.
+	//TODO : 삭제시 problemsetmapping 에서도 같이 삭제가 되는지 확인.
 	@Override
 	public boolean deleteProblemSet(int problemSetNo) throws Exception {
 		return problemSetMapper.deleteProblemSet(problemSetNo) == 1;
