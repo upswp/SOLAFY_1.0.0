@@ -10,12 +10,14 @@ import com.solafy.mapper.board.FreeBoardMapper;
 import com.solafy.model.FreeBoardDto;
 
 /**
- * FreeboardServiceImpl
- * 자유게시판 ServiceImpl
- * @author BUMSEOK SEO
- * @since 2020-12-15
- */
+* @FileName : FreeBoardServiceImpl.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 20
+* @작성자 : BUMSEOK SEO
 
+* @변경이력 :
+* @프로그램 설명 : 자유게시판 ServiceImpl
+*/
 @Service
 public class FreeBoardServiceImpl implements FreeBoardService {
 

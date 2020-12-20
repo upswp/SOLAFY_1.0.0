@@ -44,5 +44,5 @@ public interface FreeReplyService {
 	* @Method 설명 : 해당 댓글을 삭제
 	* @변경이력 :
 	*/
-	boolean deleteReplty(FreeReplyDto freeReplyDto);
+	boolean deleteReply(FreeReplyDto freeReplyDto);
 }

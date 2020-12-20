@@ -49,6 +49,7 @@ public class FreeBoardController {
 //		logger.debug("retrieveBoard - 호출");
 //		return new ResponseEntity<List<DTO 넣어주기>>>(boardService.retrieveBoard(), HttpStatus.OK);
 //	}
+	
 	/**
 	* @Method Name : createArticle
 	* @작성일 : 2020. 12. 18
@@ -62,8 +63,11 @@ public class FreeBoardController {
 	@PostMapping(value = "/createArticle")
 	public ResponseEntity<String> createArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("createArticle - 호출" + new Date());
-		freeBoardService.createArticle(freeBoardDto);
-		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		if(freeBoardService.createArticle(freeBoardDto)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}else {			
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
 	}
 	
 	// TODO: 실제로 유저에게 보여지는 부분이니까 무작정 메서드와 같이 하긴 제한있을듯.33
