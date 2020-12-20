@@ -128,5 +128,5 @@ public interface ProblemSetMapper {
 	* @Method 설명 : 문제집의 문제들을 삭제한다.
 	* @변경이력 :
 	 */
-	public int deleteProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	public int deleteProblemSetMapping(int problemSetNo) throws SQLException;
 }
