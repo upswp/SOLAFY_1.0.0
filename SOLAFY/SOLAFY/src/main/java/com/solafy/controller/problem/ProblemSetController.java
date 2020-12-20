@@ -1,6 +1,7 @@
  package com.solafy.controller.problem;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,9 +61,9 @@ public class ProblemSetController {
 	 */
 	@ApiOperation(value = "문제집번호에 해당하는 문제집 정보를 반환한다.", response = ProblemSetDto.class)
 	@GetMapping("/problemSetSelect/{problemSetNo}")
-	public ResponseEntity<ProblemSetDto> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
+	public ResponseEntity<Map<String,Object>> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
 		logger.debug("selectProblemByNo -- 호출");
-		return new ResponseEntity<ProblemSetDto> (problemsetService.selectProblemByNo(problemSetNo), HttpStatus.OK);
+		return new ResponseEntity<Map<String,Object>> (problemsetService.selectProblemByNo(problemSetNo), HttpStatus.OK);
 	}
 	
 	/**
