@@ -1,5 +1,6 @@
 package com.solafy.controller.problem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,9 +55,9 @@ public class ProblemController {
 	*/
 	@ApiOperation(value = "문제 번호에 해당하는 문제 정보를 반환한다(문제+해쉬태그+카테고리)", response = ProblemDto.class)
 	@GetMapping(value = "/{problemNo}")
-	public ResponseEntity<Map<String, Object>> selectProblem(@PathVariable int problemNo){
+	public ResponseEntity<HashMap<String, Object>> selectProblem(@PathVariable int problemNo){
 		logger.debug("selectProblem - 호출");
-		return new ResponseEntity<Map<String, Object>>(problemService.selectProblem(problemNo), HttpStatus.OK);
+		return new ResponseEntity<HashMap<String, Object>>(problemService.selectProblem(problemNo), HttpStatus.OK);
 	}
 	
 	// 지금 방식 
@@ -143,33 +144,34 @@ public class ProblemController {
 	* @param problemAnswerDto - 문제 정답 정보
 	* @param hashTagList(List<String>) - 해시태그명 리스트
 	* @return ResponseEntity<String> - 응답형태
-	* @Method 설명 : 문제 등록
+	* @Method 설명 : 문제 등록 (문제+문제정답+문제와해시태그 매핑)
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "문제를 등록한다. 그리고 DB등록 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	//@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList
+	@ApiOperation(value = "문제를 등록한다. 그리고 DB등록 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping(value = "/create")
-	public ResponseEntity<String> createProblem(@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList){
+	public ResponseEntity<String> createProblem(@RequestBody HashMap<String, Object> map){
 		logger.debug("createProblem - 호출");
-		if(problemService.createProblem(problemDto,problemAnswerDto,hashTagList)) {
+		if(problemService.createProblem(map)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
-	// TODO : 2020.12.20 여기부터
+	// TODO : 문제 전체 리스트 출력
 	// TODO : 카테고리 대 중 소 리스트 볼 수 있게 Mapper추가
-	@ApiOperation(value = "문제를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	@ApiOperation(value = "문제를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PutMapping(value = "/update")
-	public ResponseEntity<String> updateProblem(@RequestBody ProblemDto problemDto){
+	public ResponseEntity<String> updateProblem(@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList){
 		logger.debug("updateProblem - 호출");
-		if(problemService.updateProblem(problemDto)) {
+		if(problemService.updateProblem(problemDto,problemAnswerDto,hashTagList)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
 	// cascade되어있어서 삭제되면 자동으로 다른 것도 삭제됨
-	@ApiOperation(value = "문제를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = List.class)
+	@ApiOperation(value = "문제를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteProblem(@RequestBody int problemNo){
 		logger.debug("updateProblem - 호출");
