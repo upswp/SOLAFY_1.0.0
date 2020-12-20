@@ -16,16 +16,16 @@ import com.solafy.model.AnswerModifyBoardDto;
 * @프로그램 설명 : 답안수정게시판 Mapper
 */
 @Mapper
-public interface AnswerModifyMapper {
+public interface AnswerModifyBoardMapper {
 	/**
-	 * 자유게시판에 게시글 등록
+	 * 답안수정게시판에 게시글 등록
 	 * @param answerModifyBoardDto
 	 * @return boolean, 성공적으로 등록 되었을 경우 true 반환
 	 */
 	public int createArticle(AnswerModifyBoardDto answerModifyBoardDto);
 	
 	/**
-	 * 자유게시판의 모든 게시글들을 반환
+	 * 답안수정게시판 모든 게시글들을 반환
 	 * @return List<AnswerModifyBoardDto>
 	 */
 	public List<AnswerModifyBoardDto> selectArticles();
@@ -42,34 +42,34 @@ public interface AnswerModifyMapper {
 	 * @param title
 	 * @return 
 	 */
-	public AnswerModifyBoardDto selectArticleByTitle(String title);
+	public List<AnswerModifyBoardDto> selectArticleByTitle(String title);
 
 	/**
 	 * 입력한 uid와 일치하는 작성자의 게시글 반환
 	 * @param uid
 	 * @return AnswerModifyBoardDto
 	 */
-	public AnswerModifyBoardDto selectArticleByUid(String uid);
+	public List<AnswerModifyBoardDto> selectArticleByUid(String uid);
 
 	/**
-	 * 입력한 uid와 일치하는 작성자의 게시글 반환
-	 * @param uid
+	 * 입력한 문제번호와 일치하는 작성자의 게시글 반환
+	 * @param ProblemNo
 	 * @return AnswerModifyBoardDto
 	 */
-	public AnswerModifyBoardDto selectArticleByProblemNo(int problemNo);
+	public List<AnswerModifyBoardDto> selectArticleByProblemNo(int problemNo);
 
 	// TODO: 공지사항 검색이 필요할지? : 이후에 추가하도록 하겠습니다.
 	// public AnswerModifyBoardDto selectNotice(ArticleNo);
 
 	/**
-	 * 자유게시판 게시글을 수정
+	 * 답안수정게시판 게시글을 수정
 	 * @param answerModifyBoardDto
 	 * @return boolean, 정상적으로 수정 되었을 경우 true 반환
 	 */
 	public int updateArticle(AnswerModifyBoardDto answerModifyBoardDto);
 
 	/**
-	 * 자유게시판 게시글 삭제
+	 * 답안수정게시판 게시글 삭제
 	 * @param ArticleNo
 	 * @return boolean, 정상적으로 삭제 되었을 경우 true 반환
 	 */
