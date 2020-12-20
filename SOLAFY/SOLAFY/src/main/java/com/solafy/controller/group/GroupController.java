@@ -261,13 +261,13 @@ public class GroupController {
 	* @param uid
 	* @return
 	* @throws Exception
-	* @Method 설명 : 그룹 관리자가 그룹원을 탈퇴시킨다.
+	* @Method 설명 : 그룹 관리자가 그룹원을 탈퇴시킨다. uid와 groupNo가 필요하다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹원을 삭제한다.", response = String.class)
-	@DeleteMapping(value="/deleteGroupMember/{uid}")
-	public ResponseEntity<String> deleteGroupMember(@PathVariable String uid)throws Exception{
-		if(groupService.deleteGroupMember(uid))
+	@DeleteMapping(value="/deleteGroupMember")
+	public ResponseEntity<String> deleteGroupMember(@RequestBody Map<String, Object> deleteMember)throws Exception{
+		if(groupService.deleteGroupMember(deleteMember))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
@@ -278,13 +278,13 @@ public class GroupController {
 	* @param uid
 	* @return
 	* @throws Exception
-	* @Method 설명 : 맴버가 스스로 그룹을 탈퇴한다.
+	* @Method 설명 : 맴버가 스스로 그룹을 탈퇴한다. uid와 groupNo가 필요하다.
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "그룹을 탈퇴한다.", response = String.class)
-	@DeleteMapping(value="/deleteGroupMemberself/{uid}")
-	public ResponseEntity<String> deleteGroupMemberself(@PathVariable String uid)throws Exception{
-		if(groupService.deleteGroupMemberself(uid))
+	@DeleteMapping(value="/deleteGroupMemberself")
+	public ResponseEntity<String> deleteGroupMemberself(@RequestBody Map<String, Object> deleteMemberSelf)throws Exception{
+		if(groupService.deleteGroupMemberself(deleteMemberSelf))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);

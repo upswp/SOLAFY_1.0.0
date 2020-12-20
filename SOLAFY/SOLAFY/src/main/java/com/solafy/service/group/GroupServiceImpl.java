@@ -1,6 +1,7 @@
 package com.solafy.service.group;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,12 +65,12 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public boolean deleteGroupMember(String uid) throws Exception {
-		return groupMapper.deleteGroupMember(uid) > 0 ? true : false;
+	public boolean deleteGroupMember(Map<String, Object> deleteMember) throws Exception {
+		return groupMapper.deleteGroupMember(deleteMember) > 0 ? true : false;
 	}
 	@Override
-	public boolean deleteGroupMemberself(String uid) throws Exception {
-		return groupMapper.deleteGroupMemberself(uid) > 0 ? true : false;
+	public boolean deleteGroupMemberself(Map<String, Object> deleteMemberSelf) throws Exception {
+		return groupMapper.deleteGroupMemberself(deleteMemberSelf) > 0 ? true : false;
 	}
 
 }

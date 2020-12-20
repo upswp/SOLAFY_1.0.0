@@ -30,10 +30,10 @@ public class GroupDto {
 		return "GroupDto [groupNO=" + groupNo + ", title=" + title + ", type=" + type + ", description=" + description
 				+ "]";
 	}
-	public int getGroupNO() {
+	public int getGroupNo() {
 		return groupNo;
 	}
-	public void setGroupNO(int groupNo) {
+	public void setGroupNo(int groupNo) {
 		this.groupNo = groupNo;
 	}
 	public String getTitle() {

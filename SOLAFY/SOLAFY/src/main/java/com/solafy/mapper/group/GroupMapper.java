@@ -1,6 +1,7 @@
 package com.solafy.mapper.group;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -35,6 +36,6 @@ public interface GroupMapper {
 	int updateGroupInvitationConfirm(GroupMemberDto groupMember)throws Exception;
 	
 	int deleteGroup(int groupNo)throws Exception;
-	int deleteGroupMember(String uid)throws Exception;
-	int deleteGroupMemberself(String uid)throws Exception;
+	int deleteGroupMember(Map<String, Object> deleteMember)throws Exception;
+	int deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
 }

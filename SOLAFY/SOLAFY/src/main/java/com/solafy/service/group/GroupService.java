@@ -122,7 +122,7 @@ public interface GroupService {
 	* @Method 설명 : 그룹의 맴버를 탈퇴시킨다(관리자 권한 있어야 함)
 	* @변경이력 :
 	*/
-	boolean deleteGroupMember(String uid)throws Exception;
+	boolean deleteGroupMember(Map<String, Object> deleteMember)throws Exception;
 	
 	/**
 	* @param uid
@@ -131,5 +131,5 @@ public interface GroupService {
 	* @Method 설명 : 그룹 맴버가 스스로 탈퇴한다.
 	* @변경이력 :
 	*/
-	boolean deleteGroupMemberself(String uid)throws Exception;
+	boolean deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
 }

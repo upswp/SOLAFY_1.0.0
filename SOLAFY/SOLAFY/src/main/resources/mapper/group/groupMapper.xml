@@ -5,7 +5,7 @@
 <mapper namespace="com.solafy.mapper.group.GroupMapper">
  
  <insert id="createGroup" parameterType="GroupDto">
- 	insert into group (title, type, description)
+ 	insert into solafy.group (title, type, description)
  	values(#{title}, #{type}, #{description})
  </insert>
  
@@ -21,16 +21,16 @@
 
 
  <select id="selectAllGroup" resultType="GroupDto">
- 	select title, type, description from group
+ 	select groupNo, title, type, description from solafy.group
  </select>
  
  <select id="selectGroupByNo" parameterType="int" resultType="GroupDto"> 
  	select title, type, description from group
  	where groupNo = #{groupNo}
  </select>
- <select id="checkDuplicateName" parameterType="String">
+ <select id="checkDuplicateName" parameterType="String" resultType="int">
 	select count(*) from solafy.group
-	where title = #{title};
+	where title = #{title}
  </select>
 
  <update id="updateGroup" parameterType="GroupDto" >
@@ -42,32 +42,32 @@
  <update id="updatePermissionOfMember" parameterType="GroupMemberDto">
  	update groupmember 
  	set grade=#{grade} 
- 	where uid=#{uid}
+ 	where uid=#{uid} and groupNo=#{groupNo}
  </update>
  <update id="updateGroupApplyConfirm" parameterType="GroupMemberDto">
  	update groupmember 
  	set grade=#{grade}
- 	where uid=#{uid}
+ 	where uid=#{uid} and groupNo=#{groupNo}
  </update>
  <update id="updateGroupInvitationConfirm" parameterType="GroupMemberDto">
  	update groupmember 
  	set grade=#{grade} 
- 	where uid=#{uid}
+ 	where uid=#{uid} and groupNo=#{groupNo}
  </update>
  
  <delete id="deleteGroup" parameterType="int">
- 	delete group
+ 	delete from solafy.group
  	where groupNo=#{groupNo}
  </delete>
  
  
- <delete id="deleteGroupMember" parameterType="String">
- 	delete groupmember
- 	where uid=#{uid}
+ <delete id="deleteGroupMember" parameterType="Map">
+ 	delete from groupmember
+ 	where uid=#{uid} and groupNo=#{groupNo}
  </delete>
  <delete id="deleteGroupMemberself" parameterType="String">
- 	delete groupmember
- 	where uid=#{uid}
+ 	delete from groupmember
+ 	where uid=#{uid} and groupNo=#{groupNo}
  </delete>
 
 </mapper>
