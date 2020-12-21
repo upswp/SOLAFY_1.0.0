@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.solafy.mapper.problem.ProblemMapper;
 import com.solafy.mapper.problem.ProblemSetMapper;
 import com.solafy.model.ProblemSetDto;
 
@@ -25,6 +26,9 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 
 	@Autowired
 	private ProblemSetMapper problemSetMapper;
+	
+	@Autowired
+	private ProblemMapper problemMapper;
 
 	@Override
 	public List<ProblemSetDto> selectAllProblemSet() throws Exception{
@@ -85,6 +89,20 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 		return problemSetMapper.deleteProblemSet(problemSetNo) == 1;
 	}
 
-	
+	@Override
+	public boolean updatePrblemSetFlag(String uid) throws Exception {
+		boolean result = (problemSetMapper.updatePrblemSetFlag(uid)>0);
+		result &= (problemMapper.updateProblemFlag(uid)>0);
+		
+		return result;
+	}
+
+	@Override
+	public boolean deleteProblemSetFlag(String uid) throws Exception {
+		boolean result = (problemSetMapper.deleteProblemSetFlag(uid)>0);
+		result &= (problemMapper.deleteProblemFlag(uid)>0);
+		
+		return result;
+	}
 
 }
