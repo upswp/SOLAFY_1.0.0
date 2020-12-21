@@ -79,4 +79,24 @@ public interface ProblemSetService {
 	 */
 	public boolean deleteProblemSet(int problemSetNo) throws Exception;
 	
+	/**
+	 *  
+	* @param uid 작성중인 사용자의 uid
+	* @return int 수정된 행의 갯수 반환
+	* @throws Exception
+	* @Method 설명 :  문제집의 flag를 임시저장 상태에서 저장으로 변경
+	* @변경이력 :
+	 */
+	public boolean updatePrblemSetFlag (String uid) throws Exception;
+	
+	/**
+	 * 
+	* @param uid 작성중인 사용자의 uid
+	* @return int 삭제된 행의 갯수 반환
+	* @throws Exception
+	* @Method 설명 : 문제집의 flag가 임시저장상태인 문제집을 삭제
+	* @변경이력 : 
+	 */
+	public boolean deleteProblemSetFlag (String uid) throws Exception;
+	
 }
