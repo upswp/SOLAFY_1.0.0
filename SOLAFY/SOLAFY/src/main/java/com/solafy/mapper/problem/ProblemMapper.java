@@ -1,6 +1,8 @@
 package com.solafy.mapper.problem;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -132,6 +134,20 @@ public interface ProblemMapper {
 	* @변경이력 :
 	*/
 	public int createHashTagMapping(int problemNo, int hashTagNo);
+	
+	/**
+	 * 
+	* @param map - Map<String, Integer> - problemSetNo, problemNo 포함
+	* @return int 등록된 행의 갯수 반환
+	* @throws SQLException
+	* @Method 설명 : 문제집에서 문제들을 등록한다.
+	* @변경이력 :
+	 */
+	public int createProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	
+	public int updateProblemFlag(String uid) throws SQLException;
+	
+	public int deleteProblemFlag(String uid) throws SQLException;
 	
 	/**
 	* @param problemDto - 문제
