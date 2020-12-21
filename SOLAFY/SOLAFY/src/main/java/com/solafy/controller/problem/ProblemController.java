@@ -114,12 +114,13 @@ public class ProblemController {
 	/**
 	* @param map : problemDto - 문제정보, problemAnswerDto - 문제 정답 정보, hashTagList(List<String>) - 해시태그명 리스트
 	* @return ResponseEntity<String> - 응답형태
+	 * @throws Exception 
 	* @Method 설명 : 문제 등록 (문제+문제정답+문제와해시태그 매핑)
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "문제를 등록한다. 그리고 DB등록 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping(value = "/create")
-	public ResponseEntity<String> createProblem(@RequestBody HashMap<String, Object> map){
+	public ResponseEntity<String> createProblem(@RequestBody HashMap<String, Object> map) throws Exception{
 		logger.debug("createProblem - 호출");
 		if(problemService.createProblem(map)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
