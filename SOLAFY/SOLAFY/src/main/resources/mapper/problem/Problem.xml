@@ -119,7 +119,7 @@
 	</insert>
 	
 	<!-- 문제와 문제집을 연결 -->
-	<insert id="createProblemSetMapping" parameterType="map">
+	<insert id="createProblemSetMapping" parameterType="int">
 		INSERT INTO problemsetmapping (problemSetNo, problemNo)
 		VALUES (#{problemSetNo},#{problemNo})
 	</insert>
