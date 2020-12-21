@@ -14,7 +14,7 @@
 		댓글이 달린 게시글 번호, 내용, uid, 현재시간이 등록된다.
 	 -->
 	<insert id="createReply" parameterType="FreeReplyDto">
-		insert into replybyfree(articleNo, contents, uid, regiTime)
+		insert into freereply(articleNo, contents, uid, regiTime)
 		values (#{articleNo}, #{contents}, #{uid}, now())
 	</insert>
 	
@@ -24,7 +24,7 @@
 	-->
 	<select id="selectReplies" parameterType="int" resultType="FreeReplyDto">
 		select replyNo, contents, uid, regiTime
-		from replybyfree
+		from freereply
 		where articleNo = #{articleNo}
 		order by regiTime desc
 	</select>
@@ -34,7 +34,7 @@
 		수정가능한 내용은 내용(contents)
 	-->
 	<update id="updateReply" parameterType="FreeReplyDto">
-		update replybyfree
+		update freereply
 		set contents = #{contents}
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</update>
@@ -44,7 +44,7 @@
 		인자값으로 가져온 게시불 번호와 댓글 번호가 동시에 일치하는 댓글 삭제.
 	-->
 	<delete id="deleteReply" parameterType="FreeReplyDto">
-		delete from replybyfree
+		delete from freereply
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</delete>
 </mapper>

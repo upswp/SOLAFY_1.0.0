@@ -14,7 +14,7 @@
 		댓글이 달린 게시글 번호, 내용, uid, 현재시간이 등록된다.
 	 -->
 	<insert id="createReply" parameterType="AnswerModifyReplyDto">
-		insert into replybyanswermodify(articleNo, contents, uid, regiTime)
+		insert into answermodifyreply(articleNo, contents, uid, regiTime)
 		values (#{articleNo}, #{contents}, #{uid}, now())
 	</insert>
 	
@@ -24,7 +24,7 @@
 	-->
 	<select id="selectReplies" parameterType="int" resultType="AnswerModifyReplyDto">
 		select replyNo, contents, uid, regiTime
-		from replybyanswermodify
+		from answermodifyreply
 		where articleNo = #{articleNo}
 		order by regiTime desc
 	</select>
@@ -34,7 +34,7 @@
 		수정가능한 내용은 내용(contents)
 	-->
 	<update id="updateReply" parameterType="AnswerModifyReplyDto">
-		update replybyanswermodify
+		update answermodifyreply
 		set contents = #{contents}
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</update>
@@ -44,7 +44,7 @@
 		인자값으로 가져온 게시불 번호와 댓글 번호가 동시에 일치하는 댓글 삭제.
 	-->
 	<delete id="deleteReply" parameterType="AnswerModifyReplyDto">
-		delete from replybyanswermodify
+		delete from answermodifyreply
 		where articleNo = #{articleNo} and replyNo = #{replyNo}
 	</delete>
 </mapper>
