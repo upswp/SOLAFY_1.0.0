@@ -129,4 +129,24 @@ public interface ProblemSetMapper {
 	* @변경이력 :
 	 */
 	public int deleteProblemSetMapping(int problemSetNo) throws SQLException;
+	
+	/**
+	 * 
+	* @param uid 작성중인 사용자의 uid
+	* @return int 수정된 행의 갯수 반환
+	* @throws SQLException
+	* @Method 설명 : 문제집의 flag를 임시저장 상태에서 저장으로 변경
+	* @변경이력 :
+	 */
+	public int updatePrblemSetFlag(String uid) throws SQLException;
+	
+	/**
+	 * 
+	* @param uid 작성중인 사용자의 uid
+	* @return int 삭제된 행의 갯수 반환
+	* @throws SQLException
+	* @Method 설명 : 문제집의 flag가 임시저장상태인 문제집을 삭제
+	* @변경이력 :
+	 */
+	public int deleteProblemSetFlag(String uid) throws SQLException;
 }
