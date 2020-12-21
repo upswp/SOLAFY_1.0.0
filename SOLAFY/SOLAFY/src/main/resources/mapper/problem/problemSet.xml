@@ -11,6 +11,7 @@
 	<select id="selectAllProblemSet" resultType="problemSetDto">
 		SELECT problemSetNo, uid, title, regiTime
 		FROM problemset
+		WHERE flag = 1
 		ORDER BY problemSetNo
 	</select>
 	
@@ -18,7 +19,7 @@
 	<select id="selectProblemByNo" resultType="problemSetDto">
 		SELECT problemSetNo, uid, title, regiTime
 		FROM problemset
-		WHERE problemSetNo = #{problemSetNo}
+		WHERE problemSetNo = #{problemSetNo} and flag = 1
 	</select>
 	
 	<!-- 문제집 작성자에 따른 문제집 리스트 반환 -->
@@ -27,7 +28,7 @@
 		SELECT p.problemSetNo, p.uid, p.title, p.regiTime
 		FROM problem p join usernickname u
 		ON p.uid = u.uid
-		WHERE u.nickname = #{nickname}
+		WHERE u.nickname = #{nickname} and flag = 1
 		ORDER BY problemSetNo
 	</select>
 	
@@ -35,7 +36,7 @@
 	<select id="selectProblemByTitle" resultType="problemSetDto">
 		SELECT problemSetNo, uid, title, regiTime
 		FROM problemset
-		WHERE title LIKE concat('%', #{title}, '%')
+		WHERE title LIKE concat('%', #{title}, '%') and flag = 1
 		ORDER BY problemSetNo		
 	</select>
 	
@@ -43,10 +44,10 @@
 	<!-- 문제집 생성 -->
 	<insert id="createProblemSet" parameterType="problemSetDto">
 		INSERT INTO problemset (
-								problemSetNo, uid, title, regiTime
+								problemSetNo, uid, title, regiTime,flag
 								)
 		VALUES(
-				#{problemSetNo}, #{uid}, #{title}, now()
+				#{problemSetNo}, #{uid}, #{title}, now(),0
 			  )
 	</insert>
 	
@@ -69,16 +70,24 @@
 		SELECT p.problemNo,p.title
 		FROM problemsetmapping m join problem p
 		ON m.problemNo = p.problemNo
-		WHERE m.problemSetNo = #{problemSetNo}
+		WHERE m.problemSetNo = #{problemSetNo} and p.flag = 1
 	</select>
 
-	<insert id="createProblemSetMapping" parameterType="map">
-		INSERT INTO problemsetmapping 	(problemSetNo, problemNo)
-		VALUES							(#{problemSetNo},#{problemNo})
-	</insert>
-	
 	<delete id="deleteProblemSetMapping" parameterType="int">
 		DELETE FROM problemsetmapping
 		WHERE		problemSetNo = #{problemSetNo}
+	</delete>
+	
+	<!-- 문제집의 flag를 임시저장 상태에서 저장으로 변경 -->
+	<update id="updatePrblemSetFlag" parameterType="String">
+		UPDATE problemset
+			set flag = 1
+		WHERE uid = #{uid} and flag = 0
+	</update>
+	
+	<!-- 문제집의 flag가 임시저장상태인 문제집을 삭제 -->
+	<delete id="deleteProblemSetFlag" parameterType="String">
+	 	DELETE FROM problemset
+	 	WHERE		uid = #{uid} and flag = 0
 	</delete>
 </mapper>
