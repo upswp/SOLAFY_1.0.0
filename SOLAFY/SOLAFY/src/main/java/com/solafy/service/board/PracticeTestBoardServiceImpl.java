@@ -16,7 +16,7 @@ import com.solafy.model.PracticeTestBoardDto;
 public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Autowired
-	private SqlSession sqlSession;
+	private PracticeTestBoardMapper practiceTestMapper;
 
 	@Transactional
 	@Override
@@ -25,7 +25,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 			return false;
 
 		// 모의고사 정보 등록
-		sqlSession.getMapper(PracticeTestBoardMapper.class).createPracticeTest(pDto);
+		practiceTestMapper.createPracticeTest(pDto);
 
 		// 모의고사와 문제들 매핑
 		Map<String, Integer> map = new HashMap<>();
@@ -33,7 +33,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 		map.put("problemNo", pDto.getProblems().get(0).getProblemNo());
 		for (int i = 0; i < pDto.getProblems().size(); i++) {
 			map.replace("problemNo", pDto.getProblems().get(i).getProblemNo());
-			sqlSession.getMapper(PracticeTestBoardMapper.class).createPracticeTestMapping(map);
+			practiceTestMapper.createPracticeTestMapping(map);
 		}
 
 		return true;
@@ -42,26 +42,26 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Transactional
 	@Override
 	public List<PracticeTestBoardDto> selectAllPracticeTest() throws Exception {
-		return sqlSession.getMapper(PracticeTestBoardMapper.class).selectAllPracticeTest();
+		return practiceTestMapper.selectAllPracticeTest();
 	}
 
 	@Transactional
 	@Override
 	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws Exception {
-		return sqlSession.getMapper(PracticeTestBoardMapper.class).selectPracticeTestByArticleNo(articleNo);
+		return practiceTestMapper.selectPracticeTestByArticleNo(articleNo);
 	}
 
 	@Transactional
 	@Override
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws Exception {
-		return sqlSession.getMapper(PracticeTestBoardMapper.class).selectPracticeTestByWriter(uid);
+		return practiceTestMapper.selectPracticeTestByWriter(uid);
 	}
 
 	@Transactional
 	@Override
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception {
 		title = "%" + title + "%";
-		return sqlSession.getMapper(PracticeTestBoardMapper.class).selectPracticeTestByTitle(title);
+		return practiceTestMapper.selectPracticeTestByTitle(title);
 	}
 
 	@Transactional
@@ -71,10 +71,10 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 			return false;
 
 		// 모의고사 정보 갱신
-		sqlSession.getMapper(PracticeTestBoardMapper.class).updatePracticeTest(pDto);
+		practiceTestMapper.updatePracticeTest(pDto);
 
 		// 모의고사와 문제들 매핑 삭제
-		sqlSession.getMapper(PracticeTestBoardMapper.class).deletePracticeTestMapping(pDto.getArticleNo());
+		practiceTestMapper.deletePracticeTestMapping(pDto.getArticleNo());
 
 		// 모의고사와 문제들 매핑 등록
 		Map<String, Integer> map = new HashMap<>();
@@ -82,7 +82,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 		map.put("problemNo", pDto.getProblems().get(0).getProblemNo());
 		for (int i = 0; i < pDto.getProblems().size(); i++) {
 			map.replace("problemNo", pDto.getProblems().get(i).getProblemNo());
-			sqlSession.getMapper(PracticeTestBoardMapper.class).createPracticeTestMapping(map);
+			practiceTestMapper.createPracticeTestMapping(map);
 		}
 
 		return true;
@@ -92,10 +92,10 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Override
 	public boolean deleltePracticeTest(int articleNo) throws Exception {
 		// 모의고사와 문제들 매핑 삭제
-		sqlSession.getMapper(PracticeTestBoardMapper.class).deletePracticeTestMapping(articleNo);
+		practiceTestMapper.deletePracticeTestMapping(articleNo);
 
 		// 모의고사 삭제
-		sqlSession.getMapper(PracticeTestBoardMapper.class).deleltePracticeTest(articleNo);
+		practiceTestMapper.deleltePracticeTest(articleNo);
 
 		return true;
 	}

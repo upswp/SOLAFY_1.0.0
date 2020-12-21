@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.PracticeTestBoardDto;
 
 /**
@@ -13,6 +15,7 @@ import com.solafy.model.PracticeTestBoardDto;
  *
  */
 
+@Mapper
 public interface PracticeTestBoardMapper {
 
 	/**

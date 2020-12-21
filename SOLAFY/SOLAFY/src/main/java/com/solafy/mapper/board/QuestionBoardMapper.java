@@ -3,6 +3,8 @@ package com.solafy.mapper.board;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.QuestionBoardDto;
 
 /**
@@ -12,6 +14,7 @@ import com.solafy.model.QuestionBoardDto;
  *
  */
 
+@Mapper
 public interface QuestionBoardMapper {
 
 	/**

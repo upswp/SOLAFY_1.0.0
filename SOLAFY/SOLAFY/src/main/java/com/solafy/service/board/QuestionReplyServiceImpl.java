@@ -11,40 +11,40 @@ import com.solafy.model.AnswerByQuestionDto;
 
 @Service
 public class QuestionReplyServiceImpl implements QuestionReplyService {
-	
+
 	@Autowired
-	private SqlSession sqlSession;
+	private QuestionReplyMapper answerMapper;
 
 	@Override
 	public boolean createAnswer(AnswerByQuestionDto aDto) throws Exception {
-		int result = sqlSession.getMapper(QuestionReplyMapper.class).createAnswer(aDto);
-		if(result != 1)
+		int result = answerMapper.createAnswer(aDto);
+		if (result != 1)
 			return false;
 		return true;
 	}
 
 	@Override
 	public List<AnswerByQuestionDto> selectAnswersByQuestionNo(int qestionNo) throws Exception {
-		return sqlSession.getMapper(QuestionReplyMapper.class).selectAnswersByQuestionNo(qestionNo);
+		return answerMapper.selectAnswersByQuestionNo(qestionNo);
 	}
 
 	@Override
 	public AnswerByQuestionDto selectAnswerByArticleNo(int articleNo) throws Exception {
-		return sqlSession.getMapper(QuestionReplyMapper.class).selectAnswerByArticleNo(articleNo);
+		return answerMapper.selectAnswerByArticleNo(articleNo);
 	}
 
 	@Override
 	public boolean updateAnswer(AnswerByQuestionDto aDto) throws Exception {
-		int result = sqlSession.getMapper(QuestionReplyMapper.class).updateAnswer(aDto);
-		if(result != 1)
+		int result = answerMapper.updateAnswer(aDto);
+		if (result != 1)
 			return false;
 		return true;
 	}
 
 	@Override
 	public boolean deleteAnswer(int articleNo) throws Exception {
-		int result = sqlSession.getMapper(QuestionReplyMapper.class).deleteAnswer(articleNo);
-		if(result != 1)
+		int result = answerMapper.deleteAnswer(articleNo);
+		if (result != 1)
 			return false;
 		return true;
 	}
