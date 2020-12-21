@@ -36,9 +36,14 @@ public class ProblemServiceImpl implements ProblemService {
 
 	@Autowired
 	private HashTagMapper hashTagMapper;
+	
+	@Override
+	public List<ProblemDto> selectProblemList() throws Exception {
+		return problemMapper.selectProblemList();
+	}
 
 	@Override
-	public HashMap<String, Object> selectProblem(int problemNo) {
+	public HashMap<String, Object> selectProblem(int problemNo) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		// ProbleDto
@@ -64,36 +69,13 @@ public class ProblemServiceImpl implements ProblemService {
 		return map;
 	}
 
-//	@Override
-//	public CategorySmallDto selectCategorySmall(String categoryNo) {
-//		int categorySmallNo = Integer.parseInt(categoryNo.substring(5, 10));
-//		return problemMapper.selectCategorySmall(categorySmallNo);
-//	}
-//
-//	@Override
-//	public CategoryMediumDto selectCategoryMedium(String categoryNo) {
-//		int categoryMediumNo = Integer.parseInt(categoryNo.substring(2, 5));
-//		return problemMapper.selectCategoryMedium(categoryMediumNo);
-//	}
-//
-//	@Override
-//	public CategoryLargeDto selectCategoryLarge(String categoryNo) {
-//		int categoryLargeNo = Integer.parseInt(categoryNo.substring(0, 2));
-//		return problemMapper.selectCategoryLarge(categoryLargeNo);
-//	}
-//
-//	@Override
-//	public List<HashTagDto> selectHashTagList(int problemNo) {
-//		return problemMapper.selectHashTagList(problemNo);
-//	}
-
 	@Override
-	public List<ProblemDto> selectProblemByHashTag(int hashTagNo) {
+	public List<ProblemDto> selectProblemByHashTag(int hashTagNo) throws Exception{
 		return problemMapper.selectProblemByHashTag(hashTagNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByCategory(String categoryNo) {
+	public List<ProblemDto> selectProblemByCategory(String categoryNo) throws Exception{
 		// 소분류 카테고리를 이용한 문제 검색 (소+중+대 번호 전달)
 		if (categoryNo.length() == 10) {
 			return problemMapper.selectProblemByCategorySmall(categoryNo);
@@ -113,7 +95,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) {
+	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) throws Exception{
 		if ("제목".contains(type)) {
 			return problemMapper.selectProblemByName(keyword);
 		} else if ("문제번호".contains(type)) {
@@ -128,7 +110,8 @@ public class ProblemServiceImpl implements ProblemService {
 	// 해쉬태그관련
 	// 없는 걸 등록한다 -> 해쉬태그 생성
 	// 있는 걸 등록한다 -> mappingtable연결
-	//@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList
+	// @RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, 
+	// @RequestBody List<String> hashTagList, @RequestBody int problemSetNo
 	@Override
 	public boolean createProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
@@ -166,7 +149,7 @@ public class ProblemServiceImpl implements ProblemService {
 
 	// TODO : create부분하기
 	@Override
-	public boolean updateProblem(HashMap<String, Object> map) {
+	public boolean updateProblem(HashMap<String, Object> map) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
 		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
@@ -196,7 +179,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
-	public boolean deleteProblem(int problemNo) {
+	public boolean deleteProblem(int problemNo) throws Exception{
 		return problemMapper.deleteProblem(problemNo) > 0;
 	}
 }
