@@ -2,12 +2,21 @@ package com.solafy.service.board;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.solafy.mapper.board.QuestionBoardMapper;
 import com.solafy.model.QuestionBoardDto;
+
+/**
+ * 
+ * @FileName QuestionBoardServiceImpl.java
+ * @Project SOLAFY
+ * @Date 2020. 12. 14.
+ * @author 이주희
+ *
+ * @변경이력
+ */
 
 @Service
 public class QuestionBoardServiceImpl implements QuestionBoardService {

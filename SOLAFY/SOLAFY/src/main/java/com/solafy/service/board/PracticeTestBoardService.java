@@ -1,15 +1,17 @@
 package com.solafy.service.board;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.solafy.model.PracticeTestBoardDto;
 
 /**
  * 
- * @author Juhee Lee
- * @since 2020-12-14
+ * @FileName PracticeTestBoardService.java
+ * @Project SOLAFY
+ * @Date 2020. 12. 14.
+ * @author 이주희
  *
+ * @변경이력
  */
 
 public interface PracticeTestBoardService {
@@ -19,6 +21,8 @@ public interface PracticeTestBoardService {
 	 * @param pDto - PracticeTestBoardDto
 	 * @return boolean, 등록 성공 시 true 반환
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public boolean createPracticeTest(PracticeTestBoardDto pDto) throws Exception;
 
@@ -27,6 +31,8 @@ public interface PracticeTestBoardService {
 	 * 
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectAllPracticeTest() throws Exception;
 
@@ -36,6 +42,8 @@ public interface PracticeTestBoardService {
 	 * @param articleNo - int, 모의고사 번호
 	 * @return PracticeTestBoardDto - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간, 제한시간, 문제목록 포함
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws Exception;
 
@@ -45,6 +53,8 @@ public interface PracticeTestBoardService {
 	 * @param uid - String, 검색된 uid
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws Exception;
 
@@ -54,15 +64,19 @@ public interface PracticeTestBoardService {
 	 * @param title - String, 검색된 제목 키워드
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception;
-	
+
 	/**
 	 * 모의고사 정보 수정 및 문제 mapping 갱신
 	 * 
 	 * @param pDto - PracticeTestBoardDto - 제목, 등록,시작,종료,제한시간, 문제목록 변경
 	 * @return boolean, 정상적으로 수정 시 true 반환
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public boolean updatePracticeTest(PracticeTestBoardDto pDto) throws Exception;
 
@@ -72,6 +86,8 @@ public interface PracticeTestBoardService {
 	 * @param articleNo - int, 모의고사 번호
 	 * @return boolean, 정상적으로 삭제 시 true 반환
 	 * @throws Exception
+	 * 
+	 * @변경이력
 	 */
 	public boolean deleltePracticeTest(int articleNo) throws Exception;
 
