@@ -83,10 +83,10 @@ public class ProblemSetController {
 	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 작성자에 해당하는 문제집 정보를 반환한다.",response = List.class)
-	@GetMapping(value = "/problemSetSelectByWriter/{uid}")
-	public ResponseEntity<List<ProblemSetDto>> selectProblemByWriter(@PathVariable String uid) throws Exception{
+	@GetMapping(value = "/problemSetSelectByWriter/{nickname}")
+	public ResponseEntity<List<ProblemSetDto>> selectProblemByWriter(@PathVariable String nickname) throws Exception{
 		logger.debug("selectProblemByWriter -- 호출");
-		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByWriter(uid), HttpStatus.OK);
+		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByWriter(nickname), HttpStatus.OK);
 	}
 	
 	/**
@@ -161,4 +161,27 @@ public class ProblemSetController {
 		}
 	}
 	
+	//TODO : <@PathVariable> 상태이면 주소창에 uid 노출이 되는지 확인하기.
+	
+	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값을 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@PutMapping(value = "/updatePrblemSetFlag/{uid}")
+	public ResponseEntity<String> updatePrblemSetFlag(@PathVariable String uid) throws Exception{
+		logger.debug("updatePrblemSetFlag -- 호출");
+		if (problemsetService.updatePrblemSetFlag(uid)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(FAIL,HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값이 false(0)인 상태인 문제집과 문제를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@DeleteMapping(value = "/deleteProblemSetFlag/{uid}")
+	public ResponseEntity<String> deleteProblemSetFlag(@PathVariable String uid) throws Exception{
+		logger.debug("deleteProblemSetFlag -- 호출");
+		if(problemsetService.deleteProblemSetFlag(uid)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+	}
 }
