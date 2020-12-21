@@ -143,7 +143,7 @@ public interface ProblemMapper {
 	* @Method 설명 : 문제집에서 문제들을 등록한다.
 	* @변경이력 :
 	 */
-	public int createProblemSetMapping(Map<String, Integer> map) throws SQLException;
+	public int createProblemSetMapping(int problemSetNo,int problemNo) throws SQLException;
 	
 	public int updateProblemFlag(String uid) throws SQLException;
 	
