@@ -141,22 +141,17 @@ public interface ProblemMapper {
 	*/
 	public int updateProblem(ProblemDto problemDto);
 	
-	// TODO : 해쉬태그관련
-	// 없는 걸 등록했다 -> 해쉬태그 생성
-	// 있는 걸 등록했다 -> mappingtable연결
-	// 이미 등록 되어있는 해쉬태그를 없앤다 -> mappingtable삭제
-	
 	/**
-	 * 문제의 해시태그 수정
-	 * 
-	 * @param hashTagDto - 문제에 등록되는 해쉬 태그
-	 * @return int : 수정된 행의 개수 반환 
-	 */
-	//int updateProblemHashTag(HashTagDto hashTagDto);
+	* @param ProblemNo - 문제번호
+	* @return int - 삭제된 행의 개수 반환
+	* @Method 설명 : 문제번호를 이용한 해시태그와 문제의 연결 해제
+	* @변경이력 :
+	*/
+	public int deleteHashTagMappingByProblemNo(int ProblemNo);
 	
 	/**
 	* @param problemNo - 문제
-	* @return int - 삭제된 행의 개수 
+	* @return int - 삭제된 행의 개수 반환
 	* @Method 설명 : 문제 삭제
 	* @변경이력 :
 	*/
