@@ -2,7 +2,6 @@ package com.solafy.service.problem;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -161,11 +160,35 @@ public class ProblemServiceImpl implements ProblemService {
 		return result;
 	}
 
-	// TODO : 새로운 DB 넣고, update구성하고, create부분하기
+	// TODO : create부분하기
 	@Override
-	public boolean updateProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList) {
+	public boolean updateProblem(HashMap<String, Object> map) {
+		ObjectMapper mapper = new ObjectMapper();
+		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
+		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
+		List<String> hashTagList = mapper.convertValue(map.get("hashTag"),new TypeReference<List<String>>() {});
 		
-		return problemMapper.updateProblem(problemDto) > 0;
+		// 문제 수정
+		boolean result = (problemMapper.updateProblem(problemDto) > 0);
+		
+		// 문제 답안 수정
+		result &= (problemAnswerMapper.updateProblemAnswer(problemAnswerDto)>0);
+		
+		// 문제와 연결된 모든 해시 태그의 연결을 해제
+		result &= (problemMapper.deleteHashTagMappingByProblemNo(problemDto.getProblemNo())>0);
+		// 해시태그 수정된 대로 다시 매핑
+		for (String hashTag : hashTagList) {
+			HashTagDto hashTagDto;
+			// hashTag 테이블에 존재하지 않으면 hashTag 테이블에 등록
+			if ((hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag)) == null) {
+				result &= (hashTagMapper.createHashTag(hashTag) > 0);
+				hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag);
+			}
+			// 문제와 해시태그를 mapping 테이블을 통해 연결
+			result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
+		}
+		
+		return result;
 	}
 
 	@Override

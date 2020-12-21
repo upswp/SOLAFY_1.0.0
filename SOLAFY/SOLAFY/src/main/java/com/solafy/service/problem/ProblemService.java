@@ -97,9 +97,7 @@ public interface ProblemService {
 	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) ;
 	
 	/**
-	* @param problemDto - 문제정보
-	* @param problemAnswerDto - 문제 정답 정보
-	* @param hashTagList(List<String>) - 해시태그명 리스트
+	* @param map : problemDto - 문제정보, problemAnswerDto - 문제 정답 정보, hashTagList(List<String>) - 해시태그명 리스트
 	* @return boolean - 성공,실패 여부
 	* @Method 설명 : 문제 등록
 	* @변경이력 :
@@ -117,7 +115,7 @@ public interface ProblemService {
 	* @Method 설명 : 문제 수정
 	* @변경이력 :
 	*/
-	public boolean updateProblem(ProblemDto problemDto, ProblemAnswerDto problemAnswerDto, List<String> hashTagList);
+	public boolean updateProblem(HashMap<String, Object> map);
 	
 	/**
 	* @Method Name : deleteProblem
