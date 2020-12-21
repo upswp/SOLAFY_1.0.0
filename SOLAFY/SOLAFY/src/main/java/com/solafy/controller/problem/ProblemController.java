@@ -70,34 +70,6 @@ public class ProblemController {
 	// 2. select대,중,소(problemNo)호출 -> 각 카테고리Dto반환  *query문의 join을 이용해서 problemNo로 카테고리 dto를 뽑아옴
 	// 3. selectHashTag(problemNo)호출 -> HashTagDto List반환
 	
-//	@ApiOperation(value = "문제의 카테고리번호에 해당하는  소분류 카테고리 반환한다.", response = CategorySmallDto.class)
-//	@GetMapping(value = "/category/small/{categoryNo}")
-//	public ResponseEntity<CategorySmallDto> selectCategorySmall(@PathVariable String categoryNo){
-//		logger.debug("selectCategorySmall - 호출");
-//		return new ResponseEntity<CategorySmallDto>(problemService.selectCategorySmall(categoryNo), HttpStatus.OK);
-//	}
-//	
-//	@ApiOperation(value = "문제의 카테고리번호에 해당하는 중분류 카테고리 반환한다.", response = CategoryMediumDto.class)
-//	@GetMapping(value = "/category/medium/{categoryNo}")
-//	public ResponseEntity<CategoryMediumDto> selectCategoryMedium(@PathVariable String categoryNo){
-//		logger.debug("selectCategoryMedium - 호출");
-//		return new ResponseEntity<CategoryMediumDto>(problemService.selectCategoryMedium(categoryNo), HttpStatus.OK);
-//	}
-//	
-//	@ApiOperation(value = "문제의 카테고리번호에 해당하는 대분류 카테고리 반환한다.", response = CategoryLargeDto.class)
-//	@GetMapping(value = "/category/Large/{categoryNo}")
-//	public ResponseEntity<CategoryLargeDto> selectCategoryLarge(@PathVariable String categoryNo) {
-//		logger.debug("selectCategoryLarge - 호출");
-//		return new ResponseEntity<CategoryLargeDto>(problemService.selectCategoryLarge(categoryNo), HttpStatus.OK);
-//	}
-//	
-//	@ApiOperation(value = "문제번호에 해당 하는 해시태그를 반환한다.", response = List.class)
-//	@GetMapping(value = "/{problemNo}/hashtag")
-//	public ResponseEntity<List<HashTagDto>> selectHashTagList(@PathVariable int problemNo){
-//		logger.debug("selectHashtagList - 호출");
-//		return new ResponseEntity<List<HashTagDto>>(problemService.selectHashTagList(problemNo), HttpStatus.OK);
-//	}
-	
 	/**
 	* @param hashTagNo - 해시태그 번호
 	* @return ResponseEntity<List<ProblemDto>> - 문제리스트, 응답형태
@@ -140,14 +112,11 @@ public class ProblemController {
 	}
 	
 	/**
-	* @param problemDto - 문제정보
-	* @param problemAnswerDto - 문제 정답 정보
-	* @param hashTagList(List<String>) - 해시태그명 리스트
+	* @param map : problemDto - 문제정보, problemAnswerDto - 문제 정답 정보, hashTagList(List<String>) - 해시태그명 리스트
 	* @return ResponseEntity<String> - 응답형태
 	* @Method 설명 : 문제 등록 (문제+문제정답+문제와해시태그 매핑)
 	* @변경이력 :
 	*/
-	//@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList
 	@ApiOperation(value = "문제를 등록한다. 그리고 DB등록 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping(value = "/create")
 	public ResponseEntity<String> createProblem(@RequestBody HashMap<String, Object> map){
@@ -162,9 +131,9 @@ public class ProblemController {
 	// TODO : 카테고리 대 중 소 리스트 볼 수 있게 Mapper추가
 	@ApiOperation(value = "문제를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PutMapping(value = "/update")
-	public ResponseEntity<String> updateProblem(@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList){
+	public ResponseEntity<String> updateProblem(@RequestBody HashMap<String, Object> map){
 		logger.debug("updateProblem - 호출");
-		if(problemService.updateProblem(problemDto,problemAnswerDto,hashTagList)) {
+		if(problemService.updateProblem(map)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
