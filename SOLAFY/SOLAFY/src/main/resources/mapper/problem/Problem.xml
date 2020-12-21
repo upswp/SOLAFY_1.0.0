@@ -11,7 +11,15 @@
 	@변경이력 :
 	@프로그램 설명 : Problem SQL 
 	-->
-	
+
+	<!-- 문제 전체 검색 -->
+	<select id="selectProblemList" resultType="ProblemDto">
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.flag = 1
+	</select>
+
 	<!-- 문제의 정보 반환(상세보기 용) -->
 	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
 		select p.problemNo, p.multipleChoice, p.title, u.nickname, p.contents, p.categoryNo, p.type  
@@ -54,7 +62,7 @@
 		select p.problemNo, p.title, u.nickname
 		from hashtagmapping m join problem p join usernickname u
 		on m.problemNo = p.problemNo and p.uid = u.uid
-		where m.hashTagNo = #{hashTagNo}
+		where m.hashTagNo = #{hashTagNo} and p.flag = 1
 	</select>
 	
 	<!-- 소분류 카테고리를 이용한 문제 검색 -->
@@ -62,7 +70,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where p.categoryNo = #{categoryNo}
+		where p.categoryNo = #{categoryNo} and p.flag = 1
 	</select>
 	
 	<!-- 중분류 카테고리를 이용한 문제 검색 -->
@@ -70,7 +78,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where p.categoryNo like concat(#{categoryLargeMediumNo}, '%')
+		where p.categoryNo like concat(#{categoryLargeMediumNo}, '%') and p.flag = 1
 	</select>
 	
 	<!-- 대분류 카테고리를 이용한 문제 검색 -->
@@ -78,7 +86,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where p.categoryNo like concat(#{categoryLargeNo}, '%')
+		where p.categoryNo like concat(#{categoryLargeNo}, '%') and p.flag = 1
 	</select>
 	
 	<!-- 문제이름(일부)으로 검색 -->
@@ -86,7 +94,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where p.title like concat('%', #{title}, '%')
+		where p.title like concat('%', #{title}, '%') and p.flag = 1
 	</select>
 	
 	<!-- 문제번호로 검색 -->
@@ -94,7 +102,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where p.problemNo = #{problemNo}
+		where p.problemNo = #{problemNo} and p.flag = 1
 	</select>
 	
 	<!-- 유저닉네임으로 검색 -->
@@ -102,7 +110,7 @@
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
-		where u.nickname = #{nickname}
+		where u.nickname = #{nickname} and p.flag = 1
 	</select>
 	
 	<!-- 문제 등록 -->
