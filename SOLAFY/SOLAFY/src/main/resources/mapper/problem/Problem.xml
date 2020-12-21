@@ -11,14 +11,13 @@
 	@변경이력 :
 	@프로그램 설명 : Problem SQL 
 	-->
-	<!-- TODO: uid 대신 닉네임 나오게 바꾸기 -->
-	
 	
 	<!-- 문제의 정보 반환(상세보기 용) -->
 	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
-		select problemNo, multipleChoice, title, uid, contents, categoryNo, type  
-		from problem
-		where problemNo = #{problemNo}
+		select p.problemNo, p.multipleChoice, p.title, u.nickname, p.contents, p.categoryNo, p.type  
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.problemNo = #{problemNo}
 	</select>
 	
 	<!-- 문제의 소분류 카테고리 반환(상세보기 용) -->
@@ -52,50 +51,55 @@
 	
 	<!-- 해시태그번호로 문제 검색 -->
 	<select id="selectProblemByHashTag" parameterType="int" resultType="ProblemDto">
-		select p.problemNo, p.title, p.uid
-		from hashtagmapping m join problem p
-		on m.problemNo = p.problemNo
+		select p.problemNo, p.title, u.nickname
+		from hashtagmapping m join problem p join usernickname u
+		on m.problemNo = p.problemNo and p.uid = u.uid
 		where m.hashTagNo = #{hashTagNo}
 	</select>
 	
 	<!-- 소분류 카테고리를 이용한 문제 검색 -->
 	<select id="selectProblemByCategorySmall" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where categoryNo = #{categoryNo}
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.categoryNo = #{categoryNo}
 	</select>
 	
 	<!-- 중분류 카테고리를 이용한 문제 검색 -->
 	<select id="selectProblemByCategoryMedium" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where categoryNo like concat(#{categoryLargeMediumNo}, '%')
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.categoryNo like concat(#{categoryLargeMediumNo}, '%')
 	</select>
 	
 	<!-- 대분류 카테고리를 이용한 문제 검색 -->
 	<select id="selectProblemByCategoryLarge" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where categoryNo like concat(#{categoryLargeNo}, '%')
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.categoryNo like concat(#{categoryLargeNo}, '%')
 	</select>
 	
 	<!-- 문제이름(일부)으로 검색 -->
 	<select id="selectProblemByName" parameterType="String" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where title like concat('%', #{title}, '%')
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.title like concat('%', #{title}, '%')
 	</select>
 	
 	<!-- 문제번호로 검색 -->
 	<select id="selectProblemByProblemNo" parameterType="int" resultType="ProblemDto">
-		select problemNo, title, uid
-		from problem
-		where problemNo = #{problemNo}
+		select p.problemNo, p.title, u.nickname
+		from problem p join usernickname u
+		on p.uid = u.uid
+		where p.problemNo = #{problemNo}
 	</select>
 	
 	<!-- 유저닉네임으로 검색 -->
 	<select id="selectProblemByUserNickname" parameterType="int" resultType="ProblemDto">
-		select p.problemNo, p.title, p.uid
+		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
 		where u.nickname = #{nickname}
@@ -104,8 +108,8 @@
 	<!-- 문제 등록 -->
 	<!-- useGeneratedKeys="true" keyProperty="값을 받아올컬럼명"을 써주면 insert문 실행 후 ProblemDto의 해당 컬럼에 값을 넣어준다 -->
 	<insert id="createProblem" parameterType="ProblemDto" useGeneratedKeys="true" keyProperty="problemNo">
-		insert into problem (multipleChoice, title, uid, contents, categoryNo, type)
-		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categoryNo},#{type})
+		insert into problem (multipleChoice, title, uid, contents, categoryNo, type, flag)
+		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categoryNo},#{type},0)
 	</insert>
 	
 	<!-- 문제와 해시태그를 연결 -->
@@ -120,6 +124,12 @@
 		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categoryNo=#{categoryNo},type=#{type}
 		where problemNo = #{problemNo}	
 	</update>
+	
+	<!-- 문제와 해시태그의 연결 전체 해제-->
+	<delete id="deleteHashTagMappingByProblemNo" parameterType="int">
+		delete from hashtagmapping
+		where problemNo = #{problemNo}
+	</delete>
 	
 	<!-- 문제 삭제 -->
 	<delete id="deleteProblem" parameterType="int">
