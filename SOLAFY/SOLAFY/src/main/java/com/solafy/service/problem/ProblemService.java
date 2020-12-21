@@ -102,7 +102,7 @@ public interface ProblemService {
 	* @Method 설명 : 문제 등록
 	* @변경이력 :
 	*/
-	public boolean createProblem(HashMap<String, Object> map);
+	public boolean createProblem(HashMap<String, Object> map) throws Exception;
 	
 	/**
 	* @Method Name : updateProblem

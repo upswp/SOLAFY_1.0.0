@@ -1,5 +1,6 @@
 package com.solafy.service.problem;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -129,11 +130,12 @@ public class ProblemServiceImpl implements ProblemService {
 	// 있는 걸 등록한다 -> mappingtable연결
 	//@RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, @RequestBody List<String> hashTagList
 	@Override
-	public boolean createProblem(HashMap<String, Object> map) {
+	public boolean createProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
 		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
 		List<String> hashTagList = mapper.convertValue(map.get("hashTag"),new TypeReference<List<String>>() {});
+		int problemSetNo = mapper.convertValue(map.get("problemSetNo"),new TypeReference<Integer>() {});
 		
 		// 문제 등록
 		boolean result = (problemMapper.createProblem(problemDto) > 0);
@@ -156,6 +158,8 @@ public class ProblemServiceImpl implements ProblemService {
 			// 문제와 해시태그를 mapping 테이블을 통해 연결
 			result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
 		}
+		
+		result &=(problemMapper.createProblemSetMapping(problemSetNo, problemDto.getProblemNo())>0);
 
 		return result;
 	}
