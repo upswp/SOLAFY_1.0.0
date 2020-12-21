@@ -21,31 +21,35 @@ import com.solafy.service.board.AnswerModifyBoardService;
 
 import io.swagger.annotations.ApiOperation;
 
+/**
+* @FileName : AnswerModifyBoardController.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 22
+* @작성자 : BUMSEOK SEO
 
+* @변경이력 :
+* @프로그램 설명 : 답안수정 게시판 컨트롤러
+*/
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/answermodify") //주소는 알아서 넣기
+@RequestMapping("/answermodify")
 
 public class AnswerModifyBoardController {
 	private static final Logger logger = LoggerFactory.getLogger(AnswerModifyBoardController.class);
-	//아래 string 2개는 사용하지 않는다면 지우기
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
-	
-	//@Autowired
-	//private ___Service ___Service;
-	
-//	@ApiOperation(value = "~~~~를 반환한다", response = List.class)
-//	@GetMapping(value = "/판단해서 필요하면 value 넣기")
-//	public ResponseEntity<List<DTO 넣어주기>> retrieveBoard() throws Exception {
-//		logger.debug("retrieveBoard - 호출");
-//		return new ResponseEntity<List<DTO 넣어주기>>>(boardService.retrieveBoard(), HttpStatus.OK);
-//	}
+
 	@Autowired
 	private AnswerModifyBoardService answerModifyBoardService;	
 	
-	@ApiOperation(value = "답안수정 게시판에 게시글을 등록한다.", response = List.class)
+	/**
+	* @param answerModifyBoardDto
+	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	* @Method 설명 : 게시글 등록
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "답안수정 게시판에 게시글을 등록한다.", response = String.class)
 	@PostMapping(value = "/createArticle")
 	public ResponseEntity<String> createArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto){
 		logger.info("createArticle - 호출" + new Date());
@@ -56,17 +60,28 @@ public class AnswerModifyBoardController {
 		}
 	}
 	
-
+	/**
+	* @return List<AnswerModifyBoardDto> 답안수정 게시판의 모든 게시글 반환
+	* 	AnswerModifyBoardDto엔
+	* 	articleNo, uid, problemNo, title, regiTime의 정보를 가지고 있다.
+	* @Method 설명 : 모든 게시글을 반환
+	* @변경이력 :
+	*/
 	@ApiOperation(value = "답안수정 게시판의 모든 게시글을 반환한다.", response = List.class)
 	@GetMapping(value="/selectArticles")
-	public List<AnswerModifyBoardDto> selectArticles(){
+	public ResponseEntity<List<AnswerModifyBoardDto>> selectArticles(){
 		logger.info("selectArtilces - 호출" + new Date());
-		List<AnswerModifyBoardDto> list = answerModifyBoardService.selectArticles();
-		return list;
+		return new ResponseEntity<List<AnswerModifyBoardDto>>(answerModifyBoardService.selectArticles(),HttpStatus.OK);
 	}
 	
-
-	@ApiOperation(value = "답안수정 게시판의 게시글을 수정한다", response = List.class)
+	/**
+	* @param answerModifyBoardDto 
+	* 	articleNo, title, contents의 정보를 가지고 있다.
+	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	* @Method 설명 : 게시글 수정
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "답안수정 게시판의 게시글을 수정한다", response = String.class)
 	@PostMapping(value="/updateArticle")
 	public ResponseEntity<String> updateArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto){
 		logger.info("updateArticle - 호출" + new Date());
@@ -79,8 +94,13 @@ public class AnswerModifyBoardController {
 		
 	}
 	
-
-	@ApiOperation(value = "답안수정 게시판의 게시글을 삭제한다", response = List.class)
+	/**
+	* @param articleNo 삭제할 게시글의 게시글번호
+	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	* @Method 설명 : 게시글 삭제
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "답안수정 게시판의 게시글을 삭제한다", response = String.class)
 	@PostMapping(value = "/deleteArticle/{articleNo}")
 	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo){
 		logger.info("deleteArticle - 호출" + new Date());
