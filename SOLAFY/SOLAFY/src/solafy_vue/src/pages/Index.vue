@@ -64,12 +64,7 @@ export default {
             let userId = firebaseAuth.currentUser.uid;
             firebaseDb.ref("users/" + userId).set({
               email: this.formData.email,
-<<<<<<< HEAD
               nickname: "test"
-=======
-              nickname:
-                "견222222222222222222222222222222222222222222222222222222222"
->>>>>>> 0104d6086693067c6d3f0eb814a7712f8ffd48fb
             });
             this.$q.notify({
               color: "green",
