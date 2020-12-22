@@ -23,9 +23,10 @@ public class ProblemSetDto {
 	private String uid;
 	private String title;
 	private String regiTime;
-	
+	private String nickname;
 	public ProblemSetDto() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 	public int getProblemSetNo() {
 		return problemSetNo;
@@ -51,9 +52,15 @@ public class ProblemSetDto {
 	public void setRegiTime(String regiTime) {
 		this.regiTime = regiTime;
 	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 	@Override
 	public String toString() {
 		return "ProblemSetDto [problemSetNo=" + problemSetNo + ", uid=" + uid + ", title=" + title + ", regiTime="
-				+ regiTime + "]";
+				+ regiTime + ", nickname=" + nickname + "]";
 	}
 }
