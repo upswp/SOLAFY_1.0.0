@@ -9,7 +9,7 @@
         label="admin email *"
         lazy-rules
         :rules="[
-          (val) => (val && val.length > 0) || '관리자 이메일을 입력해주세요.',
+          val => (val && val.length > 0) || '관리자 이메일을 입력해주세요.'
         ]"
       />
 
@@ -21,7 +21,7 @@
         label="admin password *"
         lazy-rules
         :rules="[
-          (val) => (val !== null && val !== '') || '비밀번호를 입력해주세요',
+          val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
         ]"
       />
       <q-toggle
@@ -45,8 +45,8 @@ export default {
       formData: {
         email: "",
         password: "",
-        accept: false,
-      },
+        accept: false
+      }
     };
   },
   methods: {
@@ -60,28 +60,26 @@ export default {
             this.formData.email,
             this.formData.password
           )
-          .then((Response) => {
+          .then(Response => {
             let userId = firebaseAuth.currentUser.uid;
             firebaseDb.ref("users/" + userId).set({
               email: this.formData.email,
-              nickname:
-                "견222222222222222222222222222222222222222222222222222222222",
+              nickname: "test"
             });
             this.$q.notify({
               color: "green",
               textColor: "white",
               icon: "cloud_done",
-              message: "가입 성공",
+              message: "가입 성공"
             });
-            this.$router.push("어디로 넘어가야 할까요?");
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error.message);
             this.$q.notify({
               color: "red",
               textColor: "white",
               icon: "warning",
-              message: "가입 실패",
+              message: "가입 실패"
             });
           });
       } else {
@@ -91,23 +89,23 @@ export default {
             this.formData.email,
             this.formData.password
           )
-          .then((Response) => {
+          .then(Response => {
             console.log(Response);
             this.$q.notify({
               color: "green",
               textColor: "white",
               icon: "cloud_done",
-              message: "인증 성공",
+              message: "인증 성공"
             });
-            this.$router.push("어디로 넘어가야 할까요?");
+            this.$router.push("main");
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             this.$q.notify({
               color: "red",
               textColor: "white",
               icon: "warning",
-              message: "인증 실패",
+              message: "인증 실패"
             });
           });
       }
@@ -117,7 +115,7 @@ export default {
       this.formData.email = null;
       this.formData.password = null;
       this.accept = false;
-    },
-  },
+    }
+  }
 };
 </script>

@@ -12,10 +12,24 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          SOLAFY
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="cursor-pointer non-selectable">
+          <q-btn flat dense round icon="account_circle" aria-label="Menu">
+            <q-menu>
+              <q-list dense style="min-width: 100px">
+                <q-item clickable v-close-popup>
+                  <q-item-section>로그인</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>회원가입</q-item-section>
+                </q-item>
+                <q-separator />
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -26,11 +40,8 @@
       content-class="bg-grey-1"
     >
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Essential Links
+        <q-item-label header class="text-grey-8">
+          SOLAFY Menu
         </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
@@ -47,61 +58,61 @@
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from "components/EssentialLink.vue";
 
 const linksData = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: "About",
+    caption: "모두함께",
+    icon: "groups",
+    link: "/about"
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    title: "Problem",
+    caption: "아영&상우",
+    icon: "pages",
+    link: "/problem"
   },
   {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    title: "Problem Set",
+    caption: "아영&상우",
+    icon: "history_edu",
+    link: "/problemset"
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
+    title: "Free Board",
+    caption: "범석&기현",
+    icon: "dashboard",
+    link: "/freeboard"
   },
   {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
+    title: "Practice Board",
+    caption: "범석&기현",
+    icon: "api",
+    link: "/practiceboard"
   },
   {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
+    title: "Answer Modify Board",
+    caption: "범석&기현",
+    icon: "announcement",
+    link: "/answermodifyboard"
   },
   {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    title: "Group",
+    caption: "기현",
+    icon: "group",
+    link: "/group"
   }
 ];
 
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   components: { EssentialLink },
-  data () {
+  data() {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData
-    }
+    };
   }
-}
+};
 </script>
