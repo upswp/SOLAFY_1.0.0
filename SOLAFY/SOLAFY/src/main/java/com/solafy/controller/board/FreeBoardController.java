@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
 */
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/freeboard") //주소는 알아서 넣기
+@RequestMapping("/free") //주소는 알아서 넣기
 
 public class FreeBoardController {
 	private static final Logger logger = LoggerFactory.getLogger(FreeBoardController.class);
@@ -105,8 +105,8 @@ public class FreeBoardController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "자유 게시판의 게시글을 수정한다", response = List.class)
-	@PostMapping(value="/updateArticle/{articleNo}")
-	public ResponseEntity<String> updateArticle(@RequestBody FreeBoardDto freeBoardDto, @PathVariable int no){
+	@PostMapping(value="/updateArticle")
+	public ResponseEntity<String> updateArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("updateArticle - 호출" + new Date());
 		if(freeBoardService.updateArticle(freeBoardDto)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

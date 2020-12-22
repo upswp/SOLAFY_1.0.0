@@ -13,13 +13,14 @@ public class ProblemDto {
 	private String contents;
 	private String categoryNo;
 	private int type;
+	private String nickname;
 	
 	public ProblemDto() {
 		super();
 	}
 
 	public ProblemDto(int problemNo, String multipleChoice, String title, String uid, String contents,
-			String categoryNo, int type) {
+			String categoryNo, int type, String nickname) {
 		super();
 		this.problemNo = problemNo;
 		this.multipleChoice = multipleChoice;
@@ -28,6 +29,7 @@ public class ProblemDto {
 		this.contents = contents;
 		this.categoryNo = categoryNo;
 		this.type = type;
+		this.nickname = nickname;
 	}
 
 	public int getProblemNo() {
@@ -86,9 +88,18 @@ public class ProblemDto {
 		this.type = type;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
 		return "ProblemDto [problemNo=" + problemNo + ", multipleChoice=" + multipleChoice + ", title=" + title
-				+ ", uid=" + uid + ", contents=" + contents + ", categoryNo=" + categoryNo + ", type=" + type + "]";
+				+ ", uid=" + uid + ", contents=" + contents + ", categoryNo=" + categoryNo + ", type=" + type
+				+ ", nickname=" + nickname + "]";
 	}
 }

@@ -26,7 +26,7 @@
       />
       <q-toggle
         v-model="formData.accept"
-        label="false 회원가입 || true 회원가입"
+        label="false 회원가입 || true 로그인"
       />
       <div>
         <q-btn label="로그인" type="submit" color="positive" />
@@ -64,7 +64,12 @@ export default {
             let userId = firebaseAuth.currentUser.uid;
             firebaseDb.ref("users/" + userId).set({
               email: this.formData.email,
+<<<<<<< HEAD
               nickname: "test"
+=======
+              nickname:
+                "견222222222222222222222222222222222222222222222222222222222"
+>>>>>>> 0104d6086693067c6d3f0eb814a7712f8ffd48fb
             });
             this.$q.notify({
               color: "green",

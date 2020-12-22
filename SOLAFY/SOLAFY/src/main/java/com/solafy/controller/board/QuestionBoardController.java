@@ -49,6 +49,14 @@ public class QuestionBoardController {
 	@Autowired
 	private QuestionReplyService answerService;
 
+	/**
+	 * 
+	 * @param qDto - QuestionBoardDto
+	 * @return String
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "새로운 질문 글을 등록한다.", response = String.class)
 	@PostMapping(value = "/create")
 	public ResponseEntity<String> createQuestion(@RequestBody QuestionBoardDto qDto) throws Exception {
@@ -59,6 +67,14 @@ public class QuestionBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @param aDto - AnswerByQuestionDto
+	 * @return String 
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "질문 글에 새로운 답변 글을 등록한다.", response = String.class)
 	@PostMapping(value = "/createanswer")
 	public ResponseEntity<String> createAnswer(@RequestBody AnswerByQuestionDto aDto) throws Exception {
@@ -69,6 +85,13 @@ public class QuestionBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @return List<QuestionBoardDto>
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모든 질문 글 목록을 반환한다.", response = List.class)
 	@GetMapping(value = "/selectall")
 	public ResponseEntity<List<QuestionBoardDto>> selectAllQuestions() throws Exception {
@@ -76,6 +99,14 @@ public class QuestionBoardController {
 		return new ResponseEntity<List<QuestionBoardDto>>(questionService.selectAllQuestions(), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param articleNo - int, 질문 글의 번호
+	 * @return QuestionBoardDto
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "글 번호에 해당하는 질문 글의 상세 정보를 반환한다.", response = QuestionBoardDto.class)
 	@GetMapping(value = "/selectbyno/{articleNo}")
 	public ResponseEntity<QuestionBoardDto> selectQuestionsByArticleNo(@PathVariable int articleNo) throws Exception {
@@ -84,6 +115,14 @@ public class QuestionBoardController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param title - String, 검색 키워드 
+	 * @return List<QuestionBoardDto>
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "질문 글의 제목에 검색어가 포함된 질문 글 목록을 반환한다.", response = List.class)
 	@GetMapping(value = "/selectbytitle/{title}")
 	public ResponseEntity<List<QuestionBoardDto>> selectQuestionsByTitle(@PathVariable String title) throws Exception {
@@ -91,6 +130,14 @@ public class QuestionBoardController {
 		return new ResponseEntity<List<QuestionBoardDto>>(questionService.selectQuestionsByTitle(title), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param uid  - String, uid 
+	 * @return List<QuestionBoardDto> 
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "작성자의 uid로 검색한 결과를 반환한다.", response = List.class)
 	@GetMapping(value = "/selectbywriter/{uid}")
 	public ResponseEntity<List<QuestionBoardDto>> selectQuestionsByWriter(@PathVariable String uid) throws Exception {
@@ -98,6 +145,14 @@ public class QuestionBoardController {
 		return new ResponseEntity<List<QuestionBoardDto>>(questionService.selectQuestionsByWriter(uid), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param problemNo - int, 문제 번호 
+	 * @return List<QuestionBoardDto>
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "문제 번호로 검색한 결과를 반환한다.", response = List.class)
 	@GetMapping(value = "/selectbypno/{problemNo}")
 	public ResponseEntity<List<QuestionBoardDto>> selectQuestionsByProblemNo(@PathVariable int problemNo)
@@ -107,6 +162,14 @@ public class QuestionBoardController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param articleNo - int, 답변글 번호
+	 * @return AnswerByQuestionDto
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "답변 글 번호로 검색하여 답변 글 상세 정보를 반환한다.", response = AnswerByQuestionDto.class)
 	@GetMapping(value = "/selectanswer/{articleNo}")
 	public ResponseEntity<AnswerByQuestionDto> selectAnswerByArticleNo(@PathVariable int articleNo) throws Exception {
@@ -114,6 +177,14 @@ public class QuestionBoardController {
 		return new ResponseEntity<AnswerByQuestionDto>(answerService.selectAnswerByArticleNo(articleNo), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param qDto - QuestionBoardDto, 수정할 내용 포함
+	 * @return String
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "질문 글을 수정하고 결과를 반환한다.", response = String.class)
 	@PutMapping(value = "/update")
 	public ResponseEntity<String> updateQuestion(@RequestBody QuestionBoardDto qDto) throws Exception {
@@ -124,6 +195,14 @@ public class QuestionBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @param aDto - AnswerByQuestionDto - 내용, 등록시간만 수정
+	 * @return String
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "답변 글을 수정하고 결과를 반환한다.", response = String.class)
 	@PutMapping(value = "/updateanswer")
 	public ResponseEntity<String> updateAnswer(@RequestBody AnswerByQuestionDto aDto) throws Exception {
@@ -134,6 +213,14 @@ public class QuestionBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @param articleNo  - int, 질문 글 번호
+	 * @return String
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "질문 글을 삭제하고 결과를 반환한다.", response = String.class)
 	@DeleteMapping(value = "/delete/{articleNo}")
 	public ResponseEntity<String> deleteQuestion(@PathVariable int articleNo) throws Exception {
@@ -144,6 +231,14 @@ public class QuestionBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @param articleNo  - int, 답변 글 번호
+	 * @return String
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "답변 글을 삭제하고 결과를 반환한다.", response = String.class)
 	@PutMapping(value = "/deleteanswer/{articleNo}")
 	public ResponseEntity<String> deleteAnswer(@PathVariable int articleNo) throws Exception {

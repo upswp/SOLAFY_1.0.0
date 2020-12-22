@@ -4,15 +4,21 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.solafy.model.PracticeTestBoardDto;
 
 /**
  * 
- * @author Juhee Lee
- * @since 2020-12-14
+ * @FileName PracticeTestBoardMapper.java
+ * @Project SOLAFY
+ * @Date 2020. 12. 14.
+ * @author 이주희
  *
+ * @변경이력
  */
 
+@Mapper
 public interface PracticeTestBoardMapper {
 
 	/**
@@ -21,6 +27,8 @@ public interface PracticeTestBoardMapper {
 	 * @param pDto - PracticeTestBoardDto
 	 * @return int, 등록된 행의 개수 반환
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public int createPracticeTest(PracticeTestBoardDto pDto) throws SQLException;
 
@@ -29,6 +37,8 @@ public interface PracticeTestBoardMapper {
 	 * 
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectAllPracticeTest() throws SQLException;
 
@@ -38,6 +48,8 @@ public interface PracticeTestBoardMapper {
 	 * @param articleNo - int, 모의고사 번호
 	 * @return PracticeTestBoardDto - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간, 제한시간
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws SQLException;
 
@@ -47,6 +59,8 @@ public interface PracticeTestBoardMapper {
 	 * @param uid - String, 검색된 uid
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws SQLException;
 
@@ -56,6 +70,8 @@ public interface PracticeTestBoardMapper {
 	 * @param title - String, 검색된 제목 키워드
 	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws SQLException;
 
@@ -65,6 +81,8 @@ public interface PracticeTestBoardMapper {
 	 * @param pDto - PracticeTestBoardDto - 제목, 등록,시작,종료,제한시간, 변경
 	 * @return int, 업데이트된 행의 개수 반환
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public int updatePracticeTest(PracticeTestBoardDto pDto) throws SQLException;
 
@@ -74,6 +92,8 @@ public interface PracticeTestBoardMapper {
 	 * @param articleNo - int, 모의고사 번호
 	 * @return int, 삭제된 행의 개수 반환
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public int deleltePracticeTest(int articleNo) throws SQLException;
 
@@ -83,6 +103,8 @@ public interface PracticeTestBoardMapper {
 	 * @param map - Map<String, Integer> - articleNo, problemNo 포함
 	 * @return int, 등록된 행의 개수 반환
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public int createPracticeTestMapping(Map<String, Integer> map) throws SQLException;
 
@@ -92,6 +114,8 @@ public interface PracticeTestBoardMapper {
 	 * @param articleNo - int, 모의고사 번호
 	 * @return int, 삭제된 행의 개수 반환
 	 * @throws SQLException
+	 * 
+	 * @변경이력
 	 */
 	public int deletePracticeTestMapping(int articleNo) throws SQLException;
 

@@ -45,6 +45,14 @@ public class PracticeTestBoardController {
 	@Autowired
 	private PracticeTestBoardService practiceService;
 
+	/**
+	 * 
+	 * @param pDto - PracticeTestBoardDto
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "새로운 모의고사를 생성하고 생성의 결과를 반환한다.", response = String.class)
 	@PostMapping(value = "/create")
 	public ResponseEntity<String> createPracticeTest(@RequestBody PracticeTestBoardDto pDto) throws Exception {
@@ -55,13 +63,28 @@ public class PracticeTestBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모든 모의고사 목록을 반환한다.", response = List.class)
 	@GetMapping(value = "/selectall")
 	public ResponseEntity<List<PracticeTestBoardDto>> selectAllPracticeTest() throws Exception {
 		logger.debug("selectAllPracticeTest");
 		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectAllPracticeTest(), HttpStatus.OK);
 	}
-
+	
+	/**
+	 * 
+	 * @param articleNo - int, 모의고사 번호
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모의고사 번호로 검색한 결과를 반환한다.", response = PracticeTestBoardDto.class)
 	@GetMapping(value = "/selectbyno/{articleNo}")
 	public ResponseEntity<PracticeTestBoardDto> selectPracticeTestByArticleNo(@PathVariable int articleNo)
@@ -71,6 +94,14 @@ public class PracticeTestBoardController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param uid - String, 검색된 uid
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모의고사 작성자 uid로 검색한 결과를 반환한다.", response = List.class)
 	@GetMapping(value = "/selectbywriter/{uid}")
 	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByWriter(@PathVariable String uid)
@@ -80,6 +111,14 @@ public class PracticeTestBoardController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param title - String, 검색된 제목 키워드
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "검색된 키워드가 모의고사 제목에 포함된 결과를 반환한다.", response = List.class)
 	@GetMapping(value = "/selectbytitle/{title}")
 	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByTitle(@PathVariable String title)
@@ -89,6 +128,14 @@ public class PracticeTestBoardController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param pDto - PracticeTestBoardDto - 제목, 등록,시작,종료,제한시간, 문제목록 변경
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모의고사 정보를 수정한다.", response = String.class)
 	@PutMapping(value = "/update")
 	public ResponseEntity<String> updatePracticeTest(@RequestBody PracticeTestBoardDto pDto) throws Exception {
@@ -99,6 +146,14 @@ public class PracticeTestBoardController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
+	/**
+	 * 
+	 * @param articleNo - int, 모의고사 번호
+	 * @return 
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
 	@ApiOperation(value = "모의고사를 삭제한다.", response = String.class)
 	@DeleteMapping(value = "/delete/{articleNo}")
 	public ResponseEntity<String> deleltePracticeTest(@PathVariable int articleNo) throws Exception {

@@ -9,42 +9,85 @@
 	
 	<!-- 전체 문제집 리스트 호출 -->
 	<select id="selectAllProblemSet" resultType="problemSetDto">
-		select problemSetNo, uid, title, regiTime
-		from problemset
-		order by problemSetNo
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		WHERE flag = 1
+		ORDER BY problemSetNo
 	</select>
 	
 	<!-- problemNo에 따른 문제집 호출 -->
 	<select id="selectProblemByNo" resultType="problemSetDto">
-		select problemSetNo, uid, title, regiTime
-		from problemset
-		where problemSetNo = #{problemSetNo}
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		WHERE problemSetNo = #{problemSetNo} and flag = 1
 	</select>
+	
+	<!-- 문제집 작성자에 따른 문제집 리스트 반환 -->
+	<!-- 작성자 uid로 검색하게 할것인가? -->
+	<select id="selectProblemByWriter" resultType="problemSetDto">
+		SELECT p.problemSetNo, p.uid, p.title, p.regiTime
+		FROM problem p join usernickname u
+		ON p.uid = u.uid
+		WHERE u.nickname = #{nickname} and flag = 1
+		ORDER BY problemSetNo
+	</select>
+	
+	<!-- 문제집 제목 키워드 포함여부에 따른 문제집 리스트 반환 -->
+	<select id="selectProblemByTitle" resultType="problemSetDto">
+		SELECT problemSetNo, uid, title, regiTime
+		FROM problemset
+		WHERE title LIKE concat('%', #{title}, '%') and flag = 1
+		ORDER BY problemSetNo		
+	</select>
+	
 	
 	<!-- 문제집 생성 -->
 	<insert id="createProblemSet" parameterType="problemSetDto">
-		insert into problemset (
-								problemSetNo, uid, title, regiTime
+		INSERT INTO problemset (
+								problemSetNo, uid, title, regiTime,flag
 								)
-		values(
-				#{problemSetNo}, #{uid}, #{title}, now()
+		VALUES(
+				#{problemSetNo}, #{uid}, #{title}, now(),0
 			  )
 	</insert>
 	
 	<!-- 문제집 업데이트 -->
 	<update id="updateProblemSet" parameterType="problemSetDto">
-		update problemset
+		UPDATE problemset
 			set title = #{title},
-		where problemSetNo = #{problemSetNo}	
+		WHERE problemSetNo = #{problemSetNo}	
 	</update>
 	
 	<!-- 문제집 삭제 -->
 	<delete id="deleteProblemSet" parameterType="int">
-		delete
-		from problemset
-		where problemSetNo = #{problemSetNo}
+		DELETE
+		FROM problemset
+		WHERE problemSetNo = #{problemSetNo}
 	</delete>
 	
+	<!-- 문제집에 해당하는 문제 리스트 불러오기 -->
+	<select id="selectProblemSetMapping" parameterType="int" resultType="ProblemDto">
+		SELECT p.problemNo,p.title
+		FROM problemsetmapping m join problem p
+		ON m.problemNo = p.problemNo
+		WHERE m.problemSetNo = #{problemSetNo} and p.flag = 1
+	</select>
 
-
+	<delete id="deleteProblemSetMapping" parameterType="int">
+		DELETE FROM problemsetmapping
+		WHERE		problemSetNo = #{problemSetNo}
+	</delete>
+	
+	<!-- 문제집의 flag를 임시저장 상태에서 저장으로 변경 -->
+	<update id="updatePrblemSetFlag" parameterType="String">
+		UPDATE problemset
+			set flag = 1
+		WHERE uid = #{uid} and flag = 0
+	</update>
+	
+	<!-- 문제집의 flag가 임시저장상태인 문제집을 삭제 -->
+	<delete id="deleteProblemSetFlag" parameterType="String">
+	 	DELETE FROM problemset
+	 	WHERE		uid = #{uid} and flag = 0
+	</delete>
 </mapper>
