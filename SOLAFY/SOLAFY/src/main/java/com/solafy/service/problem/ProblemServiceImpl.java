@@ -147,7 +147,6 @@ public class ProblemServiceImpl implements ProblemService {
 		return result;
 	}
 
-	// TODO : create부분하기
 	@Override
 	public boolean updateProblem(HashMap<String, Object> map) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();

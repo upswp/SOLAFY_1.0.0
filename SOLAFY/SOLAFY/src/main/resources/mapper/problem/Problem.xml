@@ -106,7 +106,7 @@
 	</select>
 	
 	<!-- 유저닉네임으로 검색 -->
-	<select id="selectProblemByUserNickname" parameterType="int" resultType="ProblemDto">
+	<select id="selectProblemByUserNickname" parameterType="String" resultType="ProblemDto">
 		select p.problemNo, p.title, u.nickname
 		from problem p join usernickname u
 		on p.uid = u.uid
@@ -148,7 +148,7 @@
 	<!-- 문제 수정 -->
 	<update id="updateProblem" parameterType="ProblemDto">
 		update problem
-		set multipleChoice = #{multipleChoice},title=#{title},uid=#{uid},contents=#{contents},categoryNo=#{categoryNo},type=#{type}
+		set multipleChoice = #{multipleChoice},title=#{title},contents=#{contents},categoryNo=#{categoryNo},type=#{type}
 		where problemNo = #{problemNo}	
 	</update>
 	
