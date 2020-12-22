@@ -6,6 +6,10 @@
  <!--
  	@author BUMSEOK SEO
  	@since 2020-12-20
+ 	
+ 	답안수정게시판 Mapper
+ 	게시글 등록, 모든 게시글 반환, 게시글 번호로 검색, 제목으로 검색, UID로 검색, 문제 번호로 검색,
+ 	게시글 수정, 게시글 삭제
  -->
 	
 <mapper namespace="com.solafy.mapper.board.AnswerModifyBoardMapper">
@@ -16,43 +20,47 @@
 	</insert>
 	
 	<!--
-		모든 게시물을 반환.
-		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+		모든 게시글을 반환.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간만 가져온다.
 	-->
-	<select id="selectArticles" resultType="AnswerModifyBoardDto">
-		select articleNo, uid, problemNo,title, regiTime
-		from answermodifyboard
-		order by articleNo desc
+	<select id="selectAllArticles" resultType="AnswerModifyBoardDto">
+		select articleNo, nickname, problemNo,title, regiTime
+		from answermodifyboard amb join usernickname un
+		on amb.uid = un.uid
+		order by articleNo desc;
 	</select>
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,uid, problemNo, uid_submitter,title, contents, regiTime)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,un.nickname, problemNo, uns.nickname,title, contents, regiTime)
 	-->
 	<select id="selectArticleByNo" parameterType="int" resultType="AnswerModifyBoardDto">
-		select articleNo,uid, problemNo, uid_submitter, title, contents, regiTime 
-		from answermodifyboard
-		where articleNo = #{articleNo}
+		select articleNo, un.nickname, problemNo, uns.nickname, title, contents, regiTime 
+		from answermodifyboard amb join usernickname un join usernickname uns
+		on amb.uid = un.uid and amb.uid_submitter = uns.uid
+        where articleNo = #{articleNo};
 	</select>
 
 	<!--
 		인자값으로 가져온 검색어를 포함하는 제목을 가진 게시글을 반환.
-		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간만 가져온다.
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="AnswerModifyBoardDto">
-		select articleNo, uid, problemNo, title, regiTime 
-		from answermodifyboard
+		select articleNo, nickname, problemNo, title, regiTime 
+		from answermodifyboard amb join usernickname un
+        on amb.uid = un.uid
 		where title LIKE '%#{title}%'
 	</select>
 	
 	<!--
-		인자값으로 가져온 UID에 맞는 게시글을 반환.
+		인자값으로 가져온 닉네임에 맞는 게시글을 반환.
 		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
 	-->
-	<select id="selectArticleByUid" parameterType="String" resultType="AnswerModifyBoardDto">
-		select articleNo, uid, problemNo, title, regiTime 
-		from answermodifyboard
-		where uid = #{uid}
+	<select id="selectArticleByNickname" parameterType="String" resultType="AnswerModifyBoardDto">
+		select articleNo, nickname, problemNo, title, regiTime 
+		from answermodifyboard amb join usernickname un 
+        on amb.uid = un.uid
+		where nickname = '#{nickname}';
 	</select>
 	
 	<!--
@@ -60,8 +68,9 @@
 		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
 	-->
 	<select id="selectArticleByProblemNo" parameterType="String" resultType="AnswerModifyBoardDto">
-		select articleNo, uid, problemNo, title, regiTime 
-		from answermodifyboard
+		select articleNo, nickname, problemNo, title, regiTime 
+		from answermodifyboard amb join usernickname un 
+        on amb.uid = un.uid
 		where problemNo = #{problemNo}
 	</select>
 	
