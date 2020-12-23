@@ -25,7 +25,7 @@
  </select>
  
  <select id="selectGroupByNo" parameterType="int" resultType="GroupDto"> 
- 	select title, type, description from group
+ 	select groupNo, title, type, description from solafy.group
  	where groupNo = #{groupNo}
  </select>
  <select id="checkDuplicateName" parameterType="String" resultType="int">

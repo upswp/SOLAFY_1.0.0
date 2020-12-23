@@ -52,6 +52,12 @@ const routes = [
       {
         path: "/groupmain",
         component: () => import("pages/group/GroupMain.vue")
+      },
+      ,
+      {
+        path: "/groupdetail/:groupNo",
+        name: "GroupDetail",
+        component: () => import("pages/group/GroupDetail.vue")
       }
     ]
   },

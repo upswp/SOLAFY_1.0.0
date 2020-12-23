@@ -11,6 +11,7 @@
       hide-header
       :pagination.sync="pagination"
       hide-pagination
+      @row-click="clickRow"
     >
       <template v-slot:top-right>
         <q-input
@@ -41,6 +42,7 @@
 
 <script>
 import axios from "axios";
+import routes from "src/router/routes";
 export default {
   data() {
     return {
@@ -82,6 +84,14 @@ export default {
       ],
       data: []
     };
+  },
+  methods: {
+    clickRow(evt, row) {
+      this.$router.push({
+        name: "GroupDetail",
+        params: { groupNo: row.groupNo }
+      });
+    }
   },
   mounted() {
     axios
