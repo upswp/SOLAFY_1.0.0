@@ -101,7 +101,13 @@ const linksData = [
     title: "Group",
     caption: "기현",
     icon: "group",
-    link: "/group"
+    link: "/groupmain"
+  },
+  {
+    title: "create Group",
+    caption: "기현",
+    icon: "group",
+    link: "/creategroup"
   }
 ];
 

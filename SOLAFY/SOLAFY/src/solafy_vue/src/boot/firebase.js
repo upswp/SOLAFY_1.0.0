@@ -5,14 +5,14 @@ import "firebase/auth";
 import "firebase/database";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyDjpkF6LK39WKjzmVbRVpGBYG_92dJ5xQQ",
-  authDomain: "solafy-460e6.firebaseapp.com",
-  databaseURL: "https://solafy-460e6-default-rtdb.firebaseio.com",
-  projectId: "solafy-460e6",
-  storageBucket: "solafy-460e6.appspot.com",
-  messagingSenderId: "356259085686",
-  appId: "1:356259085686:web:237d0fcdf9ded5446fce57",
-  measurementId: "G-9V0GRD7SF0"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DATABASE_URL,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 };
 // Initialize Firebase
 let firebaseApp = firebase.initializeApp(firebaseConfig);
