@@ -66,3 +66,7 @@
 ## 3. Github GUI Tool - SourceTree
 
 <img src="C:\Users\lay07\AppData\Roaming\Typora\typora-user-images\image-20201223205628164.png" alt="image-20201223205628164" style="zoom: 80%;" />
+
+## 4. Github Action
+
+https://zzsza.github.io/development/2020/06/06/github-action/
