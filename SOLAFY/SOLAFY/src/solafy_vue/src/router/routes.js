@@ -39,9 +39,19 @@ const routes = [
         path: "/practiceboard",
         component: () => import("pages/board/PracticeBoard.vue")
       },
+
+      // 그룹 Part
       {
         path: "/group",
-        component: () => import("pages/group/group.vue")
+        component: () => import("pages/group/Group.vue")
+      },
+      {
+        path: "/creategroup",
+        component: () => import("pages/group/CreateGroup.vue")
+      },
+      {
+        path: "/groupmain",
+        component: () => import("pages/group/GroupMain.vue")
       }
     ]
   },
