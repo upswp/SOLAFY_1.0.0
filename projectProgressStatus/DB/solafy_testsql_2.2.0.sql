@@ -12,7 +12,7 @@ VALUES('tag'),('MVC'),('이론'),('그래프'),('입출력');
 
 -- categorylmmapping Table
 INSERT INTO categorylmmapping (largeCategoryNo,mediumCategoryNo)
-VALUES(1,1),(1,2),(2,2),(3,4);
+VALUES(1,1),(1,2),(2,3),(3,4);
 
 -- categorymsmapping Table
 INSERT INTO categorymsmapping (mediumCategoryNo,smallCategoryNo)
