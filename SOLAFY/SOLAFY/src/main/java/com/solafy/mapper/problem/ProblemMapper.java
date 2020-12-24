@@ -23,7 +23,7 @@ import com.solafy.model.ProblemDto;
 @Mapper
 public interface ProblemMapper {
 	/**
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @throws SQLException
 	* @Method 설명 : 전체 문제 리스트를 반환
 	* @변경이력 :
@@ -32,7 +32,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param problemNo - 문제 번호
-	* @return ProblemDto - 문제 : problemNo, multipleChoice, title, uid, contents, categorySmallNo, type 
+	* @return ProblemDto - 문제 : problemNo, multipleChoice, title, nickname, contents, categorySmallNo, type, regiTime
 	* @Method 설명 : 문제의 정보 반환(상세보기 용)
 	* @변경이력 :
 	*/
@@ -72,7 +72,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param hashTagNo - 해시태그 번호
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid 
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 해시태그번호로 문제 검색
 	* @변경이력 :
 	*/
@@ -80,7 +80,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param categoryNo - 문제의 대,중,소분류 카테고리 숫자
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 소분류 카테고리를 이용한 문제 검색
 	* @변경이력 :
 	*/
@@ -88,7 +88,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param categoryLargeMediumNo - 문제의 대,중분류 카테고리 숫자
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 중분류 카테고리를 이용한 문제 검색
 	* @변경이력 :
 	*/
@@ -96,7 +96,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param categoryLargeNo - 문제의 대분류 카테고리 숫자
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 대분류 카테고리를 이용한 문제 검색
 	* @변경이력 :
 	*/
@@ -104,7 +104,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param title - 문제이름(일부)
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 문제이름(일부)으로 검색
 	* @변경이력 :
 	*/
@@ -112,7 +112,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param problemNo - 문제번호
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 문제번호로 검색
 	* @변경이력 :
 	*/
@@ -120,7 +120,7 @@ public interface ProblemMapper {
 	
 	/**
 	* @param userNickname - 유저 닉네임
-	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, uid
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title, nickname, regiTime
 	* @Method 설명 : 유저닉네임으로 검색
 	* @변경이력 :
 	*/
