@@ -13,6 +13,7 @@ public class ProblemDto {
 	private String contents;
 	private String categoryNo;
 	private int type;
+	private String regiTime;
 	private String nickname;
 	
 	public ProblemDto() {
@@ -20,7 +21,7 @@ public class ProblemDto {
 	}
 
 	public ProblemDto(int problemNo, String multipleChoice, String title, String uid, String contents,
-			String categoryNo, int type, String nickname) {
+			String categoryNo, int type, String regiTime, String nickname) {
 		super();
 		this.problemNo = problemNo;
 		this.multipleChoice = multipleChoice;
@@ -29,6 +30,7 @@ public class ProblemDto {
 		this.contents = contents;
 		this.categoryNo = categoryNo;
 		this.type = type;
+		this.regiTime = regiTime;
 		this.nickname = nickname;
 	}
 
@@ -88,6 +90,14 @@ public class ProblemDto {
 		this.type = type;
 	}
 
+	public String getRegiTime() {
+		return regiTime;
+	}
+
+	public void setRegiTime(String regiTime) {
+		this.regiTime = regiTime;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -100,6 +110,6 @@ public class ProblemDto {
 	public String toString() {
 		return "ProblemDto [problemNo=" + problemNo + ", multipleChoice=" + multipleChoice + ", title=" + title
 				+ ", uid=" + uid + ", contents=" + contents + ", categoryNo=" + categoryNo + ", type=" + type
-				+ ", nickname=" + nickname + "]";
+				+ ", regiTime=" + regiTime + ", nickname=" + nickname + "]";
 	}
 }
