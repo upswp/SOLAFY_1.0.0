@@ -46,7 +46,6 @@ public class ProblemController {
 	
 	@Autowired
 	private ProblemService problemService;
-	// TODO : 카테고리 대 중 소 리스트 볼 수 있게 Mapper추가
 	
 	/**
 	* @return ResponseEntity<List<ProblemDto>> - 문제리스트, 응답형태
