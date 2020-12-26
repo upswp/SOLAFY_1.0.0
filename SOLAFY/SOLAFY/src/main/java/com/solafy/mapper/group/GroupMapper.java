@@ -26,7 +26,7 @@ public interface GroupMapper {
 	int createGroupInvitation(GroupMemberDto groupMember)throws Exception;
 	
 	//TODO : private 그룹도 보여줄 것인가?
-	List<GroupDto> selectAllGroup()throws Exception;
+	List<GroupDto> selectAllGroup(String uid)throws Exception;
 	GroupDto selectGroupByNo(int groupNo)throws Exception;
 	int checkDuplicateName(String title)throws Exception;
 	

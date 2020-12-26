@@ -20,8 +20,11 @@
  </insert>
 
 
- <select id="selectAllGroup" resultType="GroupDto">
- 	select groupNo, title, type, description from solafy.group
+ <select id="selectAllGroup" parameterType="String" resultType="GroupDto">
+ 	 <!-- 모든 그룹을 선택하고 uid가 ~인 사람의 grade를 가지고와서 grade 컬럼을 표시한다. -->
+	select gp.groupNo, gp.title, gp.type, gp.description, gm.grade from solafy.group as gp
+	left outer join groupmember as gm
+	on gm.uid = #{uid} and gp.groupNo = gm.groupNo;
  </select>
  
  <select id="selectGroupByNo" parameterType="int" resultType="GroupDto"> 
@@ -65,7 +68,7 @@
  	delete from groupmember
  	where uid=#{uid} and groupNo=#{groupNo}
  </delete>
- <delete id="deleteGroupMemberself" parameterType="String">
+ <delete id="deleteGroupMemberself" parameterType="Map">
  	delete from groupmember
  	where uid=#{uid} and groupNo=#{groupNo}
  </delete>

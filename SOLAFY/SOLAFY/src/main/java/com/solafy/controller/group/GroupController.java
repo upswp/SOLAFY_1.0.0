@@ -78,6 +78,7 @@ public class GroupController {
 	@PostMapping(value="/createApplyGroupSignUp")
 	public ResponseEntity<String> createApplyGroupSignUp(@RequestBody GroupMemberDto groupMember)throws Exception{
 		logger.debug("createApplyGroupSignUp 호출");
+		System.out.println(groupMember);
 		if(groupService.createApplyGroupSignUp(groupMember))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
@@ -118,10 +119,10 @@ public class GroupController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "전체 그룹 리스트 정보를 받아온다.", response = List.class)
-	@GetMapping(value = "/selectAllGroup")
-	public ResponseEntity<List<GroupDto>> selectAllGroup() throws Exception{
-		logger.debug("selectAllGroup 호출");
-		return new ResponseEntity<List<GroupDto>>(groupService.selectAllGroup(), HttpStatus.OK);
+	@GetMapping(value = "/selectAllGroup/{uid}")
+	public ResponseEntity<List<GroupDto>> selectAllGroup(@PathVariable String uid) throws Exception{
+		logger.debug("selectAllGroup 호출   "+uid);
+		return new ResponseEntity<List<GroupDto>>(groupService.selectAllGroup(uid), HttpStatus.OK);
 	}
 	
 	/**
@@ -284,6 +285,7 @@ public class GroupController {
 	@ApiOperation(value = "그룹을 탈퇴한다.", response = String.class)
 	@DeleteMapping(value="/deleteGroupMemberself")
 	public ResponseEntity<String> deleteGroupMemberself(@RequestBody Map<String, Object> deleteMemberSelf)throws Exception{
+		System.out.println(deleteMemberSelf);
 		if(groupService.deleteGroupMemberself(deleteMemberSelf))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else

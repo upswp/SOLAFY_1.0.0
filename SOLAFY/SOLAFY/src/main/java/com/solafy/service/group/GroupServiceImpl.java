@@ -28,8 +28,8 @@ public class GroupServiceImpl implements GroupService {
 		return groupMapper.createGroupInvitation(groupMember) > 0 ? true : false;
 	}
 	@Override
-	public List<GroupDto> selectAllGroup() throws Exception {
-		return groupMapper.selectAllGroup();
+	public List<GroupDto> selectAllGroup(String uid) throws Exception {
+		return groupMapper.selectAllGroup(uid);
 	}
 
 	@Override

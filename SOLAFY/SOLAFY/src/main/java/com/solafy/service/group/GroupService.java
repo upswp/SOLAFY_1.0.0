@@ -50,7 +50,7 @@ public interface GroupService {
 	* @Method 설명 : 모든 그룹을 list로 반환한다.
 	* @변경이력 :
 	*/
-	List<GroupDto> selectAllGroup()throws Exception;
+	List<GroupDto> selectAllGroup(String uid)throws Exception;
 	
 	/**
 	* @param groupNo

@@ -2,17 +2,29 @@
   <div>
     <!-- itemlist - 자유게시판 시작-->
     <q-table
-      grid
       title="그룹 리스트"
       :data="data"
       :columns="columns"
       row-key="name"
       :filter="filter"
-      hide-header
+      gird-header
       :pagination.sync="pagination"
       hide-pagination
       @row-click="clickRow"
     >
+      <template v-slot:body-cell-groupNo="props">
+        <q-td :props="props">
+          <div :props="props" v-if="props.row.grade > 0 && props.row.grade < 4">
+            <q-chip color="green" dense text-color="white" label="가입" />
+          </div>
+          <div :props="props" v-if="props.row.grade == 0">
+            <q-chip color="red" dense text-color="white" label="미가입" />
+          </div>
+          <div :props="props" v-if="props.row.grade == 99">
+            <q-chip color="orange" dense text-color="white" label="승인대기" />
+          </div>
+        </q-td>
+      </template>
       <template v-slot:top-right>
         <q-input
           borderless
@@ -43,6 +55,7 @@
 <script>
 import axios from "axios";
 import routes from "src/router/routes";
+import { firebaseAuth } from "src/boot/firebase";
 export default {
   data() {
     return {
@@ -60,7 +73,7 @@ export default {
         {
           name: "groupNo",
           required: true,
-          label: "번호",
+          label: "상태",
           align: "left",
           field: row => row.groupNo,
           format: val => `${val}`,
@@ -89,15 +102,19 @@ export default {
     clickRow(evt, row) {
       this.$router.push({
         name: "GroupDetail",
-        params: { groupNo: row.groupNo }
+        params: {
+          groupNo: row.groupNo,
+          grade: row.grade
+        }
       });
     }
   },
   mounted() {
     axios
-      .get("group/selectAllGroup")
+      .get("group/selectAllGroup/" + firebaseAuth.currentUser.uid)
       .then(Response => {
         this.data = Response.data;
+        console.log(this.data);
       })
       .catch(error => {
         this.$q.notify({

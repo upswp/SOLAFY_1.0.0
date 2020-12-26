@@ -60,7 +60,7 @@ export default {
             icon: "cloud_done",
             message: "인증 성공"
           });
-          this.$router.push("어디로 넘어가야 할까요?");
+          this.$router.push("main");
         })
         .catch(error => {
           console.log(error);
