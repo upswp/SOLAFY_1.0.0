@@ -3,6 +3,7 @@ import firebase from "firebase/app";
 // Add the Firebase services that you want to use
 import "firebase/auth";
 import "firebase/database";
+import "firebase/storage";
 
 var firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -18,5 +19,6 @@ var firebaseConfig = {
 let firebaseApp = firebase.initializeApp(firebaseConfig);
 let firebaseAuth = firebaseApp.auth();
 let firebaseDb = firebaseApp.database();
+let firebaseSt = firebaseApp.storage();
 
-export { firebaseAuth, firebaseDb };
+export { firebaseAuth, firebaseSt };

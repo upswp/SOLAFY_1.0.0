@@ -17,11 +17,15 @@ const routes = [
       },
       {
         path: "/problem",
-        component: () => import("pages/problem/Problem.vue")
+        component: () => import("pages/problem/ProblemList.vue")
       },
       {
         path: "/problemset",
-        component: () => import("pages/problem/ProblemSet.vue")
+        component: () => import("pages/problemSet/ProblemSetList.vue")
+      },
+      {
+        path: "/problemdetail",
+        component: () => import("pages/problem/ProblemDetail.vue")
       },
       {
         path: "/freeboard",
