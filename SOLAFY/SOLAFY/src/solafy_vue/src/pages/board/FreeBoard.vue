@@ -22,6 +22,7 @@
       label="검색어를 입력해주세요"
       counter
       maxlength="12"
+      @keyup.enter="selectArticle"
     >
       <template v-slot:append>
         <q-icon
@@ -33,6 +34,28 @@
         <q-icon name="search" @click="selectArticle" />
       </template>
     </q-input>
+    <!-- start of q-markup-table -->
+    <q-markup-table>
+      <thead>
+        <tr>
+          <th class="text-left">articleNo</th>
+          <th class="text-left">nickname</th>
+          <th class="text-left">title</th>
+          <th class="text-left">regiTime</th>
+          <th class="text-left">likeCount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="article in articles" :key="article.articleNo">
+          <td class="text-left">{{ article.articleNo }}</td>
+          <td class="text-left">{{ article.nickname }}</td>
+          <td class="text-left">{{ article.title }}</td>
+          <td class="text-left">{{ article.regiTime }}</td>
+          <td class="text-left">{{ article.likeCount }}</td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+    <!-- end of q-markup-table -->
     <q-table
       title="Treats"
       :data="articles"
