@@ -58,7 +58,14 @@ const routes = [
         path: "/groupdetail/:groupNo",
         name: "GroupDetail",
         component: () => import("pages/group/GroupDetail.vue")
-      }
+      },
+      
+      // member
+      {
+        path: "/memberRegi",
+        name: "memberRegi",
+        component: () => import("pages/member/CreateMember.vue")
+      },
     ]
   },
 
