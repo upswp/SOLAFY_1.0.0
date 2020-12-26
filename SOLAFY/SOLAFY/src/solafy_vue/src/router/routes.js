@@ -42,7 +42,8 @@ const routes = [
 
       // 그룹 Part
       {
-        path: "/group",
+        path: "/group/:groupNo",
+        name: "groupHome",
         component: () => import("pages/group/Group.vue")
       },
       {
@@ -55,17 +56,17 @@ const routes = [
       },
       ,
       {
-        path: "/groupdetail/:groupNo",
+        path: "/groupdetail/:groupNo/:grade",
         name: "GroupDetail",
         component: () => import("pages/group/GroupDetail.vue")
       },
-      
+
       // member
       {
         path: "/memberRegi",
         name: "memberRegi",
         component: () => import("pages/member/CreateMember.vue")
-      },
+      }
     ]
   },
 
