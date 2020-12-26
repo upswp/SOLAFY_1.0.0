@@ -8,7 +8,7 @@
         v-model="formData.email"
         label="email *"
         lazy-rules
-        :rules="[val => (val && val.length > 0) || '이메일을 입력해주세요']"
+        :rules="[(val) => (val && val.length > 0) || '이메일을 입력해주세요']"
       />
 
       <q-input
@@ -19,7 +19,7 @@
         label="password *"
         lazy-rules
         :rules="[
-          val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
+          (val) => (val !== null && val !== '') || '비밀번호를 입력해주세요',
         ]"
       />
       <q-toggle v-model="formData.accept" label="이메일 저장" />
@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { firebaseAuth, firebaseDb } from "boot/firebase";
+import { firebaseAuth } from "boot/firebase";
 export default {
   name: "PageIndex",
   data() {
@@ -43,8 +43,8 @@ export default {
       formData: {
         email: "",
         password: "",
-        accept: false
-      }
+        accept: false,
+      },
     };
   },
   methods: {
@@ -52,23 +52,23 @@ export default {
     onSubmit() {
       firebaseAuth
         .signInWithEmailAndPassword(this.formData.email, this.formData.password)
-        .then(Response => {
+        .then((Response) => {
           console.log(Response);
           this.$q.notify({
             color: "green",
             textColor: "white",
             icon: "cloud_done",
-            message: "인증 성공"
+            message: "인증 성공",
           });
           this.$router.push("main");
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.$q.notify({
             color: "red",
             textColor: "white",
             icon: "warning",
-            message: "인증 실패"
+            message: "인증 실패",
           });
         });
     },
@@ -79,7 +79,7 @@ export default {
     },
     goMemberRegi() {
       this.$router.push("memberRegi");
-    }
-  }
+    },
+  },
 };
 </script>
