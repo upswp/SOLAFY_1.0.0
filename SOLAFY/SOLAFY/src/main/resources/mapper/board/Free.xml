@@ -20,8 +20,9 @@
 		게시글번호, UID(닉네임), 등록시간, 종아요 갯수만 가져온다.
 	-->
 	<select id="selectArticles" resultType="FreeBoardDto">
-		select articleNo, uid,title, regiTime, likeCount
-		from freeboard
+		select articleNo, nickname,title, regiTime, likeCount
+		from freeboard fb join usernickname un
+        on fb.uid = un.uid
 		order by articleNo desc
 	</select>
 	
@@ -30,8 +31,9 @@
 		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
 	-->
 	<select id="selectArticleByNo" parameterType="int" resultType="FreeBoardDto">
-		select articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
-		from freeboard
+		select articleNo, title, contents, nickname, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		from freeboard fb join usernickname un
+        on fb.uid = un.uid
 		where articleNo = #{articleNo}
 	</select>
 
@@ -40,8 +42,9 @@
 		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="FreeBoardDto">
-		select articleNo, uid,title, regiTime, likeCount
-		from freeboard
+		select articleNo, nickname,title, regiTime, likeCount
+		from freeboard fb join usernickname un
+        on fb.uid = un.uid
 		where title LIKE '%#{title}%'
 	</select>
 	
@@ -49,10 +52,11 @@
 		인자값으로 가져온 UID에 맞는 게시글을 반환.
 		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
 	-->
-	<select id="selectArticleByUid" parameterType="String" resultType="FreeBoardDto">
-		select articleNo, uid,title, regiTime, likeCount 
-		from freeboard
-		where uid = #{uid}
+	<select id="selectArticleByNickname" parameterType="String" resultType="FreeBoardDto">
+		select articleNo, nickname,title, regiTime, likeCount 
+		from freeboard fb join usernickname un
+        on fn.uid = un.uid
+		where nickname = '#{nickname}'
 	</select>
 	
 	<!--
