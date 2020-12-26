@@ -45,7 +45,7 @@
 		select articleNo, nickname,title, regiTime, likeCount
 		from freeboard fb join usernickname un
         on fb.uid = un.uid
-		where title LIKE %#{title}%
+		where title LIKE CONCAT('%', #{title}, '%')
 	</select>
 	
 	<!--
