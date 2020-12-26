@@ -15,6 +15,8 @@ const routes = [
         path: "/about",
         component: () => import("pages/About.vue")
       },
+
+      // problem 
       {
         path: "/problem",
         component: () => import("pages/problem/ProblemList.vue")
@@ -24,9 +26,11 @@ const routes = [
         component: () => import("pages/problemSet/ProblemSetList.vue")
       },
       {
-        path: "/problemdetail",
+        path: "/problemdetail/:problemNo",
         component: () => import("pages/problem/ProblemDetail.vue")
       },
+
+      // board 
       {
         path: "/freeboard",
         component: () => import("pages/board/FreeBoard.vue")
