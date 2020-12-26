@@ -1,6 +1,39 @@
 <template>
   <div>
     <h3>FreeBoard</h3>
+    <div class="q-pa-md" style="max-width: 300px">
+      <div class="q-gutter-md">
+        <q-badge color="secondary" multi-line> Model: "{{ model }}" </q-badge>
+
+        <q-select filled v-model="model" :options="options" label="Standard" />
+      </div>
+    </div>
+    <q-input
+      bottom-slots
+      v-model="text"
+      label="Label"
+      counter
+      maxlength="12"
+      :dense="dense"
+    >
+      <template v-slot:before>
+        <q-icon name="flight_takeoff" />
+      </template>
+
+      <template v-slot:append>
+        <q-icon
+          v-if="text !== ''"
+          name="close"
+          @click="text = ''"
+          class="cursor-pointer"
+        />
+        <q-icon name="search" />
+      </template>
+
+      <template v-slot:hint>
+        Field hint
+      </template>
+    </q-input>
     <q-table
       title="Treats"
       :data="articles"
@@ -15,6 +48,8 @@ import Axios from "axios";
 export default {
   data() {
     return {
+      model: null,
+      options: ["제목", "작성자"],
       articles: [],
       errored: false,
       columns: [

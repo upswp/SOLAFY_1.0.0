@@ -35,8 +35,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	}
 
 	@Override
-	public List<FreeBoardDto> selectArticles() {
-		List<FreeBoardDto> list = freeBoardMapper.selectArticles();
+	public List<FreeBoardDto> selectAllArticles() {
+		List<FreeBoardDto> list = freeBoardMapper.selectAllArticles();
 		return list;
 	}
 
@@ -53,8 +53,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	}
 
 	@Override
-	public FreeBoardDto selectArticleByUid(String uid) {
-		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByUid(uid);
+	public FreeBoardDto selectArticleByNickname(String nickname) {
+		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByNickname(nickname);
 		return freeBoardDto;
 	}
 

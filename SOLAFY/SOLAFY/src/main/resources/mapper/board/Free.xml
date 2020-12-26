@@ -19,7 +19,7 @@
 		모든 게시물을 반환.
 		게시글번호, UID(닉네임), 등록시간, 종아요 갯수만 가져온다.
 	-->
-	<select id="selectArticles" resultType="FreeBoardDto">
+	<select id="selectAllArticles" resultType="FreeBoardDto">
 		select articleNo, nickname,title, regiTime, likeCount
 		from freeboard fb join usernickname un
         on fb.uid = un.uid

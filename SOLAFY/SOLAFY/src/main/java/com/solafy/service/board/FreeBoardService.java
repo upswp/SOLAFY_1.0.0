@@ -22,7 +22,7 @@ public interface FreeBoardService {
 	 * 자유게시판의 모든 게시글들을 반환
 	 * @return List<FreeBoardDto>
 	 */
-	public List<FreeBoardDto> selectArticles();
+	public List<FreeBoardDto> selectAllArticles();
 
 	/**
 	 * 입력한 게시를 번호에 해당하는 게시글 반환
@@ -36,14 +36,14 @@ public interface FreeBoardService {
 	 * @param title
 	 * @return 
 	 */
-	public FreeBoardDto selectArticleByTitle(String title);
+	public List<FreeBoardDto> selectArticleByTitle(String title);
 
 	/**
-	 * 입력한 uid와 일치하는 작성자의 게시글 반환
-	 * @param uid
+	 * 입력한 닉네임과 일치하는 작성자의 게시글 반환
+	 * @param nickname
 	 * @return FreeBoardDto
 	 */
-	public FreeBoardDto selectArticleByUid(String uid);
+	public List<FreeBoardDto> selectArticleByNickname(String nickname);
 
 	// TODO: 공지사항 검색이 필요할지?
 	// public FreeBoardDto selectNotice( ArticleNo);

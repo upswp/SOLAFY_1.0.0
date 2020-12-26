@@ -70,7 +70,7 @@ public class FreeBoardController {
 		}
 	}
 	
-	// TODO: 실제로 유저에게 보여지는 부분이니까 무작정 메서드와 같이 하긴 제한있을듯.33
+	// TODO: 실제로 유저에게 보여지는 부분이니까 무작정 메서드와 같이 하긴 제한있을듯.33???
 	/**
 	* @Method Name : selectArticles
 	* @작성일 : 2020. 12. 19
@@ -80,19 +80,28 @@ public class FreeBoardController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "자유게시판의 모든 게시글을 반환한다.", response = List.class)
-	@GetMapping(value="/selectArticles")
-	public List<FreeBoardDto> selectArticles(){
+	@GetMapping(value="/selectAllArticles")
+	public List<FreeBoardDto> selectAllArticles(){
 		logger.info("selectArtilces - 호출" + new Date());
-		List<FreeBoardDto> list = freeBoardService.selectArticles();
+		List<FreeBoardDto> list = freeBoardService.selectAllArticles();
 		return list;
 	}
 	
-	//TODO: Quasar에 검색기능이 제공 된텐데, 검색기능은 있는거 사용할지?
-//	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
-//	@GetMapping(value = "/selectArticleByTitle/{title}")
-//	public List<FreeBoardDto> selectArticles(){
-//		logger.info("selectAtricleByTitle - 호출" + new Date());
-//	}
+	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
+	@GetMapping(value = "/selectArticleByTitle/{title}")
+	public List<FreeBoardDto> selectArticleByTitle(@PathVariable String title){
+		logger.info("selectAtricleByTitle - 호출" + new Date());
+		List<FreeBoardDto> list = freeBoardService.selectArticleByTitle(title);
+		return list;
+	}
+	
+	@ApiOperation(value = "입력한 닉네임에 해당하는 게시글을 반환한다", response = List.class)
+	@GetMapping(value = "/selectArticleByNickname/{nickname}")
+	public List<FreeBoardDto> selectArticleByNickname(@PathVariable String nickname){
+		logger.info("selectAtricleByTitle - 호출" + new Date());
+		List<FreeBoardDto> list = freeBoardService.selectArticleByNickname(nickname);
+		return list;
+	}
 	
 	/**
 	* @Method Name : updateArticle
