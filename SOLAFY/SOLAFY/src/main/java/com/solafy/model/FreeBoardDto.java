@@ -19,12 +19,12 @@ public class FreeBoardDto {
 	private boolean isGroup;
 	private int groupNo;
 	private int boardNo;
-
-	public FreeBoardDto() {
-	}
+	private String nickname;
+	
+	public FreeBoardDto() {	}
 
 	public FreeBoardDto(int articleNo, String title, String contents, String uid, int likeCount, boolean isNotice,
-			String regiTime, boolean isGroup, int groupNo, int boardNo) {
+			String regiTime, boolean isGroup, int groupNo, int boardNo, String nickname) {
 		super();
 		this.articleNo = articleNo;
 		this.title = title;
@@ -36,6 +36,7 @@ public class FreeBoardDto {
 		this.isGroup = isGroup;
 		this.groupNo = groupNo;
 		this.boardNo = boardNo;
+		this.nickname = nickname;
 	}
 
 	public int getArticleNo() {
@@ -118,11 +119,19 @@ public class FreeBoardDto {
 		this.boardNo = boardNo;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
 		return "FreeBoardDto [articleNo=" + articleNo + ", title=" + title + ", contents=" + contents + ", uid=" + uid
 				+ ", likeCount=" + likeCount + ", isNotice=" + isNotice + ", regiTime=" + regiTime + ", isGroup="
-				+ isGroup + ", groupNo=" + groupNo + ", boardNo=" + boardNo + "]";
+				+ isGroup + ", groupNo=" + groupNo + ", boardNo=" + boardNo + ", nickname=" + nickname + "]";
 	}
-
+	
 }

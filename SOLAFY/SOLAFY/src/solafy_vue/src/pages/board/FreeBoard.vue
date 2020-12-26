@@ -28,11 +28,11 @@ export default {
           sortable: true
         },
         {
-          name: "uid",
+          name: "nickname",
           required: true,
-          label: "uid",
+          label: "nickname",
           align: "left",
-          field: row => row.uid,
+          field: row => row.nickname,
           format: val => `${val}`,
           sortable: true
         },
@@ -71,6 +71,7 @@ export default {
       Axios.get(`/free/selectArticles`)
         .then(response => {
           this.articles = response.data;
+          console.log(this.articles[0]);
         })
         .catch(() => {
           this.errored = true;
