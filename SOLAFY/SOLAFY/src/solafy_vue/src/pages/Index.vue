@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { firebaseAuth, firebaseDb } from "boot/firebase";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
 export default {
   name: "PageIndex",
   data() {

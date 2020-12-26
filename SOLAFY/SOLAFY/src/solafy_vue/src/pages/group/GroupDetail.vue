@@ -34,7 +34,7 @@
 
 <script>
 import axios from "axios";
-import { firebaseAuth, firebaseDb } from "boot/firebase";
+import { firebaseAuth } from "boot/firebase";
 export default {
   data() {
     return {
