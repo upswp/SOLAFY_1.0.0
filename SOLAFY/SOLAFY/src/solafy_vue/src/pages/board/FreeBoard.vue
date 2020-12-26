@@ -3,35 +3,34 @@
     <h3>FreeBoard</h3>
     <div class="q-pa-md" style="max-width: 300px">
       <div class="q-gutter-md">
-        <q-badge color="secondary" multi-line> Model: "{{ model }}" </q-badge>
-
-        <q-select filled v-model="model" :options="options" label="Standard" />
+        <q-badge color="secondary" multi-line>
+          Selection: "{{ selection }}"
+        </q-badge>
+        <!-- 선택한 내용은 model에 담긴다 -->
+        <q-select
+          filled
+          v-model="selection"
+          :options="options"
+          label="Standard"
+        />
       </div>
     </div>
+    <q-badge color="secondary" multi-line> keyword: "{{ keyword }}" </q-badge>
     <q-input
       bottom-slots
-      v-model="text"
-      label="Label"
+      v-model="keyword"
+      label="검색어를 입력해주세요"
       counter
       maxlength="12"
-      :dense="dense"
     >
-      <template v-slot:before>
-        <q-icon name="flight_takeoff" />
-      </template>
-
       <template v-slot:append>
         <q-icon
-          v-if="text !== ''"
+          v-if="keyword !== ''"
           name="close"
-          @click="text = ''"
+          @click="keyword = ''"
           class="cursor-pointer"
         />
-        <q-icon name="search" />
-      </template>
-
-      <template v-slot:hint>
-        Field hint
+        <q-icon name="search" @click="selectArticle" />
       </template>
     </q-input>
     <q-table
@@ -48,10 +47,11 @@ import Axios from "axios";
 export default {
   data() {
     return {
-      model: null,
+      selection: "제목",
       options: ["제목", "작성자"],
       articles: [],
       errored: false,
+      keyword: null,
       columns: [
         {
           name: "articleNo",
@@ -102,8 +102,8 @@ export default {
     };
   },
   methods: {
-    selectArticles: function() {
-      Axios.get(`/free/selectArticles`)
+    selectAllArticles: function() {
+      Axios.get(`/free/selectAllArticles`)
         .then(response => {
           this.articles = response.data;
           console.log(this.articles[0]);
@@ -112,10 +112,33 @@ export default {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
+    },
+    selectArticle: function() {
+      if (this.selection === "제목") {
+        Axios.get(`/free/selectArticleByTitle/${this.keyword}`)
+          .then(response => {
+            this.articles = response.data;
+            console.log(this.articles[0]);
+          })
+          .catch(() => {
+            this.errored = true;
+          })
+          .finally(() => (this.loading = false));
+      } else {
+        Axios.get(`/free/selectArticleByNickname/${this.keyword}`)
+          .then(response => {
+            this.articles = response.data;
+            console.log(this.articles[0]);
+          })
+          .catch(() => {
+            this.errored = true;
+          })
+          .finally(() => (this.loading = false));
+      }
     }
   },
   created() {
-    this.selectArticles();
+    this.selectAllArticles();
   }
 };
 </script>
