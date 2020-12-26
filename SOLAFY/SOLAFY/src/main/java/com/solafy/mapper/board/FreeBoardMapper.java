@@ -42,14 +42,14 @@ public interface FreeBoardMapper {
 	 * @param title
 	 * @return 
 	 */
-	public FreeBoardDto selectArticleByTitle(String title);
+	public List<FreeBoardDto> selectArticleByTitle(String title);
 
 	/**
 	 * 입력한 닉네임와 일치하는 작성자의 게시글 반환
 	 * @param nickname
 	 * @return FreeBoardDto
 	 */
-	public FreeBoardDto selectArticleByNickname(String nickname);
+	public List<FreeBoardDto> selectArticleByNickname(String nickname);
 
 	// TODO: 공지사항 검색이 필요할지?
 	// public FreeBoardDto selectNotice( ArticleNo);

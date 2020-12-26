@@ -45,7 +45,7 @@
 		select articleNo, nickname,title, regiTime, likeCount
 		from freeboard fb join usernickname un
         on fb.uid = un.uid
-		where title LIKE '%#{title}%'
+		where title LIKE %#{title}%
 	</select>
 	
 	<!--
@@ -55,8 +55,8 @@
 	<select id="selectArticleByNickname" parameterType="String" resultType="FreeBoardDto">
 		select articleNo, nickname,title, regiTime, likeCount 
 		from freeboard fb join usernickname un
-        on fn.uid = un.uid
-		where nickname = '#{nickname}'
+        on fb.uid = un.uid
+		where nickname = #{nickname}
 	</select>
 	
 	<!--

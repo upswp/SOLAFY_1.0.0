@@ -47,15 +47,15 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	}
 
 	@Override
-	public FreeBoardDto selectArticleByTitle(String title) {
-		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByTitle(title);
-		return freeBoardDto;
+	public List<FreeBoardDto> selectArticleByTitle(String title) {
+		List<FreeBoardDto> list = freeBoardMapper.selectArticleByTitle(title);
+		return list;
 	}
 
 	@Override
-	public FreeBoardDto selectArticleByNickname(String nickname) {
-		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByNickname(nickname);
-		return freeBoardDto;
+	public List<FreeBoardDto> selectArticleByNickname(String nickname) {
+		List<FreeBoardDto> list = freeBoardMapper.selectArticleByNickname(nickname);
+		return list;
 	}
 
 	@Override
