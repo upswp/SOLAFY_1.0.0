@@ -27,7 +27,17 @@ cmd창에서
 
 ##### 결과
 
-###### ![image-20201227112559958](C:\Users\lay07\AppData\Roaming\Typora\typora-user-images\image-20201227112559958.png)
+-------
+
+# h1 Heading
+
+## h2 Heading
+### h3 Heading
+#### h4 Heading
+##### h5 Heading
+###### h6 Heading
+
+--------------
 
 ***주의사항 : text는 반드시 tap없이 사용!**
 
