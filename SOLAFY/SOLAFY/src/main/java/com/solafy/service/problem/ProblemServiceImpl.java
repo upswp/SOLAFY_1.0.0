@@ -1,6 +1,5 @@
 package com.solafy.service.problem;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,6 +66,11 @@ public class ProblemServiceImpl implements ProblemService {
 		map.put("hashTag", problemMapper.selectHashTagList(problemNo));
 
 		return map;
+	}
+	
+	@Override
+	public ProblemAnswerDto selectProblemAnswer(int problemNo) throws Exception{
+		return problemAnswerMapper.selectProblemAnswer(problemNo);
 	}
 
 	@Override

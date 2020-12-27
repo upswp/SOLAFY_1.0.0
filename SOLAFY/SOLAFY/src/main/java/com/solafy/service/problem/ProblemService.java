@@ -35,6 +35,16 @@ public interface ProblemService {
 	* @변경이력 :
 	*/
 	public HashMap<String, Object> selectProblem(int problemNo) throws Exception;
+	
+
+	/**
+	* @param problemNo - 문제번호
+	* @return ProblemAnswerDto - 문제 정답 : problemNo, answer, solution, keyword
+	* @throws Exception
+	* @Method 설명 : 문제 정답 반환
+	* @변경이력 :
+	*/
+	public ProblemAnswerDto selectProblemAnswer(int problemNo) throws Exception;
 	 
 	/**
 	* @param hashTagNo - 해시태그 번호
