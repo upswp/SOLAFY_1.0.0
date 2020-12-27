@@ -72,7 +72,7 @@
               label="검색어를 입력해주세요"
               counter
               maxlength="12"
-              @keyup.enter="searchProblem"
+              @keyup.enter="searchProblem()"
             >
               <template v-slot:append>
                 <q-icon
@@ -81,7 +81,7 @@
                   @click="keyword = ''"
                   class="cursor-pointer"
                 />
-                <q-icon name="search" @click="searchProblem" />
+                <q-icon name="search" @click="searchProblem()" />
               </template>
             </q-input>
           </template>
@@ -188,13 +188,26 @@ export default {
     },
     searchProblem: function() {
       this.loading = true;
-      Axios.get(`/search/${this.options}/${this.keyword}`)
+      Axios.get(`/problem/search/${this.selection}/${this.keyword}`)
         .then(response => {
           this.problems = response.data;
+          if (this.problems.length === 0) {
+            this.$q.notify({
+              color: "red-6",
+              textColor: "white",
+              icon: "warning",
+              message: "조회 실패"
+            });
+          }
           console.log(this.problems[0]);
         })
-        .catch(() => {
-          this.errored = true;
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
         })
         .finally(() => (this.loading = false));
     },
