@@ -9,6 +9,13 @@
  	values(#{title}, #{type}, #{description})
  </insert>
  
+ <!-- 2020.12.28. createGroup에서 그룹장 설정 -->
+ <!-- TODO : statusMessage 설정 해야함  -->
+ <insert id="createGroupMaster" parameterType="Map">
+ 	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
+ 	values(#{uid}, (select groupNo from solafy.group where title = #{title}), 1, '', '')
+ </insert>
+ 
  <insert id="createApplyGroupSignUp" parameterType="GroupMemberDto">
  	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
  	values(#{uid}, #{groupNo}, #{grade}, #{statusMessage}, #{regiMessage})

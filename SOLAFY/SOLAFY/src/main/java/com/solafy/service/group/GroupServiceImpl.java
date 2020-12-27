@@ -1,10 +1,12 @@
 package com.solafy.service.group;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.solafy.mapper.group.GroupMapper;
 import com.solafy.model.GroupDto;
@@ -16,8 +18,15 @@ public class GroupServiceImpl implements GroupService {
 	private GroupMapper groupMapper;
 	
 	@Override
-	public boolean createGroup(GroupDto group) throws Exception {
-		return groupMapper.createGroup(group) > 0 ? true : false;
+	@Transactional
+	public boolean createGroup(GroupDto group, String uid) throws Exception {
+		if(groupMapper.createGroup(group) > 0) {
+			Map<String, Object> groupMaster = new HashMap<String, Object>();
+			groupMaster.put("uid", uid);
+			groupMaster.put("title", group.getTitle());
+			return groupMapper.createGroupMaster(groupMaster) > 0 ? true : false;
+		}
+		return false;
 	}
 	@Override
 	public boolean createApplyGroupSignUp(GroupMemberDto groupMember) throws Exception {
