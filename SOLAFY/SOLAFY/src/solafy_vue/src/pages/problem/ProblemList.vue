@@ -26,7 +26,7 @@
       </div>
       <div class="col">
         <q-table
-          title="Treats"
+          title="문제 리스트"
           :data="data"
           :columns="columns"
           row-key="id"
@@ -59,11 +59,43 @@
               label="소분류"
             />
             <q-space />
-            <q-input dense debounce="500" color="primary" v-model="filter">
+            <q-select
+              id="selectbox"
+              filled
+              v-model="selection"
+              :options="options"
+              label="검색조건"
+            />
+            <q-input
+              bottom-slots
+              v-model="keyword"
+              label="검색어를 입력해주세요"
+              counter
+              maxlength="12"
+              @keyup.enter="searchProblem"
+            >
               <template v-slot:append>
-                <q-icon name="search" />
+                <q-icon
+                  v-if="keyword !== ''"
+                  name="close"
+                  @click="keyword = ''"
+                  class="cursor-pointer"
+                />
+                <q-icon name="search" @click="searchProblem" />
               </template>
             </q-input>
+          </template>
+          <template>
+            <q-td>
+              <q-btn name="수정" @click="problemDetail(problem.no)">
+                수정
+              </q-btn>
+              <template>
+                <q-btn name="삭제" @click="problemDelete(problem.no)">
+                  삭제
+                </q-btn>
+              </template>
+            </q-td>
           </template>
         </q-table>
       </div>
@@ -72,6 +104,7 @@
 </template>
 
 <script>
+import Axios from "axios";
 export default {
   data() {
     return {
@@ -84,13 +117,18 @@ export default {
       loading: false,
       filter: "",
       rowCount: 10,
+      errored: false,
+      keyword: null,
+      problems: [],
+      selection: "제목",
+      options: ["제목", "문제번호", "작성자"],
       columns: [
         {
           name: "desc",
           required: true,
           label: "문제번호",
           align: "left",
-          field: row => row.name,
+          field: row => row.problemNo,
           format: val => `${val}`,
           sortable: true,
           style: "width = 10px"
@@ -98,33 +136,37 @@ export default {
         {
           name: "title",
           label: "제목",
-          field: "fat",
-          sortable: true,
+          required: true,
           align: "left",
-          style: "width = 200px"
+          field: row => row.title,
+          format: val => `${val}`,
+          sortable: true
         },
         {
           name: "nickname",
           label: "작성자",
-          field: "carbs",
+          required: true,
           align: "left",
-          style: "width = 40px",
+          field: row => row.nickname,
+          format: val => `${val}`,
           sortable: true
         },
         {
           name: "regiTime",
           label: "작성일자",
-          field: "protein",
+          required: true,
           align: "left",
-          style: "width = 50px",
+          field: row => row.regiTime,
+          format: val => `${val}`,
           sortable: true
         },
         {
           name: "etc",
           label: "비고",
-          field: "sodium",
-          align: "left",
-          style: "width = 50px"
+          required: true,
+          // field: row => row.problemNo,
+          // format: val => `${val}`,
+          align: "left"
         }
       ],
       data: [],
