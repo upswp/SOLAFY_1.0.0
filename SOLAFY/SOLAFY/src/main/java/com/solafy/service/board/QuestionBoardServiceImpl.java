@@ -44,7 +44,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
 	@Override
 	public List<QuestionBoardDto> selectQuestionsByTitle(String keyword) throws Exception {
-		return questionMapper.selectQuestionsByTitle(keyword);
+		return questionMapper.selectQuestionsByTitle("%" + keyword + "%");
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	@Override
 	public boolean updateQuestion(QuestionBoardDto qDto) throws Exception {
 		int result = questionMapper.updateQuestion(qDto);
-		if(result != 1)
+		if (result != 1)
 			return false;
 		return true;
 	}
@@ -68,7 +68,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	@Override
 	public boolean deleteQuestion(int articleNo) throws Exception {
 		int result = questionMapper.deleteQuestion(articleNo);
-		if(result != 1)
+		if (result != 1)
 			return false;
 		return true;
 	}

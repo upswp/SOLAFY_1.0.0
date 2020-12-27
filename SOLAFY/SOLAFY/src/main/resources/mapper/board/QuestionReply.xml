@@ -34,14 +34,14 @@
 	<update id="updateAnswer" parameterType="AnswerByQuestionDto">
 		UPDATE answerbyquestion
 		SET    contents  = #{contents},
-			   regiTime  = now(),
+			   regiTime  = now()
 		WHERE  articleNo = #{articleNo}
 	</update>
 	
 	<!-- 답변글 삭제 -->
 	<delete id="deleteAnswer" parameterType="int">
 		DELETE FROM answerbyquestion
-		WHERE		articleNo = #{articleNo)
+		WHERE		articleNo = #{articleNo}
 	</delete>
 	
 </mapper>

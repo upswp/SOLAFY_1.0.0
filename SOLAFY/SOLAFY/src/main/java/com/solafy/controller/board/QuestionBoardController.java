@@ -240,7 +240,7 @@ public class QuestionBoardController {
 	 * @변경이력
 	 */
 	@ApiOperation(value = "답변 글을 삭제하고 결과를 반환한다.", response = String.class)
-	@PutMapping(value = "/deleteanswer/{articleNo}")
+	@DeleteMapping(value = "/deleteanswer/{articleNo}")
 	public ResponseEntity<String> deleteAnswer(@PathVariable int articleNo) throws Exception {
 		logger.debug("deleteAnswer");
 		if (answerService.deleteAnswer(articleNo))

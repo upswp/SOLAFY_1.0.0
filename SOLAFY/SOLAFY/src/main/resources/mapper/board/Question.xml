@@ -33,7 +33,7 @@
 	<select id="selectQuestionsByTitle" parameterType="String" resultType="QuestionBoardDto">
 		SELECT articleNo, title, uid, regiTime, problemNo
 		FROM   questionboard
-		WHERE  title LIKE #{title}
+		WHERE  UPPER(title) LIKE UPPER(#{title})
 	</select>
 	
 	<!-- 검색된 uid와 작성자 uid가 동일한 질문글들 반환 -->
@@ -55,14 +55,14 @@
 		UPDATE questionboard
 		SET    title 	 = #{title},
 			   contents  = #{contents},
-			   regiTime  = now(),
+			   regiTime  = now()
 		WHERE  articleNo = #{articleNo}
 	</update>
 	
 	<!-- 질문글 삭제 -->
 	<delete id="deleteQuestion" parameterType="int">
 		DELETE FROM questionboard
-		WHERE		articleNo = #{articleNo)
+		WHERE		articleNo = #{articleNo}
 	</delete>
 	
 </mapper>
