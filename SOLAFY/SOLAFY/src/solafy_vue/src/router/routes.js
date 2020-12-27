@@ -16,21 +16,22 @@ const routes = [
         component: () => import("pages/About.vue")
       },
 
-      // problem 
+      // problem
       {
         path: "/problem",
         component: () => import("pages/problem/ProblemList.vue")
       },
       {
+        path: "/problemdetail/:problemNo",
+        name: "ProblemDetail",
+        component: () => import("pages/problem/ProblemDetail.vue")
+      },
+      {
         path: "/problemset",
         component: () => import("pages/problemSet/ProblemSetList.vue")
       },
-      {
-        path: "/problemdetail/:problemNo",
-        component: () => import("pages/problem/ProblemDetail.vue")
-      },
 
-      // board 
+      // board
       {
         path: "/freeboard",
         component: () => import("pages/board/FreeBoard.vue")
