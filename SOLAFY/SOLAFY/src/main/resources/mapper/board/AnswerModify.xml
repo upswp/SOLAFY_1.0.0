@@ -25,19 +25,19 @@
 	-->
 	<select id="selectAllArticles" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo,title, regiTime
-		from answermodifyboard amb join usernickname un
-		on amb.uid = un.uid
+		from answermodifyboard amb join userinfo ui
+		on amb.uid = ui.uid
 		order by articleNo desc;
 	</select>
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,un.nickname, problemNo, uns.nickname,title, contents, regiTime)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,ui.nickname, problemNo, uns.nickname,title, contents, regiTime)
 	-->
 	<select id="selectArticleByNo" parameterType="int" resultType="AnswerModifyBoardDto">
-		select articleNo, un.nickname, problemNo, uns.nickname, title, contents, regiTime 
-		from answermodifyboard amb join usernickname un join usernickname uns
-		on amb.uid = un.uid and amb.uid_submitter = uns.uid
+		select articleNo, ui.nickname, problemNo, uns.nickname, title, contents, regiTime 
+		from answermodifyboard amb join userinfo ui join userinfo uis
+		on amb.uid = ui.uid and amb.uid_submitter = uns.uid
         where articleNo = #{articleNo};
 	</select>
 
@@ -47,8 +47,8 @@
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
-		from answermodifyboard amb join usernickname un
-        on amb.uid = un.uid
+		from answermodifyboard amb join userinfo ui
+        on amb.uid = ui.uid
 		where title LIKE '%#{title}%'
 	</select>
 	
@@ -58,8 +58,8 @@
 	-->
 	<select id="selectArticleByNickname" parameterType="String" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
-		from answermodifyboard amb join usernickname un 
-        on amb.uid = un.uid
+		from answermodifyboard amb join userinfo ui
+        on amb.uid = ui.uid
 		where nickname = '#{nickname}';
 	</select>
 	
@@ -69,8 +69,8 @@
 	-->
 	<select id="selectArticleByProblemNo" parameterType="String" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
-		from answermodifyboard amb join usernickname un 
-        on amb.uid = un.uid
+		from answermodifyboard amb join userinfo ui 
+        on amb.uid = ui.uid
 		where problemNo = #{problemNo}
 	</select>
 	
