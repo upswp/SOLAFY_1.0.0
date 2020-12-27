@@ -74,6 +74,13 @@ public class ProblemController {
 		return new ResponseEntity<HashMap<String, Object>>(problemService.selectProblem(problemNo), HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "문제번호에 해당하는 문제정답을 반환한다.", response = ProblemAnswerDto.class)
+	@GetMapping(value = "/answer/{problemNo}")
+	public ResponseEntity<ProblemAnswerDto> selectProblemAnswer(@PathVariable int problemNo) throws Exception {
+		logger.debug("selectProblemAnswer - 호출");
+		return new ResponseEntity<ProblemAnswerDto>(problemService.selectProblemAnswer(problemNo), HttpStatus.OK);
+	}
+	
 	// 지금 방식 
 	// 1. 문제를 클릭 -> selectProblem(problemNo)호출 -> ProblemDto를 반환 
 	// -> (vue)ProblemDto에서 categoryNo를  뽑음 -> select대,중,소(categoryNo)호출 -> 각 카테고리Dto반환
