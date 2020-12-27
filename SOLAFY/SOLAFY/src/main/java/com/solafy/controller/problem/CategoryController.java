@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,7 +65,7 @@ public class CategoryController {
 	*/
 	@ApiOperation(value="대분류에 해당하는 중분류 카테고리 리스트를 반환한다.", response = List.class)
 	@GetMapping(value = "/medium/{largeCategoryNo}")
-	public ResponseEntity<List<CategoryMediumDto>> selectCategoryMediumList(int largeCategoryNo) throws Exception{
+	public ResponseEntity<List<CategoryMediumDto>> selectCategoryMediumList(@PathVariable int largeCategoryNo) throws Exception{
 		logger.debug("selectCategoryMediumList - 호출");
 		return new ResponseEntity<List<CategoryMediumDto>>(categoryService.selectCategoryMediumList(largeCategoryNo),HttpStatus.OK);
 	}
@@ -78,7 +79,7 @@ public class CategoryController {
 	*/
 	@ApiOperation(value="중분류에 해당하는 소분류 카테고리 리스트를 반환한다.", response = List.class)
 	@GetMapping(value = "/small/{mediumCategoryNo}")
-	public ResponseEntity<List<CategorySmallDto>> selectCategorySmallList(int mediumCategoryNo) throws Exception{
+	public ResponseEntity<List<CategorySmallDto>> selectCategorySmallList(@PathVariable int mediumCategoryNo) throws Exception{
 		logger.debug("selectCategorySmallList - 호출");
 		return new ResponseEntity<List<CategorySmallDto>>(categoryService.selectCategorySmallList(mediumCategoryNo),HttpStatus.OK);
 	}

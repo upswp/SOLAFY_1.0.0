@@ -23,8 +23,9 @@ public interface GroupService {
 	* @작성자 : Yun Kihyeon
 	* @Method 설명 : 그룹을 생성한다.
 	* @변경이력 :
+	* 2020.12.28 uid추가(그룹장 설정을 위해)
 	*/
-	boolean createGroup(GroupDto group)throws Exception;
+	boolean createGroup(GroupDto group, String uid)throws Exception;
 
 	/**
 	* @param groupMember

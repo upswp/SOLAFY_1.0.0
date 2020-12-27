@@ -24,6 +24,7 @@ public interface GroupMapper {
 	//TODO : 아래 2개를 합치는 것에 대한 이슈
 	int createApplyGroupSignUp(GroupMemberDto groupMember)throws Exception;
 	int createGroupInvitation(GroupMemberDto groupMember)throws Exception;
+	int createGroupMaster(Map<String, Object> groupMaster)throws Exception;
 	
 	//TODO : private 그룹도 보여줄 것인가?
 	List<GroupDto> selectAllGroup(String uid)throws Exception;
@@ -38,4 +39,5 @@ public interface GroupMapper {
 	int deleteGroup(int groupNo)throws Exception;
 	int deleteGroupMember(Map<String, Object> deleteMember)throws Exception;
 	int deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
+
 }
