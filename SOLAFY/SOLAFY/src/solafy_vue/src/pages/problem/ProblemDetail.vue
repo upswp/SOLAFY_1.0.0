@@ -113,7 +113,7 @@ export default {
       },
       checklist: [],
       answer: "",
-      loading: true
+      loading: true,
     };
   },
   created() {
@@ -144,10 +144,18 @@ export default {
       this.$router.push("/problem");
     },
     goToResult(){
-
+      this.loading=true;
+       axios
+      .get("problem/answer/" + this.$route.params.problemNo)
+      .then(Response => {
+        
+      })
+      .catch(error => {
+        alert(error);
+      });
     },
     goToAnswerModify(){
-
+      
     }
   }
 };
