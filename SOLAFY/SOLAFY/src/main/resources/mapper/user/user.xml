@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<!-- author : Juhee Lee
+	 since : 2020-12-27 -->
+	
+<mapper namespace="com.solafy.mapper.user.UserMapper">
+	
+	<!-- 사용자 등록 -->
+	<insert id="createUser" parameterType="UserDto">
+		INSERT INTO userinfo ( uid,    nickname,    statusMessage    )
+		VALUES				 ( #{uid}, #{nickname}, #{statusMessage} )
+	</insert>
+	
+	<!-- 모든 사용자 번환 -->
+	<select id="selectAllUsers" resultType="UserDto">
+		SELECT uid, nickname, statusMessage
+		FROM   userinfo
+	</select>
+	
+	<!-- uid로 검색한 결과 반환 -->
+	<select id="selectUserByUid" parameterType="String" resultType="UserDto">
+		SELECT uid, nickname, statusMessage
+		FROM   userinfo
+		WHERE  uid = #{uid}
+	</select>
+	
+	<!-- 별명으로 검색한 결과 반환 -->
+	<select id="selectUserByNickname" parameterType="String" resultType="UserDto">
+		SELECT uid, nickname, statusMessage
+		FROM   userinfo
+		WHERE  nickname = #{nickname}
+	</select>	
+	
+	<!-- 사용자 정보 수정 -->
+	<update id="updateUser" parameterType="UserDto">
+		UPDATE userinfo
+		SET    nickname 	 = #{nickname},
+			   statusMessage = #{statusMessage}
+		WHERE  uid = #{uid}
+	</update>
+	
+	<!-- 사용자 삭제 -->
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM userinfo
+		WHERE		uid = #{uid}
+	</delete>
+	
+</mapper>
