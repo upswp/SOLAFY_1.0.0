@@ -106,7 +106,7 @@
 	</select>
 	
 	<!-- 유저닉네임으로 검색 -->
-	<select id="selectProblemByuserinfo" parameterType="String" resultType="ProblemDto">
+	<select id="selectProblemByUserNickname" parameterType="String" resultType="ProblemDto">
 		select p.problemNo, p.title, u.nickname, p.regiTime
 		from problem p join userinfo u
 		on p.uid = u.uid
