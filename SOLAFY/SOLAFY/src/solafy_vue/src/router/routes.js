@@ -27,6 +27,11 @@ const routes = [
         component: () => import("pages/problem/ProblemDetail.vue")
       },
       {
+        path: "/problemcreate",
+        name: "ProblemCreate",
+        component: () => import("pages/problem/ProblemCreate.vue")
+      },
+      {
         path: "/problemset",
         component: () => import("pages/problemSet/ProblemSetList.vue")
       },
