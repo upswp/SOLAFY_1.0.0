@@ -35,7 +35,7 @@ public interface FreeBoardMapper {
 	 * @param ArticleNo
 	 * @return FreeBoardDto(해당 번호에 해당하는 게시글)
 	 */
-	public FreeBoardDto selectArticleByNo(int ArticleNo);
+	public FreeBoardDto selectArticleByArticleNo(int ArticleNo);
 
 	/**
 	 * 입력한 게시글 제목에 해당하는 게시글 반환
