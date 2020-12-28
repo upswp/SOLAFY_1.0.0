@@ -3,13 +3,13 @@
     <div class="column">
       <!-- 상단 제목 및 돌아가기 버튼 -->
       <div class="col" id="header-title">
-        <h3>문제집 제목</h3>
+        <h3 v-html="item.problemSet.title"></h3>
       </div>
       <div class="col" id="header-btn">
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="돌아가기" />
+            <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
           </div>
         </div>
       </div>
@@ -29,52 +29,38 @@
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <p>총 문제 : 00</p>
+            <p>총 문제 : {{ item.problemList.length }}</p>
           </div>
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <q-item clickable v-ripple>
-              <q-item-section>
-                <q-item-label>Content filtering</q-item-label>
-                <q-item-label caption>
-                  Set the content filtering level to restrict apps that can be
-                  downloaded
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-item clickable v-ripple>
-              <q-item-section>
-                <q-item-label>Password</q-item-label>
-                <q-item-label caption>
-                  Require password for purchase or use password to restrict
-                  purchase
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section>
-                <q-item-label>Password</q-item-label>
-                <q-item-label caption>
-                  Require password for purchase or use password to restrict
-                  purchase
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple>
-              <q-item-section>
-                <q-item-label>Password</q-item-label>
-                <q-item-label caption>
-                  Require password for purchase or use password to restrict
-                  purchase
-                </q-item-label>
-              </q-item-section>
-            </q-item>
+            <div>
+              <q-item
+                clickable
+                v-ripple
+                v-for="(problem, index) in item.problemList"
+                :key="index"
+              >
+                <q-item-section>
+                  <q-item-label v-html="problem.problemNo"></q-item-label>
+                  <q-item-label caption v-html="problem.title"> </q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
+            <div class="q-pa-md">
+              <p>총 문제 : {{ item.problemList.length }}</p>
+              <q-table
+                title="문제 List"
+                :data="item.problemList"
+                :columns="listColumns"
+                hide-pagination
+                :pagination.sync="pagination"
+              />
+            </div>
             <div class="q-pa-lg flex flex-center">
               <q-pagination
-                v-model="current"
-                :max="5"
+                v-model="pagination.page"
+                :max="pagesNumber"
                 input
                 input-class="text-orange-10"
               />
@@ -88,9 +74,21 @@
         <div class="row">
           <div class="col-7"></div>
           <div class="col-5">
-            <q-btn color="primary" label="문제집 삭제" />
-            <q-btn color="primary" label="문제집 수정" />
-            <q-btn color="primary" label="문제풀이 시작" />
+            <q-btn
+              color="primary"
+              label="문제집 삭제"
+              @click="ProblemSetDelete"
+            />
+            <q-btn
+              color="primary"
+              label="문제집 수정"
+              @click="GoProblemSetUpdate"
+            />
+            <q-btn
+              color="primary"
+              label="문제풀이 시작"
+              @click="GoProblemSolving"
+            />
           </div>
         </div>
       </div>
@@ -106,6 +104,13 @@ export default {
   data() {
     return {
       current: 3,
+      pagination: {
+        sortBy: "desc",
+        descending: false,
+        page: 1,
+        rowsPerPage: 3
+        // rowsNumber: xx if getting data from a server
+      },
       columns: [
         { name: "title", align: "left", label: "title", field: "title" },
         {
@@ -116,13 +121,29 @@ export default {
           align: "left"
         }
       ],
+      listColumns: [
+        {
+          name: "문제번호",
+          align: "left",
+          label: "문제번호",
+          field: "problemNo"
+        },
+        {
+          name: "문제제목",
+          style: "width:100vw",
+          label: "문제 제목",
+          field: "title",
+          align: "center"
+        }
+      ],
       item: {
         problemSet: {
           problemSetNo: 0,
           title: "",
           regiTime: "",
           nickname: ""
-        }
+        },
+        problemList: []
       },
       data: [
         {
@@ -141,6 +162,7 @@ export default {
     };
   },
   methods: {
+    //ProblemSet Contents - table 반환
     selectProblemByNo: function() {
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
@@ -165,10 +187,59 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    //ProblemSetDelete 반환
+    ProblemSetDelete: function() {
+      Axios.get(
+        "/problem/problemset/deleteProblemSet" +
+          this.item.problemSet.problemSetNo
+      )
+        .then(Response => {
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "done",
+            message: "삭제 완료"
+          });
+          this.GoProblemSetList();
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "삭제 실패"
+          });
+        });
+    },
+    //ProblemDetailByProblem 이동
+    GoProblemSolving: function() {
+      this.$router.push({
+        name: "ProblemDetailByProblem"
+      });
+    },
+    //ProblemSetList 이동
+    GoProblemSetList: function() {
+      this.$router.push({
+        name: "ProblemSet"
+      });
+    },
+    //ProblemSet Update 이동
+    GoProblemSetUpdate: function() {
+      this.$router.push({
+        name: "ProblemSetUpdate"
+      });
     }
   },
   created() {
     this.selectProblemByNo();
+  },
+  computed: {
+    pagesNumber() {
+      return Math.ceil(
+        this.item.problemList.length / this.pagination.rowsPerPage
+      );
+    }
   }
 };
 </script>
