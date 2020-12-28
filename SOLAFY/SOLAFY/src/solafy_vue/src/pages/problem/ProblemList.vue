@@ -32,15 +32,19 @@
           row-key="name"
           :filter="filter"
           :loading="loading"
+          @row-click="problemDetail"
         >
           <template v-slot:top>
             <q-select
               id="selectbox"
               borderless
               filled
-              v-model="largeModel"
+              use-chips
+              stack-label
               :options="large"
+              v-model="largeModel"
               label="대분류"
+              @change="selectMedium"
             />
             <q-select
               id="selectbox"
@@ -85,18 +89,6 @@
               </template>
             </q-input>
           </template>
-          <template>
-            <q-td>
-              <q-btn name="수정" @click="problemDetail(problems.problemNo)">
-                수정
-              </q-btn>
-              <template>
-                <q-btn name="삭제" @click="problemDelete(problems.problemNo)">
-                  삭제
-                </q-btn>
-              </template>
-            </q-td>
-          </template>
         </q-table>
       </div>
     </div>
@@ -105,6 +97,8 @@
 
 <script>
 import Axios from "axios";
+import routes from "src/router/routes";
+
 export default {
   data() {
     return {
@@ -159,21 +153,12 @@ export default {
           field: row => row.regiTime,
           format: val => `${val}`,
           sortable: true
-        },
-        {
-          name: "etc",
-          label: "비고",
-          required: true,
-          // field: row => row.problemNo,
-          // format: val => `${val}`,
-          align: "left"
         }
-      ],
-      data: [],
-      original: []
+      ]
     };
   },
   methods: {
+    //문제 전체 리스트 반환
     selectProblemList: function() {
       this.loading = true;
       Axios.get(`/problem`)
@@ -186,6 +171,7 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
+    //문제 검색 및 검색 예외처리
     searchProblem: function() {
       this.loading = true;
       Axios.get(`/problem/search/${this.selection}/${this.keyword}`)
@@ -211,26 +197,90 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
+    //문제 대분류 반환
+    selectLarge: function() {
+      Axios.get(`/category/large`)
+        .then(response => {
+          response.data.forEach(element => {
+            this.large.push({
+              label: element.categoryName,
+              value: element.categoryNo
+            });
+          });
+          console.log(this.large);
+        })
+        .catch(() => {
+          this.errored = true;
+        });
+    },
+    //문제 중분류 반환
+    selectMedium: function() {
+      Axios.get(`/category/medium/${this.largeModel.value}`)
+        .then(response => {
+          response.data.forEach(element => {
+            this.medium.push({
+              label: element.categoryName,
+              value: element.categoryNo
+            });
+          });
+          console.log(this.medium[0]);
+        })
+        .catch(() => {
+          this.errored = true;
+        });
+    },
+    //문제 소분류 반환
+    selectSmall: function() {
+      Axios.get(`/category/small/${this.mediumModel.value}`)
+        .then(response => {
+          response.data.forEach(element => {
+            this.small.push({
+              label: element.categoryName,
+              value: element.categoryNo
+            });
+          });
+          console.log(this.small[0]);
+        })
+        .catch(() => {
+          this.errored = true;
+        });
+    },
 
-    // emulate fetching data from server
+    // problemList로 이동
     problemList() {
       this.loading = true;
+      this.$router.push({
+        name: "Problem"
+      });
     },
+    // problemSetList로 이동
     ProblemSetList() {
       this.loading = true;
+      this.$router.push({
+        name: "ProblemSet"
+      });
     },
+    //problemCreate page로 이동
     ProblemCreate() {
       this.loading = true;
+      this.$router.push({
+        name: "ProblemCreate"
+      });
     },
-    problemDetail(problmeNo) {
+    //problemDetail page로 이동
+    problemDetail(evt, row) {
       this.loading = true;
-    },
-    problemDelete(problmeNo) {
-      this.loading = true;
+      this.$router.push({
+        name: "ProblemDetail",
+        params: {
+          problemNo: row.problemNo
+        }
+      });
     }
   },
   created() {
     this.selectProblemList();
+    this.selectLarge();
   }
 };
 </script>
