@@ -35,7 +35,7 @@ public class ProblemServiceImpl implements ProblemService {
 
 	@Autowired
 	private HashTagMapper hashTagMapper;
-	
+
 	@Override
 	public List<ProblemDto> selectProblemList() throws Exception {
 		return problemMapper.selectProblemList();
@@ -67,19 +67,19 @@ public class ProblemServiceImpl implements ProblemService {
 
 		return map;
 	}
-	
+
 	@Override
-	public ProblemAnswerDto selectProblemAnswer(int problemNo) throws Exception{
+	public ProblemAnswerDto selectProblemAnswer(int problemNo) throws Exception {
 		return problemAnswerMapper.selectProblemAnswer(problemNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByHashTag(int hashTagNo) throws Exception{
+	public List<ProblemDto> selectProblemByHashTag(int hashTagNo) throws Exception {
 		return problemMapper.selectProblemByHashTag(hashTagNo);
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByCategory(String categoryNo) throws Exception{
+	public List<ProblemDto> selectProblemByCategory(String categoryNo) throws Exception {
 		// 소분류 카테고리를 이용한 문제 검색 (소+중+대 번호 전달)
 		if (categoryNo.length() == 10) {
 			return problemMapper.selectProblemByCategorySmall(categoryNo);
@@ -99,7 +99,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
-	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) throws Exception{
+	public List<ProblemDto> selectProblemByKeyword(String type, String keyword) throws Exception {
 		if ("제목".contains(type)) {
 			return problemMapper.selectProblemByName(keyword);
 		} else if ("문제번호".contains(type)) {
@@ -114,26 +114,32 @@ public class ProblemServiceImpl implements ProblemService {
 	// 해쉬태그관련
 	// 없는 걸 등록한다 -> 해쉬태그 생성
 	// 있는 걸 등록한다 -> mappingtable연결
-	// @RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto problemAnswerDto, 
+	// @RequestBody ProblemDto problemDto, @RequestBody ProblemAnswerDto
+	// problemAnswerDto,
 	// @RequestBody List<String> hashTagList, @RequestBody int problemSetNo
 	@Override
 	public boolean createProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
-		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
-		List<String> hashTagList = mapper.convertValue(map.get("hashTag"),new TypeReference<List<String>>() {});
-		int problemSetNo = mapper.convertValue(map.get("problemSetNo"),new TypeReference<Integer>() {});
-		
+		ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
+		});
+		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),
+				new TypeReference<ProblemAnswerDto>() {
+				});
+		List<String> hashTagList = mapper.convertValue(map.get("hashTag"), new TypeReference<List<String>>() {
+		});
+		int problemSetNo = mapper.convertValue(map.get("problemSetNo"), new TypeReference<Integer>() {
+		});
+
 		// 문제 등록
 		boolean result = (problemMapper.createProblem(problemDto) > 0);
-		//System.out.println("problemNo : "+problemDto.getProblemNo());
-		
+		// System.out.println("problemNo : "+problemDto.getProblemNo());
+
 		// 문제 번호를 받아서 정답에 넣어줘야하는데 어떻게 받아올 것인가? --> answer : problem.xml참고
 		problemDto.setProblemNo(problemDto.getProblemNo());
 		problemAnswerDto.setProblemNo(problemDto.getProblemNo());
 		// 문제 답 등록
 		result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
-		
+
 		// 해시태그 매핑
 		for (String hashTag : hashTagList) {
 			HashTagDto hashTagDto;
@@ -145,27 +151,32 @@ public class ProblemServiceImpl implements ProblemService {
 			// 문제와 해시태그를 mapping 테이블을 통해 연결
 			result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
 		}
-		
-		result &=(problemMapper.createProblemSetMapping(problemSetNo, problemDto.getProblemNo())>0);
+		if (problemSetNo != 0) {
+			result &= (problemMapper.createProblemSetMapping(problemSetNo, problemDto.getProblemNo()) > 0);
+		}
 
 		return result;
 	}
 
 	@Override
-	public boolean updateProblem(HashMap<String, Object> map) throws Exception{
+	public boolean updateProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		ProblemDto problemDto = mapper.convertValue(map.get("problem"),new TypeReference<ProblemDto>() {});
-		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),new TypeReference<ProblemAnswerDto>() {});
-		List<String> hashTagList = mapper.convertValue(map.get("hashTag"),new TypeReference<List<String>>() {});
-		
+		ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
+		});
+		ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),
+				new TypeReference<ProblemAnswerDto>() {
+				});
+		List<String> hashTagList = mapper.convertValue(map.get("hashTag"), new TypeReference<List<String>>() {
+		});
+
 		// 문제 수정
 		boolean result = (problemMapper.updateProblem(problemDto) > 0);
-		
+
 		// 문제 답안 수정
-		result &= (problemAnswerMapper.updateProblemAnswer(problemAnswerDto)>0);
-		
+		result &= (problemAnswerMapper.updateProblemAnswer(problemAnswerDto) > 0);
+
 		// 문제와 연결된 모든 해시 태그의 연결을 해제
-		result &= (problemMapper.deleteHashTagMappingByProblemNo(problemDto.getProblemNo())>0);
+		result &= (problemMapper.deleteHashTagMappingByProblemNo(problemDto.getProblemNo()) > 0);
 		// 해시태그 수정된 대로 다시 매핑
 		for (String hashTag : hashTagList) {
 			HashTagDto hashTagDto;
@@ -177,12 +188,12 @@ public class ProblemServiceImpl implements ProblemService {
 			// 문제와 해시태그를 mapping 테이블을 통해 연결
 			result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
 		}
-		
+
 		return result;
 	}
 
 	@Override
-	public boolean deleteProblem(int problemNo) throws Exception{
+	public boolean deleteProblem(int problemNo) throws Exception {
 		return problemMapper.deleteProblem(problemNo) > 0;
 	}
 }
