@@ -29,7 +29,7 @@
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <q-p>총 문제 : 00</q-p>
+            <p>총 문제 : 00</p>
           </div>
         </div>
         <div class="row justify-center">
@@ -98,8 +98,8 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import Axios from 'axios';
+import Axios from "axios";
+import routes from "src/router/routes";
 
 export default {
   name: "ProblemDetailByProblemSetInfo",
@@ -116,14 +116,14 @@ export default {
           align: "left"
         }
       ],
-      item:{
-          problemSet:{
-              problemSetNo:0,
-              title:"",
-              regitime:"",
-
-          }
-      }
+      item: {
+        problemSet: {
+          problemSetNo: 0,
+          title: "",
+          regiTime: "",
+          nickname: ""
+        }
+      },
       data: [
         {
           title: "문제집 제목",
@@ -141,13 +141,35 @@ export default {
     };
   },
   methods: {
-      selectProblemByNo: function(){
-          Axios.get("/problem/problemset/problemSetSelectByNo/"+this.$router.params.problemSetNo)
-          this.
-
-      }
+    selectProblemByNo: function() {
+      Axios.get(
+        "/problem/problemset/problemSetSelectByNo/" +
+          this.$route.params.problemSetNo
+      )
+        .then(Response => {
+          console.log(Response.data);
+          this.item = Response.data;
+          this.data[0].content = this.item.problemSet.title;
+          this.data[1].content = this.item.problemSet.nickname;
+          this.data[2].content = this.item.problemSet.regiTime;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "error",
+            message: "조회 실패"
+          });
+          this.goToproblemList();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   },
-  created() {}
+  created() {
+    this.selectProblemByNo();
+  }
 };
 </script>
 <style>
