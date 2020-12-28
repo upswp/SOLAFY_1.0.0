@@ -10,12 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.solafy.model.FreeBoardDto;
 import com.solafy.model.FreeReplyDto;
 import com.solafy.service.board.FreeReplyService;
 
@@ -77,7 +77,7 @@ public class FreeReplyController {
 	*/
 	@ApiOperation(value = "모든 댓글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectReplies/{articleNo}")
-	public List<FreeReplyDto> selectReplies(int articleNo){
+	public List<FreeReplyDto> selectReplies(@PathVariable int articleNo){
 		logger.info("selectReplies - 호출" + new Date());
 		List<FreeReplyDto> list = freeReplyService.selectReplies(articleNo);
 		return list;
@@ -107,7 +107,7 @@ public class FreeReplyController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "댓글을 삭제한다", response = List.class)
-	@PostMapping(value = "/delteReply")
+	@PostMapping(value = "/deleteReply")
 	public ResponseEntity<String> deleteReply(@RequestBody FreeReplyDto freeReplyDto){
 		logger.info("deleteReply - 호출" + new Date());
 		if(freeReplyService.deleteReply(freeReplyDto)) {

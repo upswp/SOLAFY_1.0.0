@@ -1,30 +1,33 @@
 package com.solafy.model;
 
 /**
- * FreeReplyDto
- * 자유게시판 댓글 DTO
- * @author BUMSEOK SEO
- * @since 2020-12-14
- * 
- */
-
+* @FileName : FreeReplyDto.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 14
+* @작성자 : BUMSEOK SEO
+* @변경이력 :
+* 2020-12-29(BEOMSEOK SEO) : nickname 저장을 위한 필드 추가
+* @프로그램 설명 : FreeReplyDto 자유게시판 댓글 DTO
+*/
 public class FreeReplyDto {
 
 	private int replyNo;
 	private int articleNo;
 	private String contents;
 	private String uid;
+	private String nickname;
 	private String regiTime;
 
 	public FreeReplyDto() {
 	}
 
-	public FreeReplyDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
+	public FreeReplyDto(int replyNo, int articleNo, String contents, String uid, String nickname, String regiTime) {
 		super();
 		this.replyNo = replyNo;
 		this.articleNo = articleNo;
 		this.contents = contents;
 		this.uid = uid;
+		this.nickname = nickname;
 		this.regiTime = regiTime;
 	}
 
@@ -60,6 +63,14 @@ public class FreeReplyDto {
 		this.uid = uid;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	public String getRegiTime() {
 		return regiTime;
 	}
@@ -71,7 +82,7 @@ public class FreeReplyDto {
 	@Override
 	public String toString() {
 		return "FreeReplyDto [replyNo=" + replyNo + ", articleNo=" + articleNo + ", contents=" + contents + ", uid="
-				+ uid + ", regiTime=" + regiTime + "]";
+				+ uid + ", nickname=" + nickname + ", regiTime=" + regiTime + "]";
 	}
 
 }

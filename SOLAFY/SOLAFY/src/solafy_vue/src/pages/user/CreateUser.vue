@@ -91,7 +91,12 @@
           </q-file>
         </q-step>
 
-        <q-step :name="4" title="별명 입력" icon="assignment" :done="step > 4">
+        <q-step
+          :name="4"
+          title="추가 정보 입력"
+          icon="assignment"
+          :done="step > 4"
+        >
           <q-input
             filled
             dense
@@ -100,6 +105,16 @@
             lazy-rules
             :rules="[
               val => (val !== null && val !== '') || '별명을 입력해주세요'
+            ]"
+          />
+          <q-input
+            filled
+            dense
+            v-model="statusMsg"
+            label="자기소개 *"
+            lazy-rules
+            :rules="[
+              val => (val !== null && val !== '') || '자기소개를 입력해주세요'
             ]"
           />
         </q-step>
@@ -139,6 +154,7 @@ export default {
       email: "",
       password: "",
       nickname: "",
+      statusMsg: "",
       profileimg: { name: "" }
     };
   },
@@ -148,7 +164,7 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(Response => {
           let uid = firebaseAuth.currentUser.uid;
-          //createMember_DB(uid);
+          this.createUser_DB(uid);
           this.sendEmail();
           this.uploadImg_FB(uid);
           this.$q.notify({
@@ -169,14 +185,19 @@ export default {
           });
         });
     },
-    createMember_DB(curuid) {
+    createUser_DB(curuid) {
       axios
-        .put("member/createMember", {
+        .post("/user/create", {
           uid: curuid,
-          nickname: this.nickname
+          nickname: this.nickname,
+          statusMessage: this.statusMsg
         })
-        .then(Response => {})
-        .catch(error => {});
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     uploadImg_FB(curuid) {
       var storageRef = firebaseSt.ref();

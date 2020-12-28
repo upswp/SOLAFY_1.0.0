@@ -81,6 +81,7 @@
       <!-- q-markup-table 끝 -->
     </div>
     <!-- 글 목록보기 끝 -->
+
     <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
     <div v-if="showFlag == 'write'" class="column items-center">
       <!-- 글 등록 form 시작 -->
@@ -172,16 +173,23 @@
             <q-btn color="red" label="글 삭제" @click="deleteArticle" />
             <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
           </q-card-actions>
+          <q-separator />
+          <q-card-section>
+            <free-reply-write
+              :articleNo="this.article.articleNo"
+              @freeReplyChanged="showChangedReply(article.articleNo)"
+            ></free-reply-write>
+          </q-card-section>
+          <q-separator />
+          <q-card-section>
+            <free-reply-row
+              v-for="(reply, index) in replies"
+              :reply="reply"
+              :key="index"
+              @freeReplyChanged="showChangedReply(reply.articleNo)"
+            ></free-reply-row>
+          </q-card-section>
         </q-card>
-
-        <!-- 댓글 작성란, 댓글 표시란 -->
-        <!-- <reply-write :articleNo="this.article.articleno" />
-      <reply-row
-        v-for="(reply, index) in reply"
-        :reply="reply"
-        :key="index"
-        @replyChanged="showChangedReply"
-      /> -->
       </q-page>
     </div>
     <!-- 글 상세 보기 끝 -->
@@ -234,15 +242,6 @@
             <q-btn color="red" label="취소" @click="goToFreeBoard" />
           </q-card-actions>
         </q-card>
-
-        <!-- 댓글 작성란, 댓글 표시란 -->
-        <!-- <reply-write :articleNo="this.article.articleno" />
-      <reply-row
-        v-for="(reply, index) in reply"
-        :reply="reply"
-        :key="index"
-        @replyChanged="showChangedReply"
-      /> -->
       </q-page>
     </div>
 
@@ -253,11 +252,17 @@
 <script>
 import Axios from "axios";
 // 자유게시판 댓글 컴포넌트 가져오기
-// import CommentWrite from "./freeReply/FreeReplyWrite";
-// import CommentRow from "./freeReply/FreeReplyRow";
+import FreeReplyWrite from "./freeReply/FreeReplyWrite.vue";
+import FreeReplyRow from "./freeReply/FreeReplyRow.vue";
 export default {
+  components: { FreeReplyRow, FreeReplyWrite },
+  conponents: {
+    FreeReplyRow,
+    FreeReplyWrite
+  },
   data() {
     return {
+      replies: [],
       article: {
         title: null,
         contents: null,
@@ -393,6 +398,7 @@ export default {
         successFlag = false;
       }
       if (successFlag) {
+        console.log(this.article.uid);
         Axios.post(`/free/createArticle`, this.article)
           .then(response => {
             if (response.data === "success") {
@@ -436,7 +442,8 @@ export default {
       Axios.get(`/free/selectArticleByArticleNo/${articleNo}`)
         .then(response => {
           this.article = response.data;
-          console.log(this.article.notice);
+          console.log(articleNo);
+          this.getReplyRow(articleNo);
         })
         .catch(() => {
           this.errored = true;
@@ -510,6 +517,23 @@ export default {
     showList: function() {
       this.selectAllNotices();
       this.selectAllArticles();
+    },
+    // 댓글 목록
+    getReplyRow: function(articleNo) {
+      console.log("Imhere", articleNo);
+      Axios.get(`freereply/selectReplies/${articleNo}`)
+        .then(response => {
+          this.replies = response.data;
+        })
+        .catch(() => {
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    },
+    showChangedReply(articleNo) {
+      // this.replies = reply;
+      console.log(articleNo);
+      this.getReplyRow(articleNo);
     }
   },
   created() {
