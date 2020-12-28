@@ -39,12 +39,10 @@
               id="selectbox"
               borderless
               filled
-              use-chips
-              stack-label
               :options="large"
               v-model="largeModel"
               label="대분류"
-              @change="selectMedium"
+              @input="selectMedium"
             />
             <q-select
               id="selectbox"
@@ -53,6 +51,7 @@
               v-model="mediumModel"
               :options="medium"
               label="중분류"
+              @input="selectSmall"
             />
             <q-select
               id="selectbox"
@@ -217,6 +216,12 @@ export default {
     selectMedium: function() {
       Axios.get(`/category/medium/${this.largeModel.value}`)
         .then(response => {
+          this.medium = [];
+          var tmp;
+          if (tmp != this.largeModel.value) {
+            this.mediumModel = null;
+            this.smallModel = null;
+          }
           response.data.forEach(element => {
             this.medium.push({
               label: element.categoryName,
@@ -224,6 +229,7 @@ export default {
             });
           });
           console.log(this.medium[0]);
+          tmp = this.largeModel.value;
         })
         .catch(() => {
           this.errored = true;
@@ -233,6 +239,11 @@ export default {
     selectSmall: function() {
       Axios.get(`/category/small/${this.mediumModel.value}`)
         .then(response => {
+          this.small = [];
+          var tmp;
+          if (tmp != this.mediumModel.value) {
+            this.smallModel = null;
+          }
           response.data.forEach(element => {
             this.small.push({
               label: element.categoryName,
@@ -240,6 +251,7 @@ export default {
             });
           });
           console.log(this.small[0]);
+          tmp = this.mediumModel.value;
         })
         .catch(() => {
           this.errored = true;
