@@ -5,6 +5,7 @@ package com.solafy.model;
  * @author Juhee Lee
  * @since 2020-12-14
  *
+ * @변경이력 20-12-28 nickname 추가
  */
 
 public class QuestionBoardDto {
@@ -18,13 +19,14 @@ public class QuestionBoardDto {
 	private String regiTime;
 	private boolean isGroup;
 	private int groupNo;
+	private String nickname;
 
 	public QuestionBoardDto() {
 		super();
 	}
 
 	public QuestionBoardDto(int articleNo, String title, String contents, String uid, int problemNo, int point,
-			String regiTime, boolean isGroup, int groupNo) {
+			String regiTime, boolean isGroup, int groupNo, String nickname) {
 		super();
 		this.articleNo = articleNo;
 		this.title = title;
@@ -35,6 +37,7 @@ public class QuestionBoardDto {
 		this.regiTime = regiTime;
 		this.isGroup = isGroup;
 		this.groupNo = groupNo;
+		this.nickname = nickname;
 	}
 
 	public int getArticleNo() {
@@ -109,11 +112,19 @@ public class QuestionBoardDto {
 		this.groupNo = groupNo;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
 		return "QuestionBoardDto [articleNo=" + articleNo + ", title=" + title + ", contents=" + contents + ", uid="
 				+ uid + ", problemNo=" + problemNo + ", point=" + point + ", regiTime=" + regiTime + ", isGroup="
-				+ isGroup + ", groupNo=" + groupNo + "]";
+				+ isGroup + ", groupNo=" + groupNo + ", nickname=" + nickname + "]";
 	}
 
 }

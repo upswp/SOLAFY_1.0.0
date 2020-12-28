@@ -70,7 +70,7 @@ public class QuestionBoardController {
 	/**
 	 * 
 	 * @param aDto - AnswerByQuestionDto
-	 * @return String 
+	 * @return String
 	 * @throws Exception
 	 *
 	 * @변경이력
@@ -117,7 +117,7 @@ public class QuestionBoardController {
 
 	/**
 	 * 
-	 * @param title - String, 검색 키워드 
+	 * @param title - String, 검색 키워드
 	 * @return List<QuestionBoardDto>
 	 * @throws Exception
 	 *
@@ -132,22 +132,25 @@ public class QuestionBoardController {
 
 	/**
 	 * 
-	 * @param uid  - String, uid 
-	 * @return List<QuestionBoardDto> 
+	 * @param uid - String, nickname
+	 * @return List<QuestionBoardDto>
 	 * @throws Exception
 	 *
-	 * @변경이력
+	 * @변경이력 
+	 * 20-12-28 uid 검색에서 별명 검색으로 변경
 	 */
-	@ApiOperation(value = "작성자의 uid로 검색한 결과를 반환한다.", response = List.class)
-	@GetMapping(value = "/selectbywriter/{uid}")
-	public ResponseEntity<List<QuestionBoardDto>> selectQuestionsByWriter(@PathVariable String uid) throws Exception {
+	@ApiOperation(value = "작성자의 별명으로 검색한 결과를 반환한다.", response = List.class)
+	@GetMapping(value = "/selectbywriter/{nickname}")
+	public ResponseEntity<List<QuestionBoardDto>> selectQuestionsByWriter(@PathVariable String nickname)
+			throws Exception {
 		logger.debug("selectQuestionsByWriter");
-		return new ResponseEntity<List<QuestionBoardDto>>(questionService.selectQuestionsByWriter(uid), HttpStatus.OK);
+		return new ResponseEntity<List<QuestionBoardDto>>(questionService.selectQuestionsByWriter(nickname),
+				HttpStatus.OK);
 	}
 
 	/**
 	 * 
-	 * @param problemNo - int, 문제 번호 
+	 * @param problemNo - int, 문제 번호
 	 * @return List<QuestionBoardDto>
 	 * @throws Exception
 	 *
@@ -215,7 +218,7 @@ public class QuestionBoardController {
 
 	/**
 	 * 
-	 * @param articleNo  - int, 질문 글 번호
+	 * @param articleNo - int, 질문 글 번호
 	 * @return String
 	 * @throws Exception
 	 *
@@ -233,7 +236,7 @@ public class QuestionBoardController {
 
 	/**
 	 * 
-	 * @param articleNo  - int, 답변 글 번호
+	 * @param articleNo - int, 답변 글 번호
 	 * @return String
 	 * @throws Exception
 	 *
