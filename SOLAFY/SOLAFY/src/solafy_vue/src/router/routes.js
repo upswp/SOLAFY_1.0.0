@@ -43,13 +43,13 @@ const routes = [
         component: () => import("pages/problemSet/ProblemSetList.vue")
       },
       {
-        path: "/problemsetdetial/problemSetListByProblem/:problemSetNo",
+        path: "/problemsetdetail/problemSetListByProblem/:problemSetNo",
         name: "ProblemDetailByProblem",
         component: () =>
           import("pages/problemSet/problemSetDetail/ProblemDetailByProblem.vue")
       },
       {
-        path: "/problemsetdetial/problemSetInfo/:problemSetNo",
+        path: "/problemsetdetail/problemSetInfo/:problemSetNo",
         name: "ProblemDetailByProblemSetInfo",
         component: () =>
           import(
