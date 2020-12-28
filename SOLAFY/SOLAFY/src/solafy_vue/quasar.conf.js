@@ -27,7 +27,7 @@ module.exports = function(/* ctx */) {
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
-      // 'mdi-v5',
+      'mdi-v5',
       // 'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
@@ -91,8 +91,20 @@ module.exports = function(/* ctx */) {
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
-      // components: [],
-      // directives: [],
+      components: [
+        'QTooltip',
+        'QIcon',
+        'QBtn',
+        'QSeparator',
+        'QInput',
+        'QMenu',
+        'QBtnDropdown',
+        'QItemSection',
+        'QItem',
+        'QItemLabel',
+        'QAvatar'
+      ],
+      directives: ['ClosePopup'],
 
       // Quasar plugins
       plugins: ["Notify", "SessionStorage", "Dialog"]
