@@ -42,6 +42,26 @@ const routes = [
         name: "ProblemSet",
         component: () => import("pages/problemSet/ProblemSetList.vue")
       },
+      {
+        path: "/problemsetdetial/:problemSetNo",
+        name: "ProblemSetDetail",
+        component: () => import("pages/problemSet/ProblemSetDetail.vue")
+      },
+      {
+        path: "/problemsetcreate",
+        name: "ProblemSetCreate",
+        component: () => import("pages/problemSet/ProblemSetCreate.vue")
+      },
+      {
+        path: "/problemsetupdate/:problemSetNo",
+        name: "ProblemSetUpdate",
+        component: () => import("pages/problemSet/ProblemSetUpdate.vue")
+      },
+      {
+        path: "/problemsetresult/:problemSetNo/:result",
+        name: "ProblemSetResult",
+        component: () => import("pages/problemSet/ProblemSetResult.vue")
+      },
 
       // board
       {
@@ -91,7 +111,7 @@ const routes = [
       {
         path: "/verifyEmailWarn",
         component: () => import("pages/user/VerifyEmailWarn.vue")
-      },
+      }
     ]
   },
 
