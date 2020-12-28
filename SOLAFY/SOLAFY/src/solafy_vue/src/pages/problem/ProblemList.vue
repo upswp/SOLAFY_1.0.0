@@ -2,11 +2,12 @@
   <div class="q-pa-md">
     <div class="column" style="height: 150px">
       <div class="col">
+        <!-- onclick="location.reload() ::: 클릭 시 새로고침 -->
         <q-btn
           color="primary"
           :disable="loading"
           label="문제 List"
-          @click="problemList"
+          onclick="location.reload()"
         />
         <q-btn
           class="q-ml-sm"
@@ -35,6 +36,7 @@
           @row-click="problemDetail"
         >
           <template v-slot:top>
+            <!-- @input = "~~~" ::: select 박스에서 다른 박스로 이벤트 불러서 연동할때-->
             <q-select
               id="selectbox"
               borderless
@@ -218,12 +220,16 @@ export default {
     selectMedium: function() {
       Axios.get(`/category/medium/${this.largeModel.value}`)
         .then(response => {
+          //categoryNo의 자리수가 부족할때 "0"으로 채우기 위한 padStart
           this.categoryNo = String(this.largeModel.value).padStart(2, "0");
           //console.log("this.categoryNo" + this.categoryNo);
           this.selectProblemByCategory();
+          //대분류가 바뀔때 medium배열에 들어있는 값 초기화하여 쌓이는 것 방지.
           this.medium = [];
+          // 대분류가 바뀔때 selectBox에서 값들이 null로 초기화 되도록
           this.mediumModel = null;
           this.smallModel = null;
+          //for문을 돌며 DTO형태로 반환된 값들을 label과 value에 넣어 작업하기 위해
           response.data.forEach(element => {
             this.medium.push({
               label: element.categoryName,
