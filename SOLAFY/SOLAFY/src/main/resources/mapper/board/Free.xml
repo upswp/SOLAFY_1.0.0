@@ -4,8 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
         
  <!--
- 	@author BUMSEOK SEO
- 	@since 2020-12-15
+ 	* @FileName : Free.xml
+	* @Project : SOLAFY
+	* @Date : 2020. 12. 15
+	* @작성자 : BUMSEOK SEO
+	
+	* @변경이력 :
+	* @프로그램 설명 : 자유게시판 관련 쿼리문
  -->
 	
 <mapper namespace="com.solafy.mapper.board.FreeBoardMapper">
@@ -17,7 +22,8 @@
 	
 	<!--
 		모든 게시물을 반환.
-		게시글번호, UID(닉네임), 등록시간, 종아요 갯수만 가져온다.
+		게시글번호, 닉네임, 제목, 등록시간, 종아요 갯수만 가져온다.
+		articleNo, nickname,title, regiTime, likeCount
 	-->
 	<select id="selectAllArticles" resultType="FreeBoardDto">
 		select articleNo, nickname,title, regiTime, likeCount
@@ -39,7 +45,7 @@
 
 	<!--
 		인자값으로 가져온 검색어를 포함하는 제목을 가진 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, nickname,title, regiTime, likeCount)
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="FreeBoardDto">
 		select articleNo, nickname,title, regiTime, likeCount
@@ -49,8 +55,8 @@
 	</select>
 	
 	<!--
-		인자값으로 가져온 UID에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+		입력한 닉네임에 맞는 게시글을 반환.
+		해당 게시글의 정보를 가져온다(articleNo, nickname,title, regiTime, likeCount)
 	-->
 	<select id="selectArticleByNickname" parameterType="String" resultType="FreeBoardDto">
 		select articleNo, nickname,title, regiTime, likeCount 
@@ -60,7 +66,7 @@
 	</select>
 	
 	<!--
-		게시물 수정.
+		게시글 수정.
 		수정가능한 내용은 제목(title), 내용(contents), 공지사항여부(isNotice).
 	-->
 	<update id="updateArticle" parameterType="FreeBoardDto">
@@ -71,7 +77,7 @@
 	
 	<!--
 		게시물 삭제.
-		인자값으로 가져온 게시불 번호에 해당하는 게시물을 삭제.
+		인자값으로 가져온 게시글 번호에 해당하는 게시물을 삭제.
 	-->
 	<delete id="deleteArticle" parameterType="int">
 		delete from freeboard
