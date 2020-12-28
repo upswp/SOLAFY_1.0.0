@@ -9,11 +9,7 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn
-              color="primary"
-              label="문제 List"
-              onclick="location.reload()"
-            />
+            <q-btn color="primary" label="돌아가기" />
           </div>
         </div>
       </div>
@@ -21,22 +17,69 @@
       <div class="col">
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            문제 테이블 위치
+            <q-table
+              title="문제집 정보"
+              :data="data"
+              :columns="columns"
+              row-key="name"
+              hide-header
+              hide-bottom
+            />
           </div>
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <div class="row">
-              <div class="col-7"></div>
-              <div class="col-5">
-                총 문제 :00
-              </div>
+            <q-p>총 문제 : 00</q-p>
+          </div>
+        </div>
+        <div class="row justify-center">
+          <div class="col-12 col-md-auto" id="contents">
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Content filtering</q-item-label>
+                <q-item-label caption>
+                  Set the content filtering level to restrict apps that can be
+                  downloaded
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Password</q-item-label>
+                <q-item-label caption>
+                  Require password for purchase or use password to restrict
+                  purchase
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Password</q-item-label>
+                <q-item-label caption>
+                  Require password for purchase or use password to restrict
+                  purchase
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section>
+                <q-item-label>Password</q-item-label>
+                <q-item-label caption>
+                  Require password for purchase or use password to restrict
+                  purchase
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <div class="q-pa-lg flex flex-center">
+              <q-pagination
+                v-model="current"
+                :max="5"
+                input
+                input-class="text-orange-10"
+              />
             </div>
-          </div>
-        </div>
-        <div class="row justify-center">
-          <div class="col-12 col-md-auto" id="contents">
-            문제 리스트 위치
+            <q-separator spaced />
           </div>
         </div>
       </div>
@@ -45,18 +88,60 @@
         <div class="row">
           <div class="col-7"></div>
           <div class="col-5">
-            <q-btn color="primary" label="문제 List" />
-            <q-btn color="primary" label="문제 List" />
-            <q-btn color="primary" label="문제 List" />
+            <q-btn color="primary" label="문제집 삭제" />
+            <q-btn color="primary" label="문제집 수정" />
+            <q-btn color="primary" label="문제풀이 시작" />
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      current: 3,
+      columns: [
+        {
+          name: "desc",
+          required: true,
+
+          align: "left",
+          field: row => row.name,
+          format: val => `${val}`
+        },
+        {
+          name: "calories",
+          align: "left",
+          label: "Calories",
+          field: "calories"
+        }
+      ],
+      data: [
+        {
+          name: "문제집 제목",
+          calories: 159
+        },
+        {
+          name: "문제 작성자",
+          calories: 237
+        },
+        {
+          name: "문제 작성일자",
+          calories: 262
+        }
+      ]
+    };
+  }
+};
+</script>
 <style>
 .q-btn {
   margin-left: 10px;
+}
+.q-table {
+  width: 500px;
 }
 #header-title {
   height: 100px;
