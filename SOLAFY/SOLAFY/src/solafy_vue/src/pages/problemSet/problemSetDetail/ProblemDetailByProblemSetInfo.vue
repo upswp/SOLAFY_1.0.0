@@ -98,42 +98,56 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import Axios from 'axios';
+
 export default {
+  name: "ProblemDetailByProblemSetInfo",
   data() {
     return {
       current: 3,
       columns: [
+        { name: "title", align: "left", label: "title", field: "title" },
         {
-          name: "desc",
-          required: true,
-
-          align: "left",
-          field: row => row.name,
-          format: val => `${val}`
-        },
-        {
-          name: "calories",
-          align: "left",
-          label: "Calories",
-          field: "calories"
+          name: "content",
+          style: "width:100vw",
+          label: "content",
+          field: "content",
+          align: "left"
         }
       ],
+      item:{
+          problemSet:{
+              problemSetNo:0,
+              title:"",
+              regitime:"",
+
+          }
+      }
       data: [
         {
-          name: "문제집 제목",
-          calories: 159
+          title: "문제집 제목",
+          content: ""
         },
         {
-          name: "문제 작성자",
-          calories: 237
+          title: "문제 작성자",
+          content: ""
         },
         {
-          name: "문제 작성일자",
-          calories: 262
+          title: "문제 작성일자",
+          content: ""
         }
       ]
     };
-  }
+  },
+  methods: {
+      selectProblemByNo: function(){
+          Axios.get("/problem/problemset/problemSetSelectByNo/"+this.$router.params.problemSetNo)
+          this.
+
+      }
+  },
+  created() {}
 };
 </script>
 <style>
