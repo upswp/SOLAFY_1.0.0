@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,7 +60,7 @@ public class FreeBoardController {
 	* @Method 설명 : 게시글을 등록하고 성공하면 SUCCECSS, 실패하면 FAIL을 반환
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유게시판에 게시글을 등록한다.", response = List.class)
+	@ApiOperation(value = "자유게시판에 게시글을 등록한다.", response = String.class)
 	@PostMapping(value = "/createArticle")
 	public ResponseEntity<String> createArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("createArticle - 호출" + new Date());
@@ -87,6 +88,14 @@ public class FreeBoardController {
 		return list;
 	}
 	
+	@ApiOperation(value = "게시글 번호에 해당하는 게시글을 반환한다", response = FreeBoardDto.class)
+	@GetMapping(value = "/selectArticleByArticleNo/{articleNo}")
+	public FreeBoardDto selectArticleByArticleNo(@PathVariable int articleNo){
+		logger.info("selectAtricleByArticleNo - 호출" + new Date());
+		FreeBoardDto freeBoardDto = freeBoardService.selectArticleByArticleNo(articleNo);
+		return freeBoardDto;
+	}
+
 	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectArticleByTitle/{title}")
 	public List<FreeBoardDto> selectArticleByTitle(@PathVariable String title){
@@ -113,7 +122,7 @@ public class FreeBoardController {
 	* @Method 설명 : 게시글 번호에 해당하는 게시물을 수정사항을 적용시킨다.
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유 게시판의 게시글을 수정한다", response = List.class)
+	@ApiOperation(value = "자유 게시판의 게시글을 수정한다", response = String.class)
 	@PostMapping(value="/updateArticle")
 	public ResponseEntity<String> updateArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("updateArticle - 호출" + new Date());
@@ -135,8 +144,8 @@ public class FreeBoardController {
 	* @Method 설명 : 게시글번호에 해당하는 게시글을 삭제한다
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유 게시판의 게시글을 삭제한다", response = List.class)
-	@PostMapping(value = "/deleteArticle/{articleNo}")
+	@ApiOperation(value = "자유 게시판의 게시글을 삭제한다", response = String.class)
+	@DeleteMapping(value = "/deleteArticle/{articleNo}")
 	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo){
 		logger.info("deleteArticle - 호출" + new Date());
 		if(freeBoardService.deleteArticle(articleNo)){
