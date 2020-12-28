@@ -35,7 +35,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
 export default {
   name: "PageIndex",
   data() {
@@ -55,6 +55,7 @@ export default {
         .then(Response => {
           console.log(Response);
           if (firebaseAuth.currentUser.emailVerified) {
+            firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             this.$q.notify({
               color: "green",
               textColor: "white",

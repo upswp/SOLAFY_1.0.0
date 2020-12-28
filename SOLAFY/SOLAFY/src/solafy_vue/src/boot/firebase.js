@@ -21,4 +21,4 @@ let firebaseAuth = firebaseApp.auth();
 let firebaseDb = firebaseApp.database();
 let firebaseSt = firebaseApp.storage();
 
-export { firebaseAuth, firebaseSt };
+export { firebaseAuth, firebaseSt, firebase };

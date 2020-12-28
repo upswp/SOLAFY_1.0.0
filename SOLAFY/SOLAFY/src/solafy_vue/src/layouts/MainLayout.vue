@@ -19,11 +19,45 @@
           <q-btn flat dense round icon="account_circle" aria-label="Menu">
             <q-menu>
               <q-list dense style="min-width: 100px">
-                <q-item clickable v-close-popup>
+                <q-item
+                  :style="{ display: admin }"
+                  @click="goUserManage"
+                  clickable
+                  v-close-popup
+                >
+                  <q-item-section>회원관리</q-item-section>
+                </q-item>
+                <q-item
+                  :style="{ display: mem }"
+                  @click="goMypage"
+                  clickable
+                  v-close-popup
+                >
+                  <q-item-section>마이페이지</q-item-section>
+                </q-item>
+                <q-item
+                  :style="{ display: non }"
+                  @click="goRegi"
+                  clickable
+                  v-close-popup
+                >
+                  <q-item-section>회원가입</q-item-section>
+                </q-item>
+                <q-item
+                  :style="{ display: non }"
+                  @click="goLogin"
+                  clickable
+                  v-close-popup
+                >
                   <q-item-section>로그인</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
-                  <q-item-section>회원가입</q-item-section>
+                <q-item
+                  :style="{ display: mem }"
+                  @click="logout"
+                  clickable
+                  v-close-popup
+                >
+                  <q-item-section>로그아웃</q-item-section>
                 </q-item>
                 <q-separator />
               </q-list>
@@ -59,6 +93,7 @@
 
 <script>
 import EssentialLink from "components/EssentialLink.vue";
+import { firebaseAuth } from "boot/firebase";
 
 const linksData = [
   {
@@ -117,8 +152,43 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
-      essentialLinks: linksData
+      essentialLinks: linksData,
+      admin: "none",
+      mem: "",
+      non: ""
     };
+  },
+  mounted: function() {
+    if (firebaseAuth.currentUser != null) {
+      this.non = "none";
+      this.mem = "";
+    } else {
+      this.mem = "none";
+      this.non = "";
+    }
+  },
+  updated: function() {
+    if (firebaseAuth.currentUser != null) {
+      this.non = "none";
+      this.mem = "";
+    } else {
+      this.mem = "none";
+      this.non = "";
+    }
+  },
+  methods: {
+    goMypage() {},
+    goRegi() {
+      this.$router.push("UserRegi");
+    },
+    goLogin() {
+      this.$router.push("/");
+    },
+    logout() {
+      firebaseAuth.signOut();
+      this.$router.go(this.$router.currentRoute);
+    },
+    goUserManage() {}
   }
 };
 </script>
