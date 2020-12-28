@@ -16,34 +16,48 @@
       </div>
       <div class="content">
         <div>
-          <q-markdown>{{ item.problem.contents }}</q-markdown>
+          <q-markdown no-linkify>{{ item.problem.contents }}</q-markdown>
         </div>
         <div class="answer" v-if="item.problem.type === 0">
-          <div
-            v-for="(choice, index) in multipleChoice"
-            :key="index"
-          >
-            <q-checkbox :val="index + 1" v-model="checklist">
+          <div v-for="(choice, index) in multipleChoice" :key="index">
+            <q-checkbox :val="index + 1" v-model="answerChecklist">
               <q-markdown>{{ index + 1 }}. {{ choice }}</q-markdown>
             </q-checkbox>
           </div>
         </div>
         <div class="answer" v-else-if="item.problem.type === 1">
-          <q-input v-model="answer" outlined dense />
+          <q-input v-model="answerText" outlined dense />
         </div>
         <div class="answer" v-else-if="item.problem.type === 2">
-          <q-input v-model="answer" dense outlined autogrow />
+          <q-input v-model="answerText" dense outlined autogrow />
         </div>
         <div class="q-gutter-md button">
-        <q-btn color="primary" label="목록으로 돌아가기" outline @click="goToproblemList"/>
-        <q-btn color="primary" label="문제답안제출" @click="goToResult"/>
-        <q-btn color="amber" label="문제수정요청" @click="goToAnswerModify"/>
+          <q-btn
+            color="primary"
+            label="목록으로 돌아가기"
+            outline
+            @click="goToproblemList"
+          />
+          <q-btn color="primary" label="문제답안제출" @click="goToResult" />
+          <q-btn color="positive" label="문제수정요청" @click="goToAnswerModify" />
+        <q-btn
+            color="positive"
+            label="문제수정"
+            outline
+            @click="goToproblemUpdate"
+          />
+          <q-btn
+            color="negative"
+            label="문제삭제"
+            outline
+            @click="problemDelete"
+          />
         </div>
         <hr />
         <div class="row">
-            <p v-for="(ht, index) in item.hashTag" :key="index">
-              #{{ ht.hashTag }}
-            </p>
+          <p v-for="(ht, index) in item.hashTag" :key="index">
+            #{{ ht.hashTag }}
+          </p>
         </div>
       </div>
     </div>
@@ -111,9 +125,10 @@ export default {
         },
         hashTag: []
       },
-      checklist: [],
-      answer: "",
+      answerChecklist: [],
+      answerText: "",
       loading: true,
+      result: false
     };
   },
   created() {
@@ -133,30 +148,61 @@ export default {
           this.item.categorySmall.categoryName;
         this.data[2].content = this.item.problem.nickname;
         this.data[3].content = this.item.problem.regiTime;
-        this.loading = false;
       })
       .catch(error => {
         alert(error);
+      })
+      .finally(() => {
+        this.loading = false;
       });
   },
-  methods : {
-    goToproblemList(){
-      this.$router.push("/problem");
+  methods: {
+    goToproblemList() {
+      this.$router.push({ name: "Problem" });
     },
-    goToResult(){
-      this.loading=true;
-       axios
-      .get("problem/answer/" + this.$route.params.problemNo)
-      .then(Response => {
-        
-      })
-      .catch(error => {
-        alert(error);
-      });
+    goToResult() {
+      var type = this.item.problem.type;
+      if (
+        (type === 0 && this.answerChecklist == "") ||
+        ((type === 1 || type === 2) && this.answerText == "")
+      ) {
+        alert("정답 입력 필요");
+        return;
+      }
+      this.answerChecklist.sort();
+      // 정답 불러와서 비교
+      if (type === 0 || type === 1) {
+        this.loading = true;
+        axios
+          .get("problem/answer/" + this.item.problem.problemNo)
+          .then(Response => {
+            var answer = Response.data.answer;
+            if (type === 0 && answer === this.answerChecklist.toString()) {
+              this.result = true;
+            } else if (type === 1 && answer === this.answerText) {
+              this.result = true;
+            }
+            this.$router.push({
+              name: "ProblemResult",
+              params: {
+                problemNo: this.item.problem.problemNo,
+                result: this.result
+              }
+            });
+          })
+          .catch(error => {
+            alert(error);
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      } else if (type === 2) {
+        alert("주관식입니다");
+      }
     },
-    goToAnswerModify(){
-      
-    }
+    goToAnswerModify() {},
+    goToproblemUpdate() {},
+    problemDelete() {}
   }
 };
 </script>
@@ -167,9 +213,10 @@ export default {
   margin-top: 2%;
 }
 .answer {
-  margin-bottom:20px;
+  margin-bottom: 10px;
 }
-.button{
+.button {
   text-align: center;
+  margin-bottom: 10px;
 }
 </style>
