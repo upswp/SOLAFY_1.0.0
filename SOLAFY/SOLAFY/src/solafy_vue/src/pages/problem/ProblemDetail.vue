@@ -5,6 +5,7 @@
       <q-spinner-dots color="primary" size="6em" />
     </div>
     <div class="col-md-6" v-else>
+      <!-- 상단 문제 부가 정보 테이블 -->
       <div class="row">
         <q-table
           :data="data"
@@ -14,10 +15,13 @@
           separator="cell"
         />
       </div>
+      <!-- 문제 내용 -->
       <div class="content">
+        <!-- 마크다운으로 문제 내용 출력 -->
         <div>
           <q-markdown no-linkify>{{ item.problem.contents }}</q-markdown>
         </div>
+        <!-- 객관식인 경우 선지 -->
         <div class="answer" v-if="item.problem.type === 0">
           <div v-for="(choice, index) in multipleChoice" :key="index">
             <q-checkbox :val="index + 1" v-model="answerChecklist">
@@ -25,12 +29,15 @@
             </q-checkbox>
           </div>
         </div>
+        <!-- 주관식인 경우 답안 입력란 -->
         <div class="answer" v-else-if="item.problem.type === 1">
           <q-input v-model="answerText" outlined dense />
         </div>
+        <!-- 서술형인 경우 답안 입력란 -->
         <div class="answer" v-else-if="item.problem.type === 2">
           <q-input v-model="answerText" dense outlined autogrow />
         </div>
+        <!-- 버튼들 -->
         <div class="q-gutter-md button">
           <q-btn
             color="primary"
@@ -58,6 +65,7 @@
           />
         </div>
         <hr />
+        <!-- 해쉬태그 -->
         <div class="row">
           <p v-for="(ht, index) in item.hashTag" :key="index">
             #{{ ht.hashTag }}
@@ -136,6 +144,7 @@ export default {
     };
   },
   created() {
+    // 문제 정보 받아온 후 데이터 후 가공
     axios
       .get("problem/" + this.$route.params.problemNo)
       .then(Response => {
@@ -167,9 +176,11 @@ export default {
       });
   },
   methods: {
+    // 문제리스트로 이동
     goToproblemList() {
       this.$router.push({ name: "Problem" });
     },
+    // 채점후 결과 페이지로 이동
     goToResult() {
       var type = this.item.problem.type;
       if (
@@ -227,6 +238,7 @@ export default {
     },
     goToAnswerModify() {},
     goToproblemUpdate() {},
+    // 문제 삭제
     problemDelete() {
       axios
         .delete("problem/delete/" + this.item.problem.problemNo)
