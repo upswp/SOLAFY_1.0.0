@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.solafy.mapper.board.PracticeTestBoardMapper;
 import com.solafy.model.PracticeTestBoardDto;
+import com.solafy.model.ProblemDto;
 
 /**
  * 
@@ -26,21 +27,21 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Autowired
 	private PracticeTestBoardMapper practiceTestMapper;
 
-	@Transactional
 	@Override
 	public boolean createPracticeTest(PracticeTestBoardDto pDto) throws Exception {
 		if (pDto.getProblems().size() <= 0)
 			return false;
-
+		List<ProblemDto> problems = pDto.getProblems();
 		// 모의고사 정보 등록
 		practiceTestMapper.createPracticeTest(pDto);
+		System.out.println("articleNo  " + pDto.getArticleNo());
 
 		// 모의고사와 문제들 매핑
 		Map<String, Integer> map = new HashMap<>();
 		map.put("articleNo", pDto.getArticleNo());
-		map.put("problemNo", pDto.getProblems().get(0).getProblemNo());
-		for (int i = 0; i < pDto.getProblems().size(); i++) {
-			map.replace("problemNo", pDto.getProblems().get(i).getProblemNo());
+		for (ProblemDto problem : problems) {
+			System.out.println(problem.getProblemNo());
+			map.put("problemNo", problem.getProblemNo());
 			practiceTestMapper.createPracticeTestMapping(map);
 		}
 
@@ -68,8 +69,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Transactional
 	@Override
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception {
-		title = "%" + title + "%";
-		return practiceTestMapper.selectPracticeTestByTitle(title);
+		return practiceTestMapper.selectPracticeTestByTitle("%" + title + "%");
 	}
 
 	@Transactional
