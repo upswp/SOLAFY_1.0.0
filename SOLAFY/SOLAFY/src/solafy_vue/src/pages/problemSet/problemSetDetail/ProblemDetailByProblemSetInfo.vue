@@ -29,7 +29,7 @@
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <p>총 문제 : 00</p>
+            <p>총 문제 : {{ item.problemList.length }}</p>
           </div>
         </div>
         <div class="row justify-center">
@@ -122,7 +122,8 @@ export default {
           title: "",
           regiTime: "",
           nickname: ""
-        }
+        },
+        problemList: []
       },
       data: [
         {
