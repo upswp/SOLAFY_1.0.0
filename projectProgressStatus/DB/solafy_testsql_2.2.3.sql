@@ -44,7 +44,7 @@ VALUES ('Java기초','DFEIJNGRW2SKXCNSWQ','#### Java는 _____프로그래밍언�
 
 -- 객관식 문제2
 INSERT INTO problem (multipleChoice,title,uid,contents,categoryNo,type,flag)
-VALUES ('Bellman-ford,Dijkstra,bfs,nCr,Floyd-Warshall','#### 그래프 탐색 알고리즘','DFEIJJHGT7SKXCNSWQ','다음 중 그래프 탐색 알고리즘이 아닌것은?','0300400004',0,1);
+VALUES ('Bellman-ford,Dijkstra,bfs,nCr,Floyd-Warshall','그래프 탐색 알고리즘','DFEIJJHGT7SKXCNSWQ','#### 다음 중 그래프 탐색 알고리즘이 아닌것은?','0300400004',0,1);
 
 -- 단답식 문제2
 INSERT INTO problem (title,uid,contents,categoryNo,type,flag)
