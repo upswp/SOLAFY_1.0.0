@@ -18,28 +18,32 @@
 	
 	<!-- 모든 모의고사 반환 -->
 	<select id="selectAllPracticeTest" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime
-		FROM   practicetestboard
+		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		FROM   practicetestboard p JOIN userinfo u
+		USING  (uid)
 	</select>
 	
 	<!-- 모의고사 번호로 모의고사 상세 내용 반환 -->
 	<select id="selectPracticeTestByArticleNo" parameterType="int" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime, limitTime
-		FROM   practicetestboard
+		SELECT articleNo, uid, title, regiTime, startTime, endTime, limitTime, nickname
+		FROM   practicetestboard p JOIN userinfo u
+		USING  (uid)
 		WHERE  articleNo = #{articleNo}
 	</select>
 	
-	<!-- 검색된 uid와 작성자 uid가 동일한 모의고사들 반환 -->
+	<!-- 검색된 별명과 작성자 별명이 동일한 모의고사들 반환 -->
 	<select id="selectPracticeTestByWriter" parameterType="String" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime
-		FROM   practicetestboard
-		WHERE  uid = #{uid}
+		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		FROM   practicetestboard p JOIN userinfo u
+		USING  (uid)
+		WHERE  UPPER(nickname) LIKE UPPER(#{nickname})
 	</select>
 
 	<!-- 검색된 키워드가 제목에 포함된  모의고사들 반환 -->
 	<select id="selectPracticeTestByTitle" parameterType="String" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime
-		FROM   practicetestboard
+		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		FROM   practicetestboard p JOIN userinfo u
+		USING  (uid)
 		WHERE  UPPER(title) LIKE UPPER(#{title})
 	</select>
 	

@@ -61,8 +61,8 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Transactional
 	@Override
-	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws Exception {
-		return practiceTestMapper.selectPracticeTestByWriter(uid);
+	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String nickname) throws Exception {
+		return practiceTestMapper.selectPracticeTestByWriter("%" + nickname + "%");
 	}
 
 	@Transactional

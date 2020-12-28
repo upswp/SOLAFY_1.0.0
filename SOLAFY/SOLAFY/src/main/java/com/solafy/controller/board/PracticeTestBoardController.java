@@ -76,7 +76,7 @@ public class PracticeTestBoardController {
 		logger.debug("selectAllPracticeTest");
 		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectAllPracticeTest(), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 
 	 * @param articleNo - int, 모의고사 번호
@@ -96,18 +96,19 @@ public class PracticeTestBoardController {
 
 	/**
 	 * 
-	 * @param uid - String, 검색된 uid
+	 * @param nickname - String, 검색된 nickname
 	 * @return
 	 * @throws Exception
 	 *
 	 * @변경이력
+	 * 20-12-28 uid 검색에서 별명 검색으로 변경
 	 */
-	@ApiOperation(value = "모의고사 작성자 uid로 검색한 결과를 반환한다.", response = List.class)
-	@GetMapping(value = "/selectbywriter/{uid}")
-	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByWriter(@PathVariable String uid)
+	@ApiOperation(value = "모의고사 작성자의 별명으로 검색한 결과를 반환한다.", response = List.class)
+	@GetMapping(value = "/selectbywriter/{nickname}")
+	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByWriter(@PathVariable String nickname)
 			throws Exception {
 		logger.debug("selectPracticeTestByWriter");
-		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByWriter(uid),
+		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByWriter(nickname),
 				HttpStatus.OK);
 	}
 
@@ -149,7 +150,7 @@ public class PracticeTestBoardController {
 	/**
 	 * 
 	 * @param articleNo - int, 모의고사 번호
-	 * @return 
+	 * @return
 	 * @throws Exception
 	 *
 	 * @변경이력
