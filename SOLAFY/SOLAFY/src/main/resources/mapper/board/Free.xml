@@ -26,7 +26,7 @@
 		articleNo, nickname,title, regiTime, likeCount
 	-->
 	<select id="selectAllArticles" resultType="FreeBoardDto">
-		select articleNo, nickname,title, regiTime, likeCount
+		select articleNo, nickname,isNotice,title, regiTime, likeCount
 		from freeboard fb join userinfo ui
         on fb.uid = ui.uid
 		order by articleNo desc

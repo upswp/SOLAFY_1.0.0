@@ -1,28 +1,16 @@
 <template>
-  <div>
+  <div class="doc-container">
     <h3>FreeBoard</h3>
 
     <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
-    <div v-if="showFlag == 'write'">
-      <!-- 등록 정보 확인용 badge 시작 -->
-      <q-badge color="secondary" multi-line>
-        title: "{{ article.title }}" <br />
-        contents: "{{ article.contents }}" <br />
-        uid: "{{ article.uid }}" <br />
-        likeCount: "{{ article.likeCount }}" <br />
-        isNotice: "{{ article.isNotice }}" <br />
-        isgroup: "{{ article.isGroup }}" <br />
-        showFlag: "{{ showFlag }}" <br />
-      </q-badge>
-      <!-- 등록 정보 확인용 badge 끝 -->
-
+    <div v-if="showFlag == 'write'" class="column items-center">
       <!-- 글 등록 form 시작 -->
       <q-input
         v-model="article.title"
         label="제목"
         stack-label
         aria-placeholder="제목을 입력해주세요"
-        :dense="dense"
+        dense
       />
       <div class="q-pa-md" style="max-width: 300px">
         <q-input
@@ -42,7 +30,7 @@
     <!-- 글 등록하기 끝 -->
 
     <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
-    <div v-else-if="showFlag == 'detail'">
+    <div v-else-if="showFlag == 'detail'" class="column items-center">
       title: "{{ article.title }}" <br />
       contents: "{{ article.contents }}" <br />
       nickname: "{{ article.nickname }}" <br />
@@ -53,24 +41,21 @@
       <q-btn color="primary" label="글 수정" @click="showFlag = 'update'" />
       <q-btn color="red" label="글 삭제" @click="deleteArticle" />
       <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
+
+      <!-- 댓글 작성란, 댓글 표시란 -->
+      <!-- <reply-write :articleNo="this.article.articleno" />
+      <reply-row
+        v-for="(reply, index) in reply"
+        :reply="reply"
+        :key="index"
+        @replyChanged="showChangedReply"
+      /> -->
     </div>
     <!-- 글 상세 보기 끝 -->
 
     <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
-    <div v-else-if="showFlag == 'update'">
+    <div v-else-if="showFlag == 'update'" class="column items-center">
       <h3>수정!</h3>
-      <!-- 수정정보 확인용 badge 시작 -->
-      <q-badge color="secondary" multi-line>
-        title: "{{ article.title }}" <br />
-        contents: "{{ article.contents }}" <br />
-        uid: "{{ article.uid }}" <br />
-        likeCount: "{{ article.likeCount }}" <br />
-        isNotice: "{{ article.isNotice }}" <br />
-        isgroup: "{{ article.isGroup }}" <br />
-        showFlag: "{{ showFlag }}" <br />
-      </q-badge>
-      <!-- 수정정보 확인용 badge 끝 -->
-
       <!-- 글 수정 form 시작 -->
       <q-input
         v-model="article.title"
@@ -97,51 +82,43 @@
     <!-- 글 수정하기 끝 -->
 
     <!-- 글 목록보기 시작 -->
-    <div>
-      <!-- 글쓰기 버튼(showFlag가 list일 때만 표시한다) -->
-      <q-btn
-        v-if="showFlag == 'list'"
-        color="secondary"
-        label="글쓰기"
-        @click="showWrite"
-      />
-      <div class="q-pa-md" style="max-width: 300px">
-        <div class="q-gutter-md">
-          <q-badge color="secondary" multi-line>
-            Selection: "{{ selection }}"<br />
-            showFlag: "{{ showFlag }}" <br />
-          </q-badge>
-          <q-select
-            filled
-            v-model="selection"
-            :options="options"
-            label="Standard"
-          />
-        </div>
-      </div>
-      <q-badge color="secondary" multi-line> keyword: "{{ keyword }}" </q-badge>
-      <q-input
-        bottom-slots
-        v-model="keyword"
-        label="검색어를 입력해주세요"
-        counter
-        maxlength="12"
-        @keyup.enter="selectArticle"
-      >
-        <template v-slot:append>
-          <q-icon
-            v-if="keyword !== ''"
-            name="close"
-            @click="keyword = ''"
-            class="cursor-pointer"
-          />
-          <q-icon name="search" @click="selectArticle" />
-        </template>
-      </q-input>
-
+    <div v-if="showFlag == 'list'" class="column items-center">
       <!-- q-markup-table 시작 -->
       <q-markup-table>
         <thead>
+          <tr>
+            <td colspan="5">
+              <!-- 글쓰기 버튼(showFlag가 list일 때만 표시한다) -->
+              <div class="q-pa-md row q-gutter-xl">
+                <q-btn color="secondary" label="글쓰기" @click="showWrite" />
+                <q-select
+                  filled
+                  v-model="selection"
+                  :options="options"
+                  label="Standard"
+                />
+                <q-input
+                  bottom-slots
+                  v-model="keyword"
+                  label="검색어를 입력해주세요"
+                  counter
+                  maxlength="12"
+                  @keyup.enter="selectArticle"
+                  class="col self-end"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      v-if="keyword !== ''"
+                      name="close"
+                      @click="keyword = ''"
+                      class="cursor-pointer"
+                    />
+                    <q-icon name="search" @click="selectArticle" />
+                  </template>
+                </q-input>
+              </div>
+            </td>
+          </tr>
           <tr>
             <th class="text-left">articleNo</th>
             <th class="text-left">nickname</th>
@@ -158,22 +135,23 @@
           >
             <td class="text-left">{{ article.articleNo }}</td>
             <td class="text-left">{{ article.nickname }}</td>
-            <td class="text-left">{{ article.title }}</td>
+            <td class="text-left">
+              <q-chip
+                v-if="article.notice"
+                dense
+                color="orange"
+                text-color="white"
+              >
+                공지
+              </q-chip>
+              {{ article.title }}
+            </td>
             <td class="text-left">{{ article.regiTime }}</td>
             <td class="text-left">{{ article.likeCount }}</td>
           </tr>
         </tbody>
       </q-markup-table>
       <!-- q-markup-table 끝 -->
-
-      <!-- q-table 시작 -->
-      <q-table
-        title="q-table이용한 목록⬇"
-        :data="articles"
-        :columns="columns"
-        row-key="name"
-      />
-      <!-- q-table 끝 -->
     </div>
     <!-- 글 목록보기 끝 -->
   </div>
@@ -181,6 +159,9 @@
 
 <script>
 import Axios from "axios";
+// 자유게시판 댓글 컴포넌트 가져오기
+// import CommentWrite from "./freeReply/FreeReplyWrite";
+// import CommentRow from "./freeReply/FreeReplyRow";
 export default {
   data() {
     return {
@@ -226,7 +207,7 @@ export default {
           required: true,
           label: "title",
           align: "left",
-          field: row => row.title,
+          field: row => [row.title, row.isNotice],
           format: val => `${val}`,
           sortable: true
         },
