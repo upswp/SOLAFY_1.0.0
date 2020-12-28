@@ -2,16 +2,16 @@
   <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6">
-      <div>
-        <q-markup-table separator="cell" style="width:100vw">
+      <div class="row">
+        <q-markup-table separator="cell">
           <tbody>
             <tr>
               <td class="header">문제 제목</td>
-              <td><q-input v-model="item.problem.title" borderless /></td>
+              <td class="content"><q-input v-model="item.problem.title" borderless /></td>
             </tr>
             <tr>
               <td class="header">문제 카테고리</td>
-              <td>
+              <td class="content">
                 <div class="row q-gutter-md">
                   <q-select
                     class="selectbox"
@@ -21,7 +21,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="대분류"
-                    @input = "selectMediumList"
+                    @input="selectMediumList"
                   />
                   <q-select
                     class="selectbox"
@@ -31,7 +31,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="중분류"
-                    @input = "selectSmallList"
+                    @input="selectSmallList"
                   />
                   <q-select
                     class="selectbox"
@@ -47,16 +47,21 @@
             </tr>
             <tr>
               <td class="header">문제 작성자</td>
-              <td>{{ nickname }}</td>
+              <td class="content">{{ nickname }}</td>
             </tr>
           </tbody>
         </q-markup-table>
+      </div>
+      <div class="row">
+        <quasar-tiptap v-bind="options" @update="onUpdate" />
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
+import { QuasarTiptap, RecommendedExtensions } from 'quasar-tiptap'
+import 'quasar-tiptap/lib/index.css'
 
 export default {
   name: "ProblemCreate",
@@ -85,15 +90,64 @@ export default {
       mediumList: [],
       selectMedium: null,
       smallList: [],
-      selectSmall: null
+      selectSmall: null,
+      options: {
+        content: '',
+        editable: true,
+        extensions: [
+          ...RecommendedExtensions,
+          // other extenstions
+          // name string, or custom extension
+        ],
+        toolbar: [
+          'add-more',
+          'separator',
+          'bold',
+          'italic',
+          'underline',
+          'strike',
+          'code',
+          'separator',
+          'heading',
+          'font-family',
+          'fore-color',
+          'back-color',
+          'format_clear',
+          'separator',
+          'align-dropdown',
+          'indent',
+          'outdent',
+          'line-height',
+          'separator',
+          'horizontal',
+          'bullet_list',
+          'ordered_list',
+          'todo_list',
+          'separator',
+          'blockquote',
+          'separator',
+          'undo',
+          'redo',
+        ]
+      },
+      json: '',
+      html: ''
     };
   },
+  components: {
+    QuasarTiptap,
+  },
   methods: {
+    onUpdate ({ getJSON, getHTML }) {
+      this.json = getJSON()
+      this.html = getHTML()
+      //console.log('html', this.html)
+    },
     selectLargeList() {
       axios
         .get(`/category/large`)
         .then(response => {
-          this.largeList=response.data;
+          this.largeList = response.data;
         })
         .catch(error => {
           alert(error);
@@ -103,7 +157,7 @@ export default {
       axios
         .get(`/category/medium/${this.selectLarge.categoryNo}`)
         .then(response => {
-          this.mediumList=response.data;
+          this.mediumList = response.data;
         })
         .catch(error => {
           alert(error);
@@ -113,7 +167,7 @@ export default {
       axios
         .get(`/category/small/${this.selectMedium.categoryNo}`)
         .then(response => {
-          this.smallList=response.data;
+          this.smallList = response.data;
         })
         .catch(error => {
           alert(error);
@@ -129,6 +183,9 @@ export default {
 .header {
   text-align: center;
   width: 100px;
+}
+.content{
+  width: 100vw;
 }
 .selectbox {
   width: 30%;
