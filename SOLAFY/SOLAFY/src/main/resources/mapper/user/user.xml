@@ -14,22 +14,22 @@
 		VALUES				 ( #{uid}, #{nickname}, #{statusMessage} )
 	</insert>
 	
-	<!-- 모든 사용자 번환 -->
+	<!-- 모든 사용자 반환 -->
 	<select id="selectAllUsers" resultType="UserDto">
-		SELECT uid, nickname, statusMessage
+		SELECT uid, nickname, statusMessage, admin
 		FROM   userinfo
 	</select>
 	
 	<!-- uid로 검색한 결과 반환 -->
 	<select id="selectUserByUid" parameterType="String" resultType="UserDto">
-		SELECT uid, nickname, statusMessage
+		SELECT uid, nickname, statusMessage, admin
 		FROM   userinfo
 		WHERE  uid = #{uid}
 	</select>
 	
 	<!-- 별명으로 검색한 결과 반환 -->
 	<select id="selectUserByNickname" parameterType="String" resultType="UserDto">
-		SELECT uid, nickname, statusMessage
+		SELECT uid, nickname, statusMessage, admin
 		FROM   userinfo
 		WHERE  nickname = #{nickname}
 	</select>	
