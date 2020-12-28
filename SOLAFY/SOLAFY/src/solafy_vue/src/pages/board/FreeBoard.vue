@@ -1,101 +1,14 @@
 <template>
   <div class="doc-container">
     <h3>FreeBoard</h3>
-
-    <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
-    <div v-if="showFlag == 'write'" class="column items-center">
-      <!-- 글 등록 form 시작 -->
-      <q-input
-        v-model="article.title"
-        label="제목"
-        stack-label
-        aria-placeholder="제목을 입력해주세요"
-        dense
-      />
-      <div class="q-pa-md" style="max-width: 300px">
-        <q-input
-          v-model="article.contents"
-          filled
-          type="textarea"
-          aria-placeholder="내용을 입력해주세요"
-        />
-      </div>
-      <div class="q-gutter-sm">
-        <q-checkbox v-model="article.notice" label="공지사항 여부" />
-      </div>
-      <q-btn color="primary" label="글 등록" @click="createArticle" />
-      <q-btn color="red" label="취소" @click="goToFreeBoard" />
-      <!-- 글 등록 form 끝 -->
-    </div>
-    <!-- 글 등록하기 끝 -->
-
-    <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
-    <div v-else-if="showFlag == 'detail'" class="column items-center">
-      <div>
-        title: "{{ article.title }}" <br />
-        contents: "{{ article.contents }}" <br />
-        nickname: "{{ article.nickname }}" <br />
-        likeCount: "{{ article.likeCount }}" <br />
-        regiTime: "{{ article.regiTime }}" <br />
-        group: "{{ article.group }}" <br />
-        showFlag: "{{ showFlag }}" <br />
-        notice: "{{ article.notice }}" <br />
-        <q-btn color="primary" label="글 수정" @click="showFlag = 'update'" />
-        <q-btn color="red" label="글 삭제" @click="deleteArticle" />
-        <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
-
-        <!-- 댓글 작성란, 댓글 표시란 -->
-        <!-- <reply-write :articleNo="this.article.articleno" />
-      <reply-row
-        v-for="(reply, index) in reply"
-        :reply="reply"
-        :key="index"
-        @replyChanged="showChangedReply"
-      /> -->
-      </div>
-    </div>
-    <!-- 글 상세 보기 끝 -->
-
-    <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
-    <div v-else-if="showFlag == 'update'" class="column items-center">
-      <div>
-        <h3>수정!</h3>
-        <!-- 글 수정 form 시작 -->
-        <q-input
-          v-model="article.title"
-          label="제목"
-          stack-label
-          aria-placeholder="제목을 입력해주세요"
-          dense
-        />
-        <div class="q-pa-md" style="max-width: 300px">
-          <q-input
-            v-model="article.contents"
-            filled
-            type="textarea"
-            aria-placeholder="내용을 입력해주세요"
-          />
-        </div>
-        <div class="q-gutter-sm">
-          <q-checkbox v-model="article.notice" label="공지사항 여부" />
-        </div>
-        <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
-        <q-btn color="red" label="취소" @click="goToFreeBoard" />
-        <!-- 글 수정 form 끝 -->
-      </div>
-    </div>
-
-    <!-- 글 수정하기 끝 -->
-
     <!-- 글 목록보기 시작 -->
-    <div v-if="showFlag == 'list'" class="column items-center">
+    <div v-if="showFlag == 'list'">
       <!-- q-markup-table 시작 -->
       <q-markup-table>
         <thead>
           <tr>
-            <td colspan="5">
-              <!-- 글쓰기 버튼(showFlag가 list일 때만 표시한다) -->
-              <div class="q-pa-md row q-gutter-xl">
+            <td colspan="5" style="padding-top:50px;">
+              <div class="q-pa-md row q-gutter-xl" style="">
                 <q-btn color="secondary" label="글쓰기" @click="showWrite" />
                 <q-select
                   filled
@@ -168,6 +81,172 @@
       <!-- q-markup-table 끝 -->
     </div>
     <!-- 글 목록보기 끝 -->
+    <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
+    <div v-if="showFlag == 'write'" class="column items-center">
+      <!-- 글 등록 form 시작 -->
+      <q-input
+        v-model="article.title"
+        label="제목"
+        stack-label
+        aria-placeholder="제목을 입력해주세요"
+        dense
+      />
+      <div class="q-pa-md" style="max-width: 300px">
+        <q-input
+          v-model="article.contents"
+          filled
+          type="textarea"
+          aria-placeholder="내용을 입력해주세요"
+        />
+      </div>
+      <div class="q-gutter-sm">
+        <q-checkbox v-model="article.notice" label="공지사항 여부" />
+      </div>
+      <q-btn color="primary" label="글 등록" @click="createArticle" />
+      <q-btn color="red" label="취소" @click="goToFreeBoard" />
+      <!-- 글 등록 form 끝 -->
+    </div>
+    <!-- 글 등록하기 끝 -->
+
+    <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
+    <div v-else-if="showFlag == 'detail'">
+      <q-page class="q-pa-md">
+        <!-- final card 시작 -->
+        <q-card flat bordered>
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label overline> # {{ article.articleNo }} </q-item-label>
+              <q-item-label
+                ><q-chip
+                  dense
+                  color="orange"
+                  text-color="white"
+                  v-if="article.notice"
+                >
+                  공지 </q-chip
+                >{{ article.title }}</q-item-label
+              >
+              <q-item-label caption>
+                닉네임 : {{ article.nickname }} <br />
+                작성시간 : {{ article.regiTime }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+          <q-card-section>
+            <q-card-section class="col-4"
+              >{{ article.contents }}
+            </q-card-section>
+          </q-card-section>
+          <q-card-section align="right">
+            <q-rating
+              id="likeArea"
+              v-model="likeBtn"
+              max="1"
+              size="1em"
+              color="red"
+              color-selected="red-9"
+              icon="favorite_border"
+              icon-selected="favorite"
+              icon-half="favorite"
+              no-dimming
+            />
+            <label for="#likeArea">
+              LikeCount :
+              {{ article.likeCount + likeBtn }}
+            </label>
+          </q-card-section>
+          <q-separator />
+          <q-card-actions align="right">
+            <q-btn
+              color="primary"
+              label="글 수정"
+              @click="showFlag = 'update'"
+            />
+            <q-btn color="red" label="글 삭제" @click="deleteArticle" />
+            <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
+          </q-card-actions>
+        </q-card>
+
+        <!-- 댓글 작성란, 댓글 표시란 -->
+        <!-- <reply-write :articleNo="this.article.articleno" />
+      <reply-row
+        v-for="(reply, index) in reply"
+        :reply="reply"
+        :key="index"
+        @replyChanged="showChangedReply"
+      /> -->
+      </q-page>
+    </div>
+    <!-- 글 상세 보기 끝 -->
+
+    <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
+    <div v-else-if="showFlag == 'update'">
+      <q-page class="q-pa-md">
+        <!-- final card 시작 -->
+        <q-card flat bordered>
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label overline> #{{ article.articleNo }} </q-item-label>
+              <q-item-label>
+                <q-input
+                  v-model="article.title"
+                  label="제목"
+                  stack-label
+                  aria-placeholder="제목을 입력해주세요"
+                  dense
+              /></q-item-label>
+              <q-item-label caption>
+                닉네임 : {{ article.nickname }} <br />
+                작성시간 : {{ article.regiTime }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+          <q-card-section>
+            <q-card-section class="col-4">
+              <q-input
+                v-model="article.contents"
+                filled
+                type="textarea"
+                aria-placeholder="내용을 입력해주세요"
+              />
+            </q-card-section>
+          </q-card-section>
+          <q-card-section align="right"
+            ><q-checkbox v-model="article.notice" label="공지사항 여부" />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions align="right">
+            <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
+            <q-btn color="red" label="취소" @click="goToFreeBoard" />
+          </q-card-actions>
+        </q-card>
+
+        <!-- 댓글 작성란, 댓글 표시란 -->
+        <!-- <reply-write :articleNo="this.article.articleno" />
+      <reply-row
+        v-for="(reply, index) in reply"
+        :reply="reply"
+        :key="index"
+        @replyChanged="showChangedReply"
+      /> -->
+      </q-page>
+    </div>
+
+    <!-- 글 수정하기 끝 -->
   </div>
 </template>
 
@@ -191,6 +270,7 @@ export default {
         boardBNo: 0,
         nickname: null
       },
+      likeBtn: 0,
       showFlag: "list",
       selection: "제목",
       options: ["제목", "작성자"],

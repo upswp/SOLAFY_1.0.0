@@ -82,12 +82,16 @@ const routes = [
         component: () => import("pages/group/GroupDetail.vue")
       },
 
-      // member
+      // user
       {
-        path: "/memberRegi",
-        name: "memberRegi",
-        component: () => import("pages/member/CreateMember.vue")
-      }
+        path: "/userRegi",
+        name: "UserRegi",
+        component: () => import("pages/user/CreateUser.vue")
+      },
+      {
+        path: "/verifyEmailWarn",
+        component: () => import("pages/user/VerifyEmailWarn.vue")
+      },
     ]
   },
 

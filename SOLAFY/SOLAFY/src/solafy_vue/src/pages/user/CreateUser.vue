@@ -47,6 +47,17 @@
               val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
             ]"
           />
+          <q-input
+            filled
+            dense
+            type="password"
+            v-model="pwdcnf"
+            label="confirm password *"
+            lazy-rules
+            :rules="[
+              val => (val && val === password) || '비밀번호를 확인해주세요'
+            ]"
+          />
         </q-step>
 
         <q-step
@@ -81,7 +92,6 @@
         </q-step>
 
         <q-step :name="4" title="별명 입력" icon="assignment" :done="step > 4">
-          <div>{{ profileimg.name }}</div>
           <q-input
             filled
             dense
@@ -122,7 +132,7 @@ import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth, firebaseSt } from "boot/firebase";
 export default {
-  name: "createMember",
+  name: "CreateMember",
   data() {
     return {
       step: 1,
@@ -139,14 +149,15 @@ export default {
         .then(Response => {
           let uid = firebaseAuth.currentUser.uid;
           //createMember_DB(uid);
-          //this.uploadImg_FB(uid);
+          this.sendEmail();
+          this.uploadImg_FB(uid);
           this.$q.notify({
             color: "green",
             textColor: "white",
             icon: "cloud_done",
-            message: "가입 성공"
+            message: "가입 성공, 이메일 인증을 해주세요!"
           });
-          this.$router.push("");
+          this.$router.push("/");
         })
         .catch(error => {
           console.log(error.message);
@@ -170,50 +181,20 @@ export default {
     uploadImg_FB(curuid) {
       var storageRef = firebaseSt.ref();
       var imagesRef = storageRef.child("images");
-      // Points to 'images/space.jpg'
-      // Note that you can use variables to create child values
-      //var fileName = 'space.jpg';
-      //var spaceRef = imagesRef.child(fileName);
-
-      // File path is 'images/space.jpg'
-      //var path = spaceRef.fullPath
-
-      // File name is 'space.jpg'
-      //var name = spaceRef.name
-
-      // Points to 'images'
-      //var imagesRef = spaceRef.parent;
       var metadata = {
         contentType: this.profileimg.type
       };
       var uploadTask = storageRef
-        .child("images/" + this.profileimg.name)
+        .child("profileimg/" + curuid)
         .put(this.profileimg, metadata);
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        firebaseSt.TaskEvent.state_changed, // or 'state_changed'
-        function(snapshot) {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          var progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case firebaseSt.TaskState.paused: // or 'paused'
-              console.log("Upload is paused");
-              break;
-            case firebaseSt.TaskState.running: // or 'running'
-              console.log("Upload is running");
-              break;
-          }
-        },
-        function(error) {},
-        function() {
-          // Upload completed successfully, now we can get the download URL
-          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            console.log("File available at", downloadURL);
-          });
-        }
-      );
+    },
+    sendEmail() {
+      firebaseAuth.currentUser
+        .sendEmailVerification()
+        .then(function() {
+          console.log("이메일이 전송됨");
+        })
+        .catch("email not sent");
     }
   }
 };
