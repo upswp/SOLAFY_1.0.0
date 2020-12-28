@@ -60,6 +60,7 @@
               v-model="smallModel"
               :options="small"
               label="소분류"
+              @input="selectProblemByCategoryinSmall"
             />
             <q-space />
             <q-select
@@ -109,6 +110,7 @@ export default {
       small: [],
       loading: false,
       filter: "",
+      categoryNo: "",
       rowCount: 10,
       errored: false,
       keyword: null,
@@ -216,12 +218,12 @@ export default {
     selectMedium: function() {
       Axios.get(`/category/medium/${this.largeModel.value}`)
         .then(response => {
+          this.categoryNo = String(this.largeModel.value).padStart(2, "0");
+          //console.log("this.categoryNo" + this.categoryNo);
+          this.selectProblemByCategory();
           this.medium = [];
-          var tmp;
-          if (tmp != this.largeModel.value) {
-            this.mediumModel = null;
-            this.smallModel = null;
-          }
+          this.mediumModel = null;
+          this.smallModel = null;
           response.data.forEach(element => {
             this.medium.push({
               label: element.categoryName,
@@ -229,9 +231,9 @@ export default {
             });
           });
           console.log(this.medium[0]);
-          tmp = this.largeModel.value;
         })
-        .catch(() => {
+        .catch(error => {
+          alert(error);
           this.errored = true;
         });
     },
@@ -239,11 +241,13 @@ export default {
     selectSmall: function() {
       Axios.get(`/category/small/${this.mediumModel.value}`)
         .then(response => {
+          this.categoryNo =
+            String(this.largeModel.value).padStart(2, "0") +
+            String(this.mediumModel.value).padStart(3, "0");
+          console.log("this.categoryNo::::" + this.categoryNo);
+          this.selectProblemByCategory();
           this.small = [];
-          var tmp;
-          if (tmp != this.mediumModel.value) {
-            this.smallModel = null;
-          }
+          this.smallModel = null;
           response.data.forEach(element => {
             this.small.push({
               label: element.categoryName,
@@ -251,11 +255,43 @@ export default {
             });
           });
           console.log(this.small[0]);
-          tmp = this.mediumModel.value;
         })
         .catch(() => {
           this.errored = true;
         });
+    },
+    // 카테고리 대분류, 중분류, 소분류에 따른 ProblemList 반환
+    selectProblemByCategory: function() {
+      Axios.get(`/problem/category/${this.categoryNo}`)
+        .then(response => {
+          this.problems = response.data;
+          if (this.problems.length === 0) {
+            this.$q.notify({
+              color: "red-6",
+              textColor: "white",
+              icon: "warning",
+              message: "조회 실패"
+            });
+          }
+          console.log(this.problems[0]);
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        });
+    },
+    //소분류일때 카테고리NO 조합
+    selectProblemByCategoryinSmall: function() {
+      this.categoryNo =
+        String(this.largeModel.value).padStart(2, "0") +
+        String(this.mediumModel.value).padStart(3, "0") +
+        String(this.smallModel.value).padStart(5, "0");
+      //console.log("this.categoryNo::::" + this.categoryNo);
+      this.selectProblemByCategory();
     },
 
     // problemList로 이동
