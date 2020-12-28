@@ -41,8 +41,8 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	}
 
 	@Override
-	public FreeBoardDto selectArticleByNo(int ArticleNo) {
-		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByNo(ArticleNo);
+	public FreeBoardDto selectArticleByArticleNo(int ArticleNo) {
+		FreeBoardDto freeBoardDto = freeBoardMapper.selectArticleByArticleNo(ArticleNo);
 		return freeBoardDto;
 	}
 
@@ -76,4 +76,5 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 			return false;
 		}
 	}
+
 }
