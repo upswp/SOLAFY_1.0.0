@@ -7,23 +7,25 @@ package com.solafy.model;
  * @Date 2020. 12. 27.
  * @Author 이주희
  * 
- * @변경이력
+ * @변경이력 20-12-28 admin 추가
  */
 
 public class UserDto {
 	private String uid;
 	private String nickname;
 	private String statusMessage;
+	private boolean admin;
 
 	public UserDto() {
 		super();
 	}
 
-	public UserDto(String uid, String nickname, String statusMessage) {
+	public UserDto(String uid, String nickname, String statusMessage, boolean admin) {
 		super();
 		this.uid = uid;
 		this.nickname = nickname;
 		this.statusMessage = statusMessage;
+		this.admin = admin;
 	}
 
 	public String getUid() {
@@ -50,9 +52,18 @@ public class UserDto {
 		this.statusMessage = statusMessage;
 	}
 
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
 	@Override
 	public String toString() {
-		return "UserDto [uid=" + uid + ", nickname=" + nickname + ", statusMessage=" + statusMessage + "]";
+		return "UserDto [uid=" + uid + ", nickname=" + nickname + ", statusMessage=" + statusMessage + ", admin="
+				+ admin + "]";
 	}
 
 }
