@@ -21,7 +21,7 @@
         />
       </div>
       <div class="q-gutter-sm">
-        <q-checkbox v-model="article.isNotice" label="공지사항 여부" />
+        <q-checkbox v-model="article.notice" label="공지사항 여부" />
       </div>
       <q-btn color="primary" label="글 등록" @click="createArticle" />
       <q-btn color="red" label="취소" @click="goToFreeBoard" />
@@ -31,54 +31,60 @@
 
     <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
     <div v-else-if="showFlag == 'detail'" class="column items-center">
-      title: "{{ article.title }}" <br />
-      contents: "{{ article.contents }}" <br />
-      nickname: "{{ article.nickname }}" <br />
-      likeCount: "{{ article.likeCount }}" <br />
-      regiTime: "{{ article.regiTime }}" <br />
-      group: "{{ article.group }}" <br />
-      showFlag: "{{ showFlag }}" <br />
-      <q-btn color="primary" label="글 수정" @click="showFlag = 'update'" />
-      <q-btn color="red" label="글 삭제" @click="deleteArticle" />
-      <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
+      <div>
+        title: "{{ article.title }}" <br />
+        contents: "{{ article.contents }}" <br />
+        nickname: "{{ article.nickname }}" <br />
+        likeCount: "{{ article.likeCount }}" <br />
+        regiTime: "{{ article.regiTime }}" <br />
+        group: "{{ article.group }}" <br />
+        showFlag: "{{ showFlag }}" <br />
+        notice: "{{ article.notice }}" <br />
+        <q-btn color="primary" label="글 수정" @click="showFlag = 'update'" />
+        <q-btn color="red" label="글 삭제" @click="deleteArticle" />
+        <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
 
-      <!-- 댓글 작성란, 댓글 표시란 -->
-      <!-- <reply-write :articleNo="this.article.articleno" />
+        <!-- 댓글 작성란, 댓글 표시란 -->
+        <!-- <reply-write :articleNo="this.article.articleno" />
       <reply-row
         v-for="(reply, index) in reply"
         :reply="reply"
         :key="index"
         @replyChanged="showChangedReply"
       /> -->
+      </div>
     </div>
     <!-- 글 상세 보기 끝 -->
 
     <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
     <div v-else-if="showFlag == 'update'" class="column items-center">
-      <h3>수정!</h3>
-      <!-- 글 수정 form 시작 -->
-      <q-input
-        v-model="article.title"
-        label="제목"
-        stack-label
-        aria-placeholder="제목을 입력해주세요"
-        dense
-      />
-      <div class="q-pa-md" style="max-width: 300px">
+      <div>
+        <h3>수정!</h3>
+        <!-- 글 수정 form 시작 -->
         <q-input
-          v-model="article.contents"
-          filled
-          type="textarea"
-          aria-placeholder="내용을 입력해주세요"
+          v-model="article.title"
+          label="제목"
+          stack-label
+          aria-placeholder="제목을 입력해주세요"
+          dense
         />
+        <div class="q-pa-md" style="max-width: 300px">
+          <q-input
+            v-model="article.contents"
+            filled
+            type="textarea"
+            aria-placeholder="내용을 입력해주세요"
+          />
+        </div>
+        <div class="q-gutter-sm">
+          <q-checkbox v-model="article.notice" label="공지사항 여부" />
+        </div>
+        <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
+        <q-btn color="red" label="취소" @click="goToFreeBoard" />
+        <!-- 글 수정 form 끝 -->
       </div>
-      <div class="q-gutter-sm">
-        <q-checkbox v-model="article.isNotice" label="공지사항 여부" />
-      </div>
-      <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
-      <q-btn color="red" label="취소" @click="goToFreeBoard" />
-      <!-- 글 수정 form 끝 -->
     </div>
+
     <!-- 글 수정하기 끝 -->
 
     <!-- 글 목록보기 시작 -->
@@ -129,6 +135,22 @@
         </thead>
         <tbody>
           <tr
+            v-for="notice in notices"
+            :key="notice.articleNo"
+            @click="showDetail(notice.articleNo)"
+          >
+            <td class="text-left">{{ notice.articleNo }}</td>
+            <td class="text-left">{{ notice.nickname }}</td>
+            <td class="text-left">
+              <q-chip dense color="orange" text-color="white">
+                공지
+              </q-chip>
+              {{ notice.title }}
+            </td>
+            <td class="text-left">{{ notice.regiTime }}</td>
+            <td class="text-left">{{ notice.likeCount }}</td>
+          </tr>
+          <tr
             v-for="article in articles"
             :key="article.articleNo"
             @click="showDetail(article.articleNo)"
@@ -136,14 +158,6 @@
             <td class="text-left">{{ article.articleNo }}</td>
             <td class="text-left">{{ article.nickname }}</td>
             <td class="text-left">
-              <q-chip
-                v-if="article.notice"
-                dense
-                color="orange"
-                text-color="white"
-              >
-                공지
-              </q-chip>
               {{ article.title }}
             </td>
             <td class="text-left">{{ article.regiTime }}</td>
@@ -170,7 +184,7 @@ export default {
         contents: null,
         uid: "DFEIJC23WOSKXCNSWQ",
         likeCount: 0,
-        isNotice: false,
+        notice: false,
         regiTime: null,
         isGroup: false,
         groupNo: 1,
@@ -181,6 +195,7 @@ export default {
       selection: "제목",
       options: ["제목", "작성자"],
       articles: [],
+      notices: [],
       errored: false,
       keyword: null,
       columns: [
@@ -244,6 +259,17 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
+    selectAllNotices: function() {
+      Axios.get(`/free/selectAllNotices`)
+        .then(response => {
+          this.notices = response.data;
+          console.log(this.notices[0]);
+        })
+        .catch(() => {
+          this.errored = true;
+        })
+        .finally(() => (this.loading = false));
+    },
     selectArticle: function() {
       if (this.selection === "제목") {
         Axios.get(`/free/selectArticleByTitle/${this.keyword}`)
@@ -291,7 +317,7 @@ export default {
           .then(response => {
             if (response.data === "success") {
               this.showFlag = "list";
-              this.selectAllArticles();
+              this.showList();
               this.resetForm();
               this.$q.notify({
                 message: "게시물 등록 성공",
@@ -330,6 +356,7 @@ export default {
       Axios.get(`/free/selectArticleByArticleNo/${articleNo}`)
         .then(response => {
           this.article = response.data;
+          console.log(this.article.notice);
         })
         .catch(() => {
           this.errored = true;
@@ -357,7 +384,7 @@ export default {
           .then(response => {
             if (response.data === "success") {
               this.showFlag = "detail";
-              this.selectAllArticles();
+              this.showList();
               this.$q.notify({
                 message: "게시물 수정 성공",
                 color: "green"
@@ -382,7 +409,7 @@ export default {
         .then(response => {
           if (response.data == "success") {
             this.showFlag = "list";
-            this.selectAllArticles();
+            this.showList();
             resetForm();
             this.$q.notify({
               message: "삭제 완료!",
@@ -399,10 +426,14 @@ export default {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
+    },
+    showList: function() {
+      this.selectAllNotices();
+      this.selectAllArticles();
     }
   },
   created() {
-    this.selectAllArticles();
+    this.showList();
   }
 };
 </script>

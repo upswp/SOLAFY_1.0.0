@@ -25,12 +25,28 @@
 		게시글번호, 닉네임, 제목, 등록시간, 종아요 갯수만 가져온다.
 		articleNo, nickname,title, regiTime, likeCount
 	-->
+	<select id="selectAllNotices" resultType="FreeBoardDto">
+		select articleNo, nickname,isNotice,title, regiTime, likeCount
+		from freeboard fb join userinfo ui
+        on fb.uid = ui.uid
+        where isNotice = 1
+		order by articleNo desc
+	</select>
+	
+	<!--
+		모든 게시물을 반환.
+		게시글번호, 닉네임, 제목, 등록시간, 종아요 갯수만 가져온다.
+		articleNo, nickname,title, regiTime, likeCount
+	-->
 	<select id="selectAllArticles" resultType="FreeBoardDto">
 		select articleNo, nickname,isNotice,title, regiTime, likeCount
 		from freeboard fb join userinfo ui
         on fb.uid = ui.uid
+        where isNotice = 0
 		order by articleNo desc
 	</select>
+	
+	
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.

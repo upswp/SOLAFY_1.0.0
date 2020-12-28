@@ -63,6 +63,20 @@ public class FreeBoardController {
 	}
 	
 	/**
+	 * @return List<FreeBoardDto> 게시글 list
+	 * @Method 설명 : 인자값은 없으며, 자유게시판의 모든 공지글을 반환한다.
+	 * @변경이력 :
+	 * 2020-12-28(BEOMSEOK SEO) : 공지사항 우선 순위 표시 필요성에 따른 해당 메서드 추가
+	 */
+	@ApiOperation(value = "자유게시판의 모든 공지글을 반환한다.", response = List.class)
+	@GetMapping(value="/selectAllNotices")
+	public List<FreeBoardDto> selectAllNotices(){
+		logger.info("selectNotices - 호출" + new Date());
+		List<FreeBoardDto> list = freeBoardService.selectAllNotices();
+		return list;
+	}
+	
+	/**
 	* @return List<FreeBoardDto> 게시글 list
 	* @Method 설명 : 인자값은 없으며, 자유게시판의 모든 게시글을 반환한다.
 	* @변경이력 :

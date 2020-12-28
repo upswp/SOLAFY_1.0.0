@@ -33,6 +33,12 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 			return false;
 		}
 	}
+	
+	@Override
+	public List<FreeBoardDto> selectAllNotices() {
+		List<FreeBoardDto> list = freeBoardMapper.selectAllNotices();
+		return list;
+	}
 
 	@Override
 	public List<FreeBoardDto> selectAllArticles() {

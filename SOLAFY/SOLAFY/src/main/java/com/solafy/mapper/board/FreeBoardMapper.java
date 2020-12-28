@@ -27,6 +27,14 @@ public interface FreeBoardMapper {
 	public int createArticle(FreeBoardDto freeBoardDto);
 	
 	/**
+	 * @return List<FreeBoardDto>
+	 * @Method 설명 : 자유게시판의 모든 공지들을 반환
+	 * @변경이력 :
+	 * 2020-12-28(BEOMSEOK SEOK) : 공지사항 우선순위 표시 필요성에 따른 해당 메서드 추가
+	 */
+	public List<FreeBoardDto> selectAllNotices();
+	
+	/**
 	* @return List<FreeBoardDto>
 	* @Method 설명 : 자유게시판의 모든 게시글들을 반환
 	* @변경이력 :

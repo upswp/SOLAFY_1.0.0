@@ -25,6 +25,13 @@ public interface FreeBoardService {
 
 	/**
 	 * @return List<FreeBoardDto>
+	 * @Method 설명 : 자유게시판의 모든 공지들을 반환
+	 * @변경이력 :
+	 */
+	public List<FreeBoardDto> selectAllNotices();
+
+	/**
+	 * @return List<FreeBoardDto>
 	 * @Method 설명 : 자유게시판의 모든 게시글들을 반환
 	 * @변경이력 :
 	 */
