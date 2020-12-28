@@ -29,7 +29,7 @@
       </div>
     </q-form>
     <div>
-      <q-btn label="회원가입" @click="goMemberRegi" />
+      <q-btn label="회원가입" @click="goUserRegi" />
     </div>
   </div>
 </template>
@@ -77,8 +77,8 @@ export default {
       this.formData.password = null;
       this.accept = false;
     },
-    goMemberRegi() {
-      this.$router.push("memberRegi");
+    goUserRegi() {
+      this.$router.push("UserRegi");
     }
   }
 };
