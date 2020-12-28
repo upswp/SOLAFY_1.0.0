@@ -9,7 +9,7 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="돌아가기" />
+            <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
           </div>
         </div>
       </div>
@@ -74,9 +74,21 @@
         <div class="row">
           <div class="col-7"></div>
           <div class="col-5">
-            <q-btn color="primary" label="문제집 삭제" />
-            <q-btn color="primary" label="문제집 수정" />
-            <q-btn color="primary" label="문제풀이 시작" />
+            <q-btn
+              color="primary"
+              label="문제집 삭제"
+              @click="ProblemSetDelete"
+            />
+            <q-btn
+              color="primary"
+              label="문제집 수정"
+              @click="GoProblemSetUpdate"
+            />
+            <q-btn
+              color="primary"
+              label="문제풀이 시작"
+              @click="GoProblemSolving"
+            />
           </div>
         </div>
       </div>
@@ -150,6 +162,7 @@ export default {
     };
   },
   methods: {
+    //ProblemSet Contents - table 반환
     selectProblemByNo: function() {
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
@@ -174,6 +187,48 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    //ProblemSetDelete 반환
+    ProblemSetDelete: function() {
+      Axios.get(
+        "/problem/problemset/deleteProblemSet" +
+          this.item.problemSet.problemSetNo
+      )
+        .then(Response => {
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "done",
+            message: "삭제 완료"
+          });
+          this.GoProblemSetList();
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "삭제 실패"
+          });
+        });
+    },
+    //ProblemDetailByProblem 이동
+    GoProblemSolving: function() {
+      this.$router.push({
+        name: "ProblemDetailByProblem"
+      });
+    },
+    //ProblemSetList 이동
+    GoProblemSetList: function() {
+      this.$router.push({
+        name: "ProblemSet"
+      });
+    },
+    //ProblemSet Update 이동
+    GoProblemSetUpdate: function() {
+      this.$router.push({
+        name: "ProblemSetUpdate"
+      });
     }
   },
   created() {
