@@ -71,6 +71,8 @@ public interface GroupService {
 	*/
 	boolean checkDuplicateName(String title)throws Exception;
 	
+	List<GroupMemberDto> selectGroupMember(int groupNo)throws Exception;
+	
 	/**
 	* @param group
 	* @return
@@ -133,4 +135,5 @@ public interface GroupService {
 	* @변경이력 :
 	*/
 	boolean deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
+
 }

@@ -157,6 +157,12 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
+	@ApiOperation(value = "그룹 이름 중복을 확인한다.", response = String.class)
+	@GetMapping(value = "/selectGroupMember/{groupNo}")
+	public ResponseEntity<List<GroupMemberDto>> selectGroupMember(@PathVariable int groupNo)throws Exception{
+		logger.debug("selectGroupMember 호출");
+		return new ResponseEntity<List<GroupMemberDto>>(groupService.selectGroupMember(groupNo), HttpStatus.OK);
+	}
 //	===================================================================== //
 	
 	

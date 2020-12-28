@@ -38,11 +38,20 @@
  	select groupNo, title, type, description from solafy.group
  	where groupNo = #{groupNo}
  </select>
+ 
  <select id="checkDuplicateName" parameterType="String" resultType="int">
 	select count(*) from solafy.group
 	where title = #{title}
  </select>
-
+ 
+ <select id="selectGroupMember" parameterType="int" resultType="GroupMemberDto">
+	select ui.nickname, gm.grade, ui.statusMessage, groupNo
+	from solafy.groupmember as gm
+	join solafy.userinfo as ui
+	on gm.uid = ui.uid
+	where gm.groupNo = #{groupNo};
+ </select>
+ 
  <update id="updateGroup" parameterType="GroupDto" >
  	update solafy.group 
  	set title=#{title}, type=#{type}, description=#{description}  
@@ -54,11 +63,13 @@
  	set grade=#{grade} 
  	where uid=#{uid} and groupNo=#{groupNo}
  </update>
+
  <update id="updateGroupApplyConfirm" parameterType="GroupMemberDto">
  	update groupmember 
  	set grade=#{grade}
  	where uid=#{uid} and groupNo=#{groupNo}
  </update>
+ 
  <update id="updateGroupInvitationConfirm" parameterType="GroupMemberDto">
  	update groupmember 
  	set grade=#{grade} 
@@ -70,11 +81,11 @@
  	where groupNo=#{groupNo}
  </delete>
  
- 
  <delete id="deleteGroupMember" parameterType="Map">
  	delete from groupmember
  	where uid=#{uid} and groupNo=#{groupNo}
  </delete>
+ 
  <delete id="deleteGroupMemberself" parameterType="Map">
  	delete from groupmember
  	where uid=#{uid} and groupNo=#{groupNo}

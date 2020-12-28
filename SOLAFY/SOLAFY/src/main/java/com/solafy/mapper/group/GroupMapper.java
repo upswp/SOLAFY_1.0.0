@@ -40,4 +40,6 @@ public interface GroupMapper {
 	int deleteGroupMember(Map<String, Object> deleteMember)throws Exception;
 	int deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
 
+	List<GroupMemberDto> selectGroupMember(int groupNo);
+
 }

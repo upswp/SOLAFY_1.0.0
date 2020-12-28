@@ -47,6 +47,10 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
+	public List<GroupMemberDto> selectGroupMember(int groupNo) throws Exception {
+		return groupMapper.selectGroupMember(groupNo);
+	}
+	@Override
 	public boolean checkDuplicateName(String title) throws Exception {
 		return groupMapper.checkDuplicateName(title) == 0 ? true : false;
 	}
