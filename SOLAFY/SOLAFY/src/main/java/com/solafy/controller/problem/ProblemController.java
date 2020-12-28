@@ -114,7 +114,7 @@ public class ProblemController {
 	*/
 	@ApiOperation(value = "카테고리 번호(소+중+대/중+대/대)에 해당하는 문제들을 반환한다.", response = List.class)
 	@GetMapping(value = "/category/{categoryNo}")
-	public ResponseEntity<List<ProblemDto>> selectProblemByCategory(String categoryNo) throws Exception {
+	public ResponseEntity<List<ProblemDto>> selectProblemByCategory(@PathVariable String categoryNo) throws Exception {
 			logger.debug("selectProblemByCategory - 호출");
 			return new ResponseEntity<List<ProblemDto>>(problemService.selectProblemByCategory(categoryNo), HttpStatus.OK);
 	}
@@ -179,8 +179,8 @@ public class ProblemController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "문제를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@DeleteMapping(value = "/delete")
-	public ResponseEntity<String> deleteProblem(@RequestBody int problemNo) throws Exception{
+	@DeleteMapping(value = "/delete/{problemNo}")
+	public ResponseEntity<String> deleteProblem(@PathVariable int problemNo) throws Exception{
 		logger.debug("updateProblem - 호출");
 		if(problemService.deleteProblem(problemNo)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
