@@ -23,8 +23,9 @@ public interface GroupService {
 	* @작성자 : Yun Kihyeon
 	* @Method 설명 : 그룹을 생성한다.
 	* @변경이력 :
+	* 2020.12.28 uid추가(그룹장 설정을 위해)
 	*/
-	boolean createGroup(GroupDto group)throws Exception;
+	boolean createGroup(GroupDto group, String uid)throws Exception;
 
 	/**
 	* @param groupMember
@@ -69,6 +70,8 @@ public interface GroupService {
 	* @변경이력 :
 	*/
 	boolean checkDuplicateName(String title)throws Exception;
+	
+	List<GroupMemberDto> selectGroupMember(int groupNo)throws Exception;
 	
 	/**
 	* @param group
@@ -132,4 +135,5 @@ public interface GroupService {
 	* @변경이력 :
 	*/
 	boolean deleteGroupMemberself(Map<String, Object> deleteMemberSelf)throws Exception;
+
 }

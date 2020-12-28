@@ -5,6 +5,8 @@ package com.solafy.model;
  * @author Juhee Lee
  * @since 2020-12-14
  *
+ * @변경이력
+ * 20-12-28 닉네임 추가
  */
 
 public class AnswerByQuestionDto {
@@ -14,18 +16,21 @@ public class AnswerByQuestionDto {
 	private String contents;
 	private String uid;
 	private String regiTime;
+	private String nickname;
 
 	public AnswerByQuestionDto() {
 		super();
 	}
 
-	public AnswerByQuestionDto(int articleNo, int questionNo, String contents, String uid, String regiTime) {
+	public AnswerByQuestionDto(int articleNo, int questionNo, String contents, String uid, String regiTime,
+			String nickname) {
 		super();
 		this.articleNo = articleNo;
 		this.questionNo = questionNo;
 		this.contents = contents;
 		this.uid = uid;
 		this.regiTime = regiTime;
+		this.nickname = nickname;
 	}
 
 	public int getArticleNo() {
@@ -68,10 +73,18 @@ public class AnswerByQuestionDto {
 		this.regiTime = regiTime;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
 		return "AnswerByQuestionDto [articleNo=" + articleNo + ", questionNo=" + questionNo + ", contents=" + contents
-				+ ", uid=" + uid + ", regiTime=" + regiTime + "]";
+				+ ", uid=" + uid + ", regiTime=" + regiTime + ", nickname=" + nickname + "]";
 	}
 
 }

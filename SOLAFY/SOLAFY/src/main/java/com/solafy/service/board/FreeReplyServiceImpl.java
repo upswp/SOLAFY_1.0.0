@@ -15,6 +15,7 @@ import com.solafy.model.FreeReplyDto;
 * @작성자 : BUMSEOK SEO
 
 * @변경이력 :
+* 2020-12-20(BEOMSEOK SEO) : create, update, delete메서드 return 조건문 간소화
 * @프로그램 설명 :
 */
 @Service
@@ -26,11 +27,7 @@ public class FreeReplyServiceImpl implements FreeReplyService{
 	@Override
 	public boolean createReply(FreeReplyDto freeReplyDto) {
 		int result = freeReplyMapper.createReply(freeReplyDto);
-		if(result == 1) {
-			return true;
-		}else {
-			return false;
-		}
+		return result == 1;
 	}
 
 	@Override
@@ -42,21 +39,13 @@ public class FreeReplyServiceImpl implements FreeReplyService{
 	@Override
 	public boolean updateReply(FreeReplyDto freeReplyDto) {
 		int result = freeReplyMapper.updateReply(freeReplyDto);
-		if(result == 1) {
-			return true;
-		}else {
-			return false;
-		}
+		return result == 1;
 	}
 
 	@Override
 	public boolean deleteReply(FreeReplyDto freeReplyDto) {
 		int result = freeReplyMapper.deleteReply(freeReplyDto);
-		if(result == 1) {
-			return true;
-		}else {
-			return false;
-		}
+		return result == 1;
 	}
 
 }

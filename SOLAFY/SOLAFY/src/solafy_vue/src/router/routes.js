@@ -33,6 +33,11 @@ const routes = [
         component: () => import("pages/problem/ProblemCreate.vue")
       },
       {
+        path: "/problemresult/:problemNo/:result",
+        name: "ProblemResult",
+        component: () => import("pages/problem/ProblemResult.vue")
+      },
+      {
         path: "/problemset",
         name: "ProblemSet",
         component: () => import("pages/problemSet/ProblemSetList.vue")

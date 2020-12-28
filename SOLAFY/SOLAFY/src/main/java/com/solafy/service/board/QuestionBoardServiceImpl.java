@@ -48,8 +48,8 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	}
 
 	@Override
-	public List<QuestionBoardDto> selectQuestionsByWriter(String uid) throws Exception {
-		return questionMapper.selectQuestionsByWriter(uid);
+	public List<QuestionBoardDto> selectQuestionsByWriter(String nickname) throws Exception {
+		return questionMapper.selectQuestionsByWriter("%"+nickname+"%");
 	}
 
 	@Override

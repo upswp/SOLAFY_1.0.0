@@ -18,15 +18,17 @@
 	
 	<!-- 질문 글 번호에 해당하는 답변들 반환 -->
 	<select id="selectAnswersByQuestionNo" parameterType="int" resultType="AnswerByQuestionDto">
-		SELECT articleNo, questionNo, contents, uid, regiTime
-		FROM   answerbyquestion
+		SELECT articleNo, questionNo, contents, uid, regiTime, nickname
+		FROM   answerbyquestion a JOIN userinfo u
+		USING  (uid)
 		WHERE  qestionNo = #{qestionNo}
 	</select>
 	
 	<!-- 답변 글 번호에 해당하는 답변 -->
 	<select id="selectAnswerByArticleNo" parameterType="int" resultType="AnswerByQuestionDto">
-		SELECT articleNo, questionNo, contents, uid, regiTime
-		FROM   answerbyquestion
+		SELECT articleNo, questionNo, contents, uid, regiTime, nickname
+		FROM   answerbyquestion a JOIN userinfo u
+		USING  (uid)
 		WHERE  articleNo = #{articleNo}
 	</select>
 	

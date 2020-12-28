@@ -18,35 +18,40 @@
 	
 	<!-- 모든 질문 글을 반환 -->
 	<select id="selectAllQuestions" resultType="QuestionBoardDto">
-		SELECT articleNo, title, uid, regiTime
-		FROM   questionboard
+		SELECT articleNo, title, uid, regiTime, nickname
+		FROM   questionboard q JOIN userinfo u
+		USING  (uid)
 	</select>
 	
 	<!-- 질문글 번호로 질문글 상세 내용 반환 -->
 	<select id="selectQuestionsByArticleNo" parameterType="int" resultType="QuestionBoardDto">
-		SELECT articleNo, title, contents, uid, point, regiTime, problemNo
-		FROM   questionboard
+		SELECT articleNo, title, contents, uid, point, regiTime, problemNo, nickname
+		FROM   questionboard q JOIN userinfo u
+		USING  (uid)
 		WHERE  articleNo = #{articleNo}
 	</select>
 	
 	<!-- 검색된 키워드가 제목에 포함된  질문글들 반환 -->
 	<select id="selectQuestionsByTitle" parameterType="String" resultType="QuestionBoardDto">
-		SELECT articleNo, title, uid, regiTime, problemNo
-		FROM   questionboard
+		SELECT articleNo, title, uid, regiTime, problemNo, nickname
+		FROM   questionboard q JOIN userinfo u
+		USING  (uid)
 		WHERE  UPPER(title) LIKE UPPER(#{title})
 	</select>
 	
-	<!-- 검색된 uid와 작성자 uid가 동일한 질문글들 반환 -->
+	<!-- 검색된 닉네임과 작성자 닉네임이 동일한 질문글들 반환 -->
 	<select id="selectQuestionsByWriter" parameterType="String" resultType="QuestionBoardDto">
-		SELECT articleNo, title, uid, regiTime, problemNo
-		FROM   questionboard
-		WHERE  uid = #{uid}
+		SELECT articleNo, title, uid, regiTime, problemNo, nickname
+		FROM   questionboard q JOIN userinfo u
+		USING  (uid)
+		WHERE  UPPER(nickname) LIKE UPPER(#{nickname})
 	</select>
 	
 	<!-- 문제 번호로 검색, 한 문제에 대한 질문글들을 반환 -->
 	<select id="selectQuestionsByProblemNo" parameterType="int" resultType="QuestionBoardDto">
-		SELECT articleNo, title, uid, regiTime, problemNo
-		FROM   questionboard
+		SELECT articleNo, title, uid, regiTime, problemNo, nickname
+		FROM   questionboard q JOIN userinfo u
+		USING  (uid)
 		WHERE  problemNo = #{problemNo}
 	</select>
 	

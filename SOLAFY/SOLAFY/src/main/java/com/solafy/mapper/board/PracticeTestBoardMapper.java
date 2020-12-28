@@ -35,7 +35,7 @@ public interface PracticeTestBoardMapper {
 	/**
 	 * 모든 모의고사 반환
 	 * 
-	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
+	 * @return PracticeTestBoardDto의 List - 번호, uid, 제목, 등록시간, 시작시간, 종료시간, 별명 포함
 	 * @throws SQLException
 	 * 
 	 * @변경이력
@@ -46,7 +46,7 @@ public interface PracticeTestBoardMapper {
 	 * 모의고사 번호로 모의고사 상세 내용 반환
 	 * 
 	 * @param articleNo - int, 모의고사 번호
-	 * @return PracticeTestBoardDto - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간, 제한시간
+	 * @return PracticeTestBoardDto - 번호, uid, 제목, 등록시간, 시작시간, 종료시간, 제한시간, 별명 포함
 	 * @throws SQLException
 	 * 
 	 * @변경이력
@@ -54,21 +54,22 @@ public interface PracticeTestBoardMapper {
 	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws SQLException;
 
 	/**
-	 * 검색된 uid와 작성자 uid가 동일한 모의고사들 반환
+	 * 검색된 별명과 작성자 별명이 동일한 모의고사들 반환
 	 * 
-	 * @param uid - String, 검색된 uid
-	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
+	 * @param nickname - String, 검색된 nickname
+	 * @return PracticeTestBoardDto의 List - 번호, uid, 제목, 등록시간, 시작시간, 종료시간, 별명 포함
 	 * @throws SQLException
 	 * 
-	 * @변경이력
+	 * @변경이력 
+	 * 20-12-28 uid 검색에서 별명 검색으로 변경
 	 */
-	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String uid) throws SQLException;
+	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String nickname) throws SQLException;
 
 	/**
 	 * 검색된 키워드가 제목에 포함된 모의고사들 반환
 	 * 
 	 * @param title - String, 검색된 제목 키워드
-	 * @return PracticeTestBoardDto의 List - 번호, 작성자, 제목, 등록시간, 시작시간, 종료시간 포함
+	 * @return PracticeTestBoardDto의 List - 번호, uid, 제목, 등록시간, 시작시간, 종료시간, 별명 포함
 	 * @throws SQLException
 	 * 
 	 * @변경이력

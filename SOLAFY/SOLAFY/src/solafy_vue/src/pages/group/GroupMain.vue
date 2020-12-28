@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- itemlist - 자유게시판 시작-->
+    <!-- itemlist - 그룹 리스트 시작-->
     <q-table
       title="그룹 리스트"
       :data="data"
@@ -60,7 +60,6 @@ export default {
   data() {
     return {
       filter: "",
-      tab: "mails",
       path: "",
       pagination: {
         sortBy: "desc",

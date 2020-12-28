@@ -55,12 +55,13 @@ public class GroupController {
 	* @throws Exception
 	* @Method 설명 :그룹을 생성하고 success or fail 결과를 반환
 	* @변경이력 :
+	* 2020.12.28 /createGroup 경로 지정 및 그룹장 uid 받기
 	*/
 	@ApiOperation(value = "그룹을 생성하고 결과를 반환한다.", response = String.class)
-	@PostMapping
-	public ResponseEntity<String> createGroup(@RequestBody GroupDto group)throws Exception{
+	@PostMapping(value = "/createGroup/{uid}")
+	public ResponseEntity<String> createGroup(@RequestBody GroupDto group, @PathVariable String uid)throws Exception{
 		logger.debug("createGroup 호출");
-		if(groupService.createGroup(group))
+		if(groupService.createGroup(group, uid))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
@@ -156,6 +157,12 @@ public class GroupController {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 	
+	@ApiOperation(value = "그룹 이름 중복을 확인한다.", response = String.class)
+	@GetMapping(value = "/selectGroupMember/{groupNo}")
+	public ResponseEntity<List<GroupMemberDto>> selectGroupMember(@PathVariable int groupNo)throws Exception{
+		logger.debug("selectGroupMember 호출");
+		return new ResponseEntity<List<GroupMemberDto>>(groupService.selectGroupMember(groupNo), HttpStatus.OK);
+	}
 //	===================================================================== //
 	
 	

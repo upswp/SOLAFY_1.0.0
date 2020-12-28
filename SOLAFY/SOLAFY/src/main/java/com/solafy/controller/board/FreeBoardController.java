@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 * @작성자 : BUMSEOK SEO
 
 * @변경이력 :
+* 2020-12-28(BUMSEOK SEO) : 게시글 번호에 따른 게시글 반환 메서드 추가, 게시물 삭제 메서드 어노테이션 @DeleteMapping으로 변경
 * @프로그램 설명 : 자유게시판 관리를 위한 Controller
 */
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -43,23 +45,13 @@ public class FreeBoardController {
 	@Autowired
 	private FreeBoardService freeBoardService;
 	
-//	@ApiOperation(value = "~~~~를 반환한다", response = List.class)
-//	@GetMapping(value = "/판단해서 필요하면 value 넣기")
-//	public ResponseEntity<List<DTO 넣어주기>> retrieveBoard() throws Exception {
-//		logger.debug("retrieveBoard - 호출");
-//		return new ResponseEntity<List<DTO 넣어주기>>>(boardService.retrieveBoard(), HttpStatus.OK);
-//	}
-	
 	/**
-	* @Method Name : createArticle
-	* @작성일 : 2020. 12. 18
-	* @작성자 : BUMSEOK SEO
 	* @param freeBoardDto
 	* @return ResponseEntity<String> SUCCESS / FAIL
 	* @Method 설명 : 게시글을 등록하고 성공하면 SUCCECSS, 실패하면 FAIL을 반환
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유게시판에 게시글을 등록한다.", response = List.class)
+	@ApiOperation(value = "자유게시판에 게시글을 등록한다.", response = String.class)
 	@PostMapping(value = "/createArticle")
 	public ResponseEntity<String> createArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("createArticle - 호출" + new Date());
@@ -70,14 +62,25 @@ public class FreeBoardController {
 		}
 	}
 	
-	// TODO: 실제로 유저에게 보여지는 부분이니까 무작정 메서드와 같이 하긴 제한있을듯.33???
 	/**
-	* @Method Name : selectArticles
-	* @작성일 : 2020. 12. 19
-	* @작성자 : BUMSEOK SEO
-	* @return
+	 * @return List<FreeBoardDto> 게시글 list
+	 * @Method 설명 : 인자값은 없으며, 자유게시판의 모든 공지글을 반환한다.
+	 * @변경이력 :
+	 * 2020-12-28(BEOMSEOK SEO) : 공지사항 우선 순위 표시 필요성에 따른 해당 메서드 추가
+	 */
+	@ApiOperation(value = "자유게시판의 모든 공지글을 반환한다.", response = List.class)
+	@GetMapping(value="/selectAllNotices")
+	public List<FreeBoardDto> selectAllNotices(){
+		logger.info("selectNotices - 호출" + new Date());
+		List<FreeBoardDto> list = freeBoardService.selectAllNotices();
+		return list;
+	}
+	
+	/**
+	* @return List<FreeBoardDto> 게시글 list
 	* @Method 설명 : 인자값은 없으며, 자유게시판의 모든 게시글을 반환한다.
 	* @변경이력 :
+	* 2020-12-27(BUMSEOK SEO) : selectArticles에서 selectAllArticles로 메서드명 변경
 	*/
 	@ApiOperation(value = "자유게시판의 모든 게시글을 반환한다.", response = List.class)
 	@GetMapping(value="/selectAllArticles")
@@ -87,6 +90,27 @@ public class FreeBoardController {
 		return list;
 	}
 	
+	/**
+	* @param articleNo
+	* @return freeBoardDto
+	* @Method 설명 : 게시글 번호에 해당하는 게시글을 반환한다.
+	* @변경이력 :
+	* 2020-12-27(BUMSEOK SEO) : 해당 메서드 추가
+	*/
+	@ApiOperation(value = "게시글 번호에 해당하는 게시글을 반환한다", response = FreeBoardDto.class)
+	@GetMapping(value = "/selectArticleByArticleNo/{articleNo}")
+	public FreeBoardDto selectArticleByArticleNo(@PathVariable int articleNo){
+		logger.info("selectAtricleByArticleNo - 호출" + new Date());
+		FreeBoardDto freeBoardDto = freeBoardService.selectArticleByArticleNo(articleNo);
+		return freeBoardDto;
+	}
+
+	/**
+	* @param title
+	* @return List<FreeBoardDto> 게시글 list
+	* @Method 설명 : 입력한 키워드를 포함하는 제목의 게시글들을 반환한다.
+	* @변경이력 :
+	*/
 	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectArticleByTitle/{title}")
 	public List<FreeBoardDto> selectArticleByTitle(@PathVariable String title){
@@ -95,6 +119,12 @@ public class FreeBoardController {
 		return list;
 	}
 	
+	/**
+	* @param nickname
+	* @return List<FreeBoardDto> 게시글 list
+	* @Method 설명 : 입력한 닉네임에 해당하는 작성자의 게시글들을 반환한다.
+	* @변경이력 :
+	*/
 	@ApiOperation(value = "입력한 닉네임에 해당하는 게시글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectArticleByNickname/{nickname}")
 	public List<FreeBoardDto> selectArticleByNickname(@PathVariable String nickname){
@@ -104,16 +134,12 @@ public class FreeBoardController {
 	}
 	
 	/**
-	* @Method Name : updateArticle
-	* @작성일 : 2020. 12. 19
-	* @작성자 : BUMSEOK SEO
 	* @param freeBoardDto
-	* @param no
-	* @return
-	* @Method 설명 : 게시글 번호에 해당하는 게시물을 수정사항을 적용시킨다.
+	* @return ResponseEntity<String> SUCCESS / FAIL
+	* @Method 설명 : 게시물 수정을 한다. 성공하면 SUCCECSS, 실패하면 FAIL을 반환
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유 게시판의 게시글을 수정한다", response = List.class)
+	@ApiOperation(value = "자유 게시판의 게시글을 수정한다", response = String.class)
 	@PostMapping(value="/updateArticle")
 	public ResponseEntity<String> updateArticle(@RequestBody FreeBoardDto freeBoardDto){
 		logger.info("updateArticle - 호출" + new Date());
@@ -127,16 +153,13 @@ public class FreeBoardController {
 	}
 	
 	/**
-	* @Method Name : deleteArticle
-	* @작성일 : 2020. 12. 19
-	* @작성자 : BUMSEOK SEO
-	* @param ArticleNo
-	* @return
-	* @Method 설명 : 게시글번호에 해당하는 게시글을 삭제한다
+	* @param articleNo
+	* @return ResponseEntity<String> SUCCESS / FAIL
+	* @Method 설명 : 게시글번호에 해당하는 게시글을 삭제한다.  성공하면 SUCCECSS, 실패하면 FAIL을 반환
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "자유 게시판의 게시글을 삭제한다", response = List.class)
-	@PostMapping(value = "/deleteArticle/{articleNo}")
+	@ApiOperation(value = "자유 게시판의 게시글을 삭제한다", response = String.class)
+	@DeleteMapping(value = "/deleteArticle/{articleNo}")
 	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo){
 		logger.info("deleteArticle - 호출" + new Date());
 		if(freeBoardService.deleteArticle(articleNo)){
