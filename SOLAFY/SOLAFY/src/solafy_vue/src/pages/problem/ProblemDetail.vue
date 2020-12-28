@@ -39,8 +39,12 @@
             @click="goToproblemList"
           />
           <q-btn color="primary" label="문제답안제출" @click="goToResult" />
-          <q-btn color="positive" label="문제수정요청" @click="goToAnswerModify" />
-        <q-btn
+          <q-btn
+            color="positive"
+            label="문제수정요청"
+            @click="goToAnswerModify"
+          />
+          <q-btn
             color="positive"
             label="문제수정"
             outline
@@ -150,7 +154,13 @@ export default {
         this.data[3].content = this.item.problem.regiTime;
       })
       .catch(error => {
-        alert(error);
+        this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "error",
+            message: "조회 실패"
+          });
+        this.goToproblemList();
       })
       .finally(() => {
         this.loading = false;
@@ -166,7 +176,12 @@ export default {
         (type === 0 && this.answerChecklist == "") ||
         ((type === 1 || type === 2) && this.answerText == "")
       ) {
-        alert("정답 입력 필요");
+        this.$q.notify({
+            color: "warning",
+            textColor: "white",
+            icon: "warning",
+            message: "정답을 입력해주세요"
+          });
         return;
       }
       this.answerChecklist.sort();
@@ -191,18 +206,48 @@ export default {
             });
           })
           .catch(error => {
-            alert(error);
+            this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "error",
+            message: "채점 실패"
+          });
           })
           .finally(() => {
             this.loading = false;
           });
       } else if (type === 2) {
-        alert("주관식입니다");
+        this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "done",
+            message: "주관식입니다"
+          });
       }
     },
     goToAnswerModify() {},
     goToproblemUpdate() {},
-    problemDelete() {}
+    problemDelete() {
+      axios
+        .delete("problem/delete/" + this.item.problem.problemNo)
+        .then(Response => {
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "done",
+            message: "삭제 완료"
+          });
+          this.goToproblemList();
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "삭제 실패"
+          });
+        });
+    }
   }
 };
 </script>
