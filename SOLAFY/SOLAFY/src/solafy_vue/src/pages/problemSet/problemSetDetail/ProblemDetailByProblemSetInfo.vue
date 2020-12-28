@@ -12,6 +12,9 @@
             <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
           </div>
         </div>
+        <div class="q-pa-md">
+          <q-btn color="purple" @click="showLoading" label="Show Loading" />
+        </div>
       </div>
       <!-- contents -->
       <div class="col">
@@ -190,6 +193,7 @@ export default {
     },
     //ProblemSetDelete 반환
     ProblemSetDelete: function() {
+      this.showLoading();
       Axios.get(
         "/problem/problemset/deleteProblemSet" +
           this.item.problemSet.problemSetNo
@@ -211,6 +215,16 @@ export default {
             message: "삭제 실패"
           });
         });
+    },
+    // show LoadingPage
+    showLoading() {
+      this.$q.loading.show();
+
+      // hiding in 2s
+      this.timer = setTimeout(() => {
+        this.$q.loading.hide();
+        this.timer = void 0;
+      }, 2000);
     },
     //ProblemDetailByProblem 이동
     GoProblemSolving: function() {
@@ -239,6 +253,12 @@ export default {
       return Math.ceil(
         this.item.problemList.length / this.pagination.rowsPerPage
       );
+    }
+  },
+  beforeDestroy() {
+    if (this.timer !== void 0) {
+      clearTimeout(this.timer);
+      this.$q.loading.hide();
     }
   }
 };
