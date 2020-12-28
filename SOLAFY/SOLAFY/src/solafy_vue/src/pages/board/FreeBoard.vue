@@ -1,9 +1,10 @@
 <template>
   <div>
     <h3>FreeBoard</h3>
-    <!-- 글 등록하기 시작 -->
 
+    <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
     <div v-if="showFlag == 'write'">
+      <!-- 등록 정보 확인용 badge 시작 -->
       <q-badge color="secondary" multi-line>
         title: "{{ article.title }}" <br />
         contents: "{{ article.contents }}" <br />
@@ -13,6 +14,9 @@
         isgroup: "{{ article.isGroup }}" <br />
         showFlag: "{{ showFlag }}" <br />
       </q-badge>
+      <!-- 등록 정보 확인용 badge 끝 -->
+
+      <!-- 글 등록 form 시작 -->
       <q-input
         v-model="article.title"
         label="제목"
@@ -33,10 +37,11 @@
       </div>
       <q-btn color="primary" label="글 등록" @click="createArticle" />
       <q-btn color="red" label="취소" @click="goToFreeBoard" />
+      <!-- 글 등록 form 끝 -->
     </div>
     <!-- 글 등록하기 끝 -->
 
-    <!-- 글 상세보기 시작 -->
+    <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
     <div v-else-if="showFlag == 'detail'">
       title: "{{ article.title }}" <br />
       contents: "{{ article.contents }}" <br />
@@ -51,9 +56,10 @@
     </div>
     <!-- 글 상세 보기 끝 -->
 
-    <!-- 글 수정하기 시작 -->
+    <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
     <div v-else-if="showFlag == 'update'">
       <h3>수정!</h3>
+      <!-- 수정정보 확인용 badge 시작 -->
       <q-badge color="secondary" multi-line>
         title: "{{ article.title }}" <br />
         contents: "{{ article.contents }}" <br />
@@ -63,12 +69,15 @@
         isgroup: "{{ article.isGroup }}" <br />
         showFlag: "{{ showFlag }}" <br />
       </q-badge>
+      <!-- 수정정보 확인용 badge 끝 -->
+
+      <!-- 글 수정 form 시작 -->
       <q-input
         v-model="article.title"
         label="제목"
         stack-label
         aria-placeholder="제목을 입력해주세요"
-        :dense="dense"
+        dense
       />
       <div class="q-pa-md" style="max-width: 300px">
         <q-input
@@ -83,11 +92,13 @@
       </div>
       <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
       <q-btn color="red" label="취소" @click="goToFreeBoard" />
+      <!-- 글 수정 form 끝 -->
     </div>
     <!-- 글 수정하기 끝 -->
 
     <!-- 글 목록보기 시작 -->
     <div>
+      <!-- 글쓰기 버튼(showFlag가 list일 때만 표시한다) -->
       <q-btn
         v-if="showFlag == 'list'"
         color="secondary"
@@ -100,7 +111,6 @@
             Selection: "{{ selection }}"<br />
             showFlag: "{{ showFlag }}" <br />
           </q-badge>
-          <!-- 선택한 내용은 model에 담긴다 -->
           <q-select
             filled
             v-model="selection"
@@ -128,7 +138,8 @@
           <q-icon name="search" @click="selectArticle" />
         </template>
       </q-input>
-      <!-- start of q-markup-table -->
+
+      <!-- q-markup-table 시작 -->
       <q-markup-table>
         <thead>
           <tr>
@@ -153,13 +164,16 @@
           </tr>
         </tbody>
       </q-markup-table>
-      <!-- end of q-markup-table -->
+      <!-- q-markup-table 끝 -->
+
+      <!-- q-table 시작 -->
       <q-table
-        title="Treats"
+        title="q-table이용한 목록⬇"
         :data="articles"
         :columns="columns"
         row-key="name"
       />
+      <!-- q-table 끝 -->
     </div>
     <!-- 글 목록보기 끝 -->
   </div>
@@ -260,6 +274,7 @@ export default {
           })
           .finally(() => (this.loading = false));
       } else {
+        // 제목이 아닌 경우 == 작성자일 경우
         Axios.get(`/free/selectArticleByNickname/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
@@ -270,6 +285,7 @@ export default {
           .finally(() => (this.loading = false));
       }
     },
+    // 글쓰기 버튼을 누르면 showFlag를 write로 변경
     showWrite: function() {
       this.showFlag = "write";
     },
@@ -315,10 +331,14 @@ export default {
         return;
       }
     },
+    // 목록으로 돌아갈때는 입력(바인딩)했던 내용 초기화 후
+    // showFlag를 list로 바꿈
     goToFreeBoard: function() {
       this.resetForm();
       this.showFlag = "list";
     },
+
+    // 입력 form 초기화는 title, contents, isNotice에 적용된다
     resetForm: function() {
       this.article.title = null;
       this.article.contents = null;
