@@ -29,7 +29,7 @@ public interface FreeBoardService {
 	 * @param ArticleNo
 	 * @return FreeBoardDto(해당 번호에 해당하는 게시글)
 	 */
-	public FreeBoardDto selectArticleByNo(int ArticleNo);
+	public FreeBoardDto selectArticleByArticleNo(int ArticleNo);
 
 	/**
 	 * 입력한 게시글 제목에 해당하는 게시글 반환
@@ -61,4 +61,6 @@ public interface FreeBoardService {
 	 * @return boolean, 성공적으로 삭제 되었을 경우 true 반환
 	 */
 	public boolean deleteArticle(int ArticleNo);
+
+
 }
