@@ -54,13 +54,17 @@ export default {
         .signInWithEmailAndPassword(this.formData.email, this.formData.password)
         .then(Response => {
           console.log(Response);
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "인증 성공"
-          });
-          this.$router.push("main");
+          if (firebaseAuth.currentUser.emailVerified) {
+            this.$q.notify({
+              color: "green",
+              textColor: "white",
+              icon: "cloud_done",
+              message: "로그인 성공"
+            });
+            this.$router.push("main");
+          } else {
+            this.$router.push("/VerifyEmailWarn");
+          }
         })
         .catch(error => {
           console.log(error);
@@ -68,7 +72,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "warning",
-            message: "인증 실패"
+            message: "로그인 실패"
           });
         });
     },
