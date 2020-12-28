@@ -27,20 +27,19 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Autowired
 	private PracticeTestBoardMapper practiceTestMapper;
 
+	@Transactional
 	@Override
 	public boolean createPracticeTest(PracticeTestBoardDto pDto) throws Exception {
 		if (pDto.getProblems().size() <= 0)
 			return false;
-		List<ProblemDto> problems = pDto.getProblems();
+
 		// 모의고사 정보 등록
 		practiceTestMapper.createPracticeTest(pDto);
-		System.out.println("articleNo  " + pDto.getArticleNo());
 
 		// 모의고사와 문제들 매핑
 		Map<String, Integer> map = new HashMap<>();
 		map.put("articleNo", pDto.getArticleNo());
-		for (ProblemDto problem : problems) {
-			System.out.println(problem.getProblemNo());
+		for (ProblemDto problem : pDto.getProblems()) {
 			map.put("problemNo", problem.getProblemNo());
 			practiceTestMapper.createPracticeTestMapping(map);
 		}
