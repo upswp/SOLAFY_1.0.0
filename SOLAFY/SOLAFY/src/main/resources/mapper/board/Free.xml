@@ -67,7 +67,7 @@
 		select articleNo, nickname,title, regiTime, likeCount
 		from freeboard fb join userinfo ui
         on fb.uid = ui.uid
-		where title LIKE CONCAT('%', #{title}, '%')
+		where title LIKE CONCAT('%', #{title}, '%') and isNotice = 0
 	</select>
 	
 	<!--
@@ -78,7 +78,7 @@
 		select articleNo, nickname,title, regiTime, likeCount 
 		from freeboard fb join userinfo ui
         on fb.uid = ui.uid
-		where nickname = #{nickname}
+		where nickname = #{nickname} and isNotice = 0
 	</select>
 	
 	<!--
