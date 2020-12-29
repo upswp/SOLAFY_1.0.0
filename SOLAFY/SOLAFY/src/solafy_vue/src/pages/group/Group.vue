@@ -1,5 +1,6 @@
-<template
-  ><div>
+<template>
+  <!-- https://codepen.io/metalsadman/full/ZgKexK -->
+  <div>
     <!-- tab bar 시작 -->
     <q-card>
       <q-tabs v-model="tab" narrow-indicator dense align="justify">
@@ -34,8 +35,7 @@
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="notice">
-          <div class="text-h6">그룹 공지</div>
-          자유게시판 가지고와야함
+          <free-board></free-board>
         </q-tab-panel>
 
         <q-tab-panel name="problemSet">
@@ -186,20 +186,25 @@
               <q-tab-panel name="groupMember">
                 <div>
                   <!-- itemlist - 그룹원 보기 시작-->
+
                   <q-table
-                    title="그룹원 관리"
+                    flat
+                    bordered
+                    class="statement-table"
+                    title="회원관리"
                     :data="groupMembers"
-                    :columns="columns"
-                    row-key="name"
+                    :hide-header="mode === 'grid'"
+                    :columns="currencyColumns"
+                    row-key="__index"
+                    :grid="mode == 'grid'"
                     :filter="filter"
-                    gird-header
+                    virtual-scroll
                     :pagination.sync="pagination"
-                    hide-pagination
-                    @row-click="clickRow"
+                    :rows-per-page-options="[0]"
                   >
                     <template v-slot:top-right>
                       <q-input
-                        borderless
+                        outlined
                         dense
                         debounce="300"
                         v-model="filter"
@@ -209,21 +214,287 @@
                           <q-icon name="search" />
                         </template>
                       </q-input>
+
+                      <!-- grid버튼 -->
+                      <q-btn
+                        flat
+                        round
+                        dense
+                        :icon="mode === 'grid' ? 'list' : 'grid_on'"
+                        @click="mode = mode === 'grid' ? 'list' : 'grid'"
+                      >
+                        <q-tooltip
+                          :disable="$q.platform.is.mobile"
+                          v-close-popup
+                          >{{ mode === "grid" ? "List" : "Grid" }}</q-tooltip
+                        >
+                      </q-btn>
+                      <div class="q-pa-sm q-gutter-sm"></div>
                     </template>
-                    <template v-slot:body-cell-btn="props">
+                    <!-- grid버튼 -->
+
+                    <!-- status -->
+                    <template #body-cell-grade="props">
                       <q-td :props="props">
-                        <div>
-                          <q-btn color="primary">권한</q-btn>
-                          <q-btn color="orange">추방</q-btn>
-                        </div>
-                        <div class="my-table-details">
-                          {{ props.row.details }}
-                        </div>
+                        <q-chip
+                          :color="
+                            props.row.grade == '1'
+                              ? 'green'
+                              : props.row.grade == '2'
+                              ? 'red'
+                              : props.row.grade == '3'
+                              ? 'primary'
+                              : props.row.grade == '99'
+                              ? 'orange'
+                              : 'grey'
+                          "
+                          text-color="white"
+                          dense
+                          class="text-weight-bolder"
+                          square
+                          v-text="
+                            props.row[props.col.name] == '1'
+                              ? '그룹장'
+                              : props.row[props.col.name] == '2'
+                              ? '관리자'
+                              : props.row[props.col.name] == '3'
+                              ? '일반회원'
+                              : props.row[props.col.name] == '99'
+                              ? '가입대기'
+                              : '정체불명'
+                          "
+                        ></q-chip>
                       </q-td>
+                    </template>
+                    <!-- status -->
+
+                    <!-- action -->
+                    <template #body-cell-action="props">
+                      <q-td>
+                        <q-btn
+                          dense
+                          flat
+                          round
+                          color="blue"
+                          field="edit"
+                          icon="edit"
+                          @click="editItem(props.row)"
+                        ></q-btn>
+                        <q-btn
+                          dense
+                          flat
+                          round
+                          color="red"
+                          field="deleteMember"
+                          icon="delete_forever"
+                          @click="confirmDelete(props.row)"
+                        ></q-btn>
+                      </q-td>
+                    </template>
+                    <!-- action -->
+
+                    <template v-slot:item="props">
+                      <div
+                        class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
+                        :style="props.selected ? 'transform: scale(0.95);' : ''"
+                      >
+                        <q-card :class="props.selected ? 'bg-grey-2' : ''">
+                          <q-list dense>
+                            <q-item v-for="col in props.cols" :key="col.name">
+                              <q-item-section>
+                                <q-item-label>{{ col.label }}</q-item-label>
+                              </q-item-section>
+                              <q-item-section side>
+                                <q-chip
+                                  v-if="col.name === 'grade'"
+                                  :color="
+                                    props.row.grade == '1'
+                                      ? 'green'
+                                      : props.row.grade == '2'
+                                      ? 'red'
+                                      : props.row.grade == '3'
+                                      ? 'primary'
+                                      : props.row.grade == '99'
+                                      ? 'orange'
+                                      : 'grey'
+                                  "
+                                  text-color="white"
+                                  dense
+                                  class="text-weight-bolder"
+                                  square
+                                  v-text="
+                                    props.row.grade == '1'
+                                      ? '그룹장'
+                                      : props.row.grade == '2'
+                                      ? '관리자'
+                                      : props.row.grade == '3'
+                                      ? '일반회원'
+                                      : props.row.grade == '99'
+                                      ? '가입대기'
+                                      : '정체불명'
+                                  "
+                                ></q-chip>
+                                <q-btn
+                                  v-else-if="col.name === 'action'"
+                                  dense
+                                  flat
+                                  color="primary"
+                                  field="edit"
+                                  icon="edit"
+                                  @click="editItem(props.row)"
+                                ></q-btn>
+                                <q-item-label
+                                  v-else
+                                  caption
+                                  :class="col.classes ? col.classes : ''"
+                                  >{{ col.value }}</q-item-label
+                                >
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-card>
+                      </div>
                     </template>
                   </q-table>
 
+                  <q-dialog v-model="show_dialog">
+                    <q-card style="width: 600px; max-width: 60vw">
+                      <q-card-section>
+                        <q-btn
+                          round
+                          flat
+                          dense
+                          icon="close"
+                          class="float-right"
+                          color="grey-8"
+                          v-close-popup
+                        ></q-btn>
+                        <div class="text-h6">회원 관리</div>
+                      </q-card-section>
+                      <q-separator inset></q-separator>
+                      <q-card-section class="q-pt-none">
+                        <q-form class="q-gutter-md">
+                          <q-list>
+                            <q-item>
+                              <q-item-section>
+                                <q-item-label class="q-pb-xs"
+                                  >닉네임</q-item-label
+                                >
+                                <q-input
+                                  dense
+                                  outlined
+                                  v-model="editedItem.nickName"
+                                  readonly
+                                />
+                              </q-item-section>
+                            </q-item>
+                            <q-item>
+                              <q-item-section>
+                                <q-item-label class="q-pb-xs"
+                                  >상태 메세지</q-item-label
+                                >
+                                <q-input
+                                  dense
+                                  outlined
+                                  v-model="editedItem.statusMessage"
+                                  readonly
+                                />
+                              </q-item-section>
+                            </q-item>
+                            <q-item>
+                              <q-item-section>
+                                <q-item-label class="q-pb-xs"
+                                  >가입 메세지</q-item-label
+                                >
+                                <q-input
+                                  dense
+                                  outlined
+                                  v-model="editedItem.regiMessage"
+                                  readonly
+                                />
+                              </q-item-section>
+                            </q-item>
+                            <q-item>
+                              <q-item-section>
+                                <q-item-label class="q-pb-xs"
+                                  >상태</q-item-label
+                                >
+                                <div class="q-gutter-sm">
+                                  <q-radio
+                                    keep-color
+                                    v-model="editedItem.grade"
+                                    val="2"
+                                    label="관리자"
+                                    color="red"
+                                  />
+                                  <q-radio
+                                    keep-color
+                                    v-model="editedItem.grade"
+                                    val="3"
+                                    label="일반회원"
+                                    color="primary"
+                                  />
+                                </div>
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-form>
+                      </q-card-section>
+                      <q-card-section>
+                        <q-card-actions align="right">
+                          <q-btn
+                            flat
+                            label="Cancel"
+                            color="warning"
+                            dense
+                            v-close-popup
+                          ></q-btn>
+                          <q-btn
+                            flat
+                            label="OK"
+                            color="primary"
+                            dense
+                            v-close-popup
+                            @click="updateRow"
+                          ></q-btn>
+                        </q-card-actions>
+                      </q-card-section>
+                    </q-card>
+                  </q-dialog>
                   <!-- itemlist - 그룹원 보기 끝-->
+
+                  <q-dialog v-model="confirm" persistent>
+                    <q-card>
+                      <q-card-section class="row items-center">
+                        <q-avatar
+                          icon="outlet"
+                          color="red"
+                          text-color="white"
+                        />
+                        <span class="q-ml-sm">
+                          [{{ editedItem.nickName }}]님을 정말 탈퇴
+                          시키겠습니까?
+                        </span>
+                      </q-card-section>
+
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="취소"
+                          color="primary"
+                          v-close-popup
+                        />
+                        <q-btn
+                          flat
+                          label="탈퇴"
+                          color="red"
+                          @click="deleteMember()"
+                          v-close-popup
+                        />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+
                   <h1 :v-text="path"></h1>
                   <div class="q-pa-lg flex flex-center">
                     <q-pagination
@@ -246,18 +517,83 @@
 
 <script>
 import axios from "axios";
+import FreeBoard from "../board/FreeBoard.vue";
+const defaultItem = {
+  uid: "",
+  groupNo: "",
+  grade: "",
+  statusMessage: "",
+  regiMessage: "",
+  nickName: ""
+};
+
+const currencyColumns = [
+  {
+    name: "nickName",
+    align: "center",
+    label: "닉네임",
+    field: "nickName",
+    sortable: true,
+    classes: "text-black"
+  },
+
+  {
+    name: "statusMessage",
+    align: "center",
+    label: "소개",
+    field: "statusMessage",
+    sortable: true,
+    classes: "text-black"
+  },
+  {
+    name: "grade",
+    align: "center",
+    label: "가입 상태",
+    field: "grade",
+    sortable: true
+  },
+
+  {
+    name: "action",
+    align: "left",
+    label: "관리",
+    field: "action"
+  }
+];
+
+const currencies = [];
 export default {
+  components: { FreeBoard },
   data() {
     return {
+      inFs: false,
+
+      confirm: false,
+
+      noti: () => {},
+      show_dialog: false,
+      editedIndex: -1,
+      editedItem: defaultItem,
+      mode: "list",
+      currencyColumns: currencyColumns,
+      groupMembers: [],
+
+      page: 1,
+      totalRecord: 0,
+      pageCount: 1,
+
       tab: "notice",
       innertab: "group",
       filter: "",
       path: "",
       // TODO : createGroup와 동일하니까 이거 묶어서 component로 만들기
       groupData: {
-        description: "",
-        title: "",
-        type: ""
+        uid: "",
+        groupNo: "",
+        grade: "",
+        statusMessage: "",
+        regiMessage: "",
+        nickName: ""
       },
       check: false,
       checkColor: "red",
@@ -267,7 +603,7 @@ export default {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 3
+        rowsPerPage: 10
         // rowsNumber: xx if getting data from a server
       },
       columns: [
@@ -294,13 +630,8 @@ export default {
           field: "grade",
           sortable: true,
           sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
-        },
-        {
-          name: "btn",
-          label: ""
         }
-      ],
-      groupMembers: []
+      ]
     };
   },
   methods: {
@@ -348,39 +679,97 @@ export default {
           message: "그룹명 중복 체크 필요"
         });
       }
+    },
+    permission() {},
+
+    editItem(item) {
+      this.editedIndex = this.groupMembers.findIndex(
+        (v, i) => v.__index === item.__index
+      );
+      this.editedItem = Object.assign({}, item);
+      this.editedItem.grade = this.editedItem.grade.toString();
+      this.show_dialog = true;
+    },
+    close() {
+      this.show_dialog = false;
+      setTimeout(() => {
+        this.editedItem = defaultItem;
+        this.editedIndex = -1;
+      }, 300);
+    },
+    updateRow() {
+      // this.groupMembers.splice(this.editedIndex, 1, this.editedItem);
+      axios
+        .put("group/updateGroupApplyConfirm", this.editedItem)
+        .then(Response => {
+          this.getGroupMember();
+        })
+        .catch(error => {});
+      this.$q.notify({
+        type: "positive",
+        message: `Item '${this.editedItem.nickName}' updated.`,
+        timeout: 500
+      });
+    },
+    getGroupMember() {
+      axios
+        .get("group/selectGroupMember/" + this.$route.params.groupNo)
+        .then(Response => {
+          this.groupMembers = Response.data;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        });
+    },
+    getGroupInfo() {
+      axios
+        .get("group/selectGroupByNo/" + this.$route.params.groupNo)
+        .then(Response => {
+          this.groupData = Response.data;
+          if (this.groupData.type == 1) this.groupType = "1";
+          else this.groupType = "0";
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        });
+    },
+    confirmDelete(item) {
+      this.editedIndex = this.groupMembers.findIndex(
+        (v, i) => v.__index === item.__index
+      );
+      this.editedItem = Object.assign({}, item);
+      this.confirm = true;
+    },
+    deleteMember() {
+      axios
+        .delete("group/deleteGroupMember", {
+          data: {
+            uid: this.editedItem.uid,
+            groupNo: this.editedItem.groupNo
+          }
+        })
+        .then(Response => {
+          this.getGroupMember();
+        })
+        .catch(error => {});
     }
   },
 
   mounted() {
-    axios
-      .get("group/selectGroupMember/" + this.$route.params.groupNo)
-      .then(Response => {
-        this.groupMembers = Response.data;
-        console.log(this.groupMembers);
-      })
-      .catch(error => {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "조회 실패"
-        });
-      });
-    axios
-      .get("group/selectGroupByNo/" + this.$route.params.groupNo)
-      .then(Response => {
-        this.groupData = Response.data;
-        if (this.groupData.type == 1) this.groupType = "1";
-        else this.groupType = "0";
-      })
-      .catch(error => {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "조회 실패"
-        });
-      });
+    this.getGroupMember();
+    this.getGroupInfo();
+    // add indices
+    this.groupMembers = this.groupMembers.map((v, i) => ({ ...v, __index: i }));
   },
   computed: {
     pagesNumber() {

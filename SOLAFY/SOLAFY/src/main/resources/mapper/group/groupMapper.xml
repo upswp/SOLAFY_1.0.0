@@ -45,11 +45,12 @@
  </select>
  
  <select id="selectGroupMember" parameterType="int" resultType="GroupMemberDto">
-	select ui.nickname, gm.grade, ui.statusMessage, groupNo
+	select ui.nickname, gm.grade, ui.statusMessage, groupNo, gm.uid, gm.regiMessage
 	from solafy.groupmember as gm
 	join solafy.userinfo as ui
 	on gm.uid = ui.uid
-	where gm.groupNo = #{groupNo};
+	where gm.groupNo = #{groupNo}
+	order by gm.grade asc;
  </select>
  
  <update id="updateGroup" parameterType="GroupDto" >
