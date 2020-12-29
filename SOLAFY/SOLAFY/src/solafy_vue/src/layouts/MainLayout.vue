@@ -177,7 +177,9 @@ export default {
     }
   },
   methods: {
-    goMypage() {},
+    goMypage() {
+      this.$router.push("MyPage");
+    },
     goRegi() {
       this.$router.push("UserRegi");
     },
