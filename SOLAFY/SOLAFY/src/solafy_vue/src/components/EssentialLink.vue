@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable tag="a" :to="link">
+  <q-item clickable tag="a" @click="onclick">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { firebaseAuth } from "boot/firebase";
+
 export default {
   name: "EssentialLink",
   props: {
@@ -35,6 +37,13 @@ export default {
     icon: {
       type: String,
       default: ""
+    }
+  },
+  methods: {
+    onclick() {
+      if (this.title == "About" || firebaseAuth.currentUser != null)
+        this.$router.push(this.link);
+      else this.$router.push("/");
     }
   }
 };
