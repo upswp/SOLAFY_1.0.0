@@ -35,18 +35,6 @@ framework: [
 ]
 ```
 
-##### src/boot/tiptap.js 생성
-
-```javascript
-import Vue from 'vue'
-import { QuasarTiptapPlugin, RecommendedExtensions } from 'quasar-tiptap'
-
-Vue.use(QuasarTiptapPlugin, {
-  language: 'zh-hans',
-  spellcheck: true
-})
-```
-
 ##### Import Component
 
 ```javascript
