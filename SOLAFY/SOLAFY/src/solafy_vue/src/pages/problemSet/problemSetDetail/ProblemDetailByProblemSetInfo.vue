@@ -28,13 +28,13 @@
           </div>
         </div>
         <div class="row justify-center">
-          <div class="col-12 col-md-auto" id="contents">
-            <p>총 문제 : {{ item.problemList.length }}</p>
+          <div class="col-12 col-md-auto">
+            <h5>총 문제 : {{ item.problemList.length }}</h5>
           </div>
         </div>
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
-            <div>
+            <!-- <div>
               <q-item
                 clickable
                 v-ripple
@@ -46,9 +46,8 @@
                   <q-item-label caption v-html="problem.title"> </q-item-label>
                 </q-item-section>
               </q-item>
-            </div>
+            </div> -->
             <div class="q-pa-md">
-              <p>총 문제 : {{ item.problemList.length }}</p>
               <q-table
                 title="문제 List"
                 :data="item.problemList"
@@ -164,7 +163,7 @@ export default {
   methods: {
     //ProblemSet Contents - table 반환
     selectProblemByNo: function() {
-      this.showLoading();
+      //   this.showLoading();
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
           this.$route.params.problemSetNo
@@ -192,8 +191,8 @@ export default {
     //ProblemSetDelete 반환
     ProblemSetDelete: function() {
       this.showLoading();
-      Axios.get(
-        "/problem/problemset/deleteProblemSet" +
+      Axios.delete(
+        "/problem/problemset/deleteProblemSet/" +
           this.item.problemSet.problemSetNo
       )
         .then(Response => {
