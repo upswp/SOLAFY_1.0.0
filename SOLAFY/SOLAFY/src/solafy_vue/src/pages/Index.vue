@@ -22,7 +22,12 @@
           val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
         ]"
       />
-      <q-toggle v-model="formData.accept" label="이메일 저장" />
+      <q-toggle
+        false-value="false"
+        true-value="true"
+        v-model="idsave"
+        label="이메일 저장"
+      />
       <div>
         <q-btn label="login" type="submit" color="positive" />
         <q-btn label="reset" type="reset" color="negative" flat class="q-ml" />
@@ -42,14 +47,19 @@ export default {
     return {
       formData: {
         email: "",
-        password: "",
-        accept: false
-      }
+        password: ""
+      },
+      idsave: null
     };
+  },
+  mounted() {
+    this.idsave = localStorage.idsave;
+    this.formData.email = localStorage.email;
   },
   methods: {
     ...mapActions("store", ["loginUser"]),
     onSubmit() {
+      this.checkidsave();
       firebaseAuth
         .signInWithEmailAndPassword(this.formData.email, this.formData.password)
         .then(Response => {
@@ -80,10 +90,18 @@ export default {
     onReset() {
       this.formData.email = null;
       this.formData.password = null;
-      this.accept = false;
     },
     goUserRegi() {
       this.$router.push("UserRegi");
+    },
+    checkidsave() {
+      if (this.idsave) {
+        localStorage.idsave = true;
+        localStorage.email = this.formData.email;
+      } else {
+        localStorage.idsave = false;
+        localStorage.email = "";
+      }
     }
   }
 };
