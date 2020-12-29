@@ -12,9 +12,6 @@
             <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
           </div>
         </div>
-        <div class="q-pa-md">
-          <q-btn color="purple" @click="showLoading" label="Show Loading" />
-        </div>
       </div>
       <!-- contents -->
       <div class="col">
@@ -167,6 +164,7 @@ export default {
   methods: {
     //ProblemSet Contents - table 반환
     selectProblemByNo: function() {
+      this.showLoading();
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
           this.$route.params.problemSetNo
