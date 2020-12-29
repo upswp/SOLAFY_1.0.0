@@ -177,7 +177,9 @@ export default {
     }
   },
   methods: {
-    goMypage() {},
+    goMypage() {
+      this.$router.push("MyPage");
+    },
     goRegi() {
       this.$router.push("UserRegi");
     },
@@ -188,7 +190,7 @@ export default {
       firebaseAuth.signOut();
       console.log(this.$router.currentRoute);
 
-      this.$router.push(this.$router.currentRoute);
+      this.$router.push("/main");
     },
     goUserManage() {}
   }

@@ -156,7 +156,12 @@ const routes = [
       {
         path: "/userRegi",
         name: "UserRegi",
-        component: () => import("pages/user/CreateUser.vue")
+        component: () => import("pages/user/CreateUser.vue"),
+        beforeEnter: (to, from, next) => {
+          if (firebaseAuth.currentUser == null)
+            return next();
+          next('/main');
+        }
       },
       {
         path: "/verifyEmailWarn",
@@ -166,7 +171,13 @@ const routes = [
           return next('/main');
         next();
         }
-      }
+      },
+      {
+        path: "/mypage",
+        name: "MyPage",
+        component: () => import("pages/user/MyPage.vue"),
+        beforeEnter: requireAuth()
+      },
     ]
   },
 
