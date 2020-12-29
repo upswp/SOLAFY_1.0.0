@@ -64,18 +64,15 @@ export default {
         .signInWithEmailAndPassword(this.formData.email, this.formData.password)
         .then(Response => {
           console.log(Response);
-          if (firebaseAuth.currentUser.emailVerified) {
-            firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-            this.$q.notify({
-              color: "green",
-              textColor: "white",
-              icon: "cloud_done",
-              message: "로그인 성공"
-            });
-            this.$router.push("main");
-          } else {
-            this.$router.push("/VerifyEmailWarn");
-          }
+
+          firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+          this.$q.notify({
+            color: "green",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "로그인 성공"
+          });
+          this.$router.push("main");
         })
         .catch(error => {
           console.log(error);

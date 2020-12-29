@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable tag="a" @click="onclick">
+  <q-item clickable tag="a" @click="onclick" :to="link">
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
     </q-item-section>
@@ -37,14 +37,6 @@ export default {
     icon: {
       type: String,
       default: ""
-    }
-  },
-  methods: {
-    onclick() {
-      if (!firebaseAuth.currentUser.emailVerified) return;
-      if (this.title == "About" || firebaseAuth.currentUser != null)
-        this.$router.push(this.link);
-      else this.$router.push("/");
     }
   }
 };

@@ -187,12 +187,8 @@ export default {
     logout() {
       firebaseAuth.signOut();
       console.log(this.$router.currentRoute);
-      if (
-        this.$router.currentRoute.link == "/about" ||
-        this.$router.currentRoute.link == "/main"
-      )
-        this.$router.push(this.$router.currentRoute);
-      else this.$router.push("/main");
+
+      this.$router.push(this.$router.currentRoute);
     },
     goUserManage() {}
   }
