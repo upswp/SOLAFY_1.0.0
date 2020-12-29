@@ -102,7 +102,9 @@ module.exports = function(/* ctx */) {
         "QItemSection",
         "QItem",
         "QItemLabel",
-        "QAvatar"
+        "QAvatar",
+        "QList",
+        "QSpinner"
       ],
       directives: ["ClosePopup"],
 
