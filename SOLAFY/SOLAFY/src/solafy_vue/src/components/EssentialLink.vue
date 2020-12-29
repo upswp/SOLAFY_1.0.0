@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     onclick() {
+      if (!firebaseAuth.currentUser.emailVerified) return;
       if (this.title == "About" || firebaseAuth.currentUser != null)
         this.$router.push(this.link);
       else this.$router.push("/");

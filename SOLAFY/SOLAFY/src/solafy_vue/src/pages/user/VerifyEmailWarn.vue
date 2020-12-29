@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h6>이메일 인증이 완료되지 않았습니다. 메일함을 확인해주세요.</h6>
-    <q-btn label="로그인" color="primary" @click="goindex"></q-btn>
+    <h6>이메일 인증이 완료되지 않았습니다. 인증 완료 후 다시 로그인 하세요.</h6>
     <q-expansion-item v-model="expanded" icon="mail" label="이메일 변경하기">
       <q-card>
         <q-card-section>
