@@ -7,20 +7,22 @@ package com.solafy.model;
  * @Date 2020. 12. 27.
  * @Author 이주희
  * 
- * @변경이력 20-12-28 admin 추가
+ * @변경이력 
+ * 20-12-28 admin 추가
+ * 20-12-30 admin type 변경 (boolean -> byte)
  */
 
 public class UserDto {
 	private String uid;
 	private String nickname;
 	private String statusMessage;
-	private boolean admin;
+	private byte admin;
 
 	public UserDto() {
 		super();
 	}
 
-	public UserDto(String uid, String nickname, String statusMessage, boolean admin) {
+	public UserDto(String uid, String nickname, String statusMessage, byte admin) {
 		super();
 		this.uid = uid;
 		this.nickname = nickname;
@@ -52,11 +54,11 @@ public class UserDto {
 		this.statusMessage = statusMessage;
 	}
 
-	public boolean isAdmin() {
+	public byte getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(boolean admin) {
+	public void setAdmin(byte admin) {
 		this.admin = admin;
 	}
 
