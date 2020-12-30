@@ -16,6 +16,7 @@
         </q-toolbar-title>
 
         <div class="cursor-pointer non-selectable">
+          <span v-if="loginUser != null">{{ loginUser.email }}</span>
           <q-btn flat dense round icon="account_circle" aria-label="Menu">
             <q-menu>
               <q-list dense style="min-width: 100px">
@@ -155,10 +156,12 @@ export default {
       essentialLinks: linksData,
       admin: "none",
       mem: "",
-      non: ""
+      non: "",
+      loginUser: null
     };
   },
   mounted: function() {
+    this.loginUser = firebaseAuth.currentUser;
     if (firebaseAuth.currentUser != null) {
       this.non = "none";
       this.mem = "";
@@ -168,6 +171,7 @@ export default {
     }
   },
   updated: function() {
+    this.loginUser = firebaseAuth.currentUser;
     if (firebaseAuth.currentUser != null) {
       this.non = "none";
       this.mem = "";
@@ -188,8 +192,9 @@ export default {
     },
     logout() {
       firebaseAuth.signOut();
-      if (this.$$router.currentRoute.path == "/main") this.$router.push("/");
-      this.$router.push("/main");
+      this.loginUser = null;
+      if (this.$router.currentRoute.path == "/main") this.$router.push("/");
+      else this.$router.push("/main");
     },
     goUserManage() {}
   }
