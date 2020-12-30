@@ -197,6 +197,12 @@ const routes = [
         beforeEnter: requireNullAuth()
       },
       {
+        path: "/updateuser",
+        name: "UpdateUser",
+        component: () => import("pages/user/UpdateUser.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
         path: "/verifyemailwarn",
         component: () => import("pages/user/VerifyEmailWarn.vue"),
         beforeEnter: requireEmailNotVerified()
