@@ -4,6 +4,7 @@
     <!-- 글 목록보기 시작 -->
     <div v-if="showFlag == 'list'">
       <!-- q-markup-table 시작 -->
+      <!-- <board-list boardType="free"> </board-list> -->
       <q-markup-table>
         <thead>
           <tr>
@@ -286,9 +287,10 @@ import Axios from "axios";
 // 자유게시판 댓글 컴포넌트 가져오기
 import FreeReplyWrite from "./freeReply/FreeReplyWrite.vue";
 import FreeReplyRow from "./freeReply/FreeReplyRow.vue";
+// import BoardList from "./material/BoardList.vue";
 export default {
-  components: { FreeReplyRow, FreeReplyWrite },
-  conponents: {
+  components: {
+    // BoardList,
     FreeReplyRow,
     FreeReplyWrite
   },
