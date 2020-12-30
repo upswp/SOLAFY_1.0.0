@@ -40,6 +40,10 @@ public class ProblemServiceImpl implements ProblemService {
 	public List<ProblemDto> selectProblemList() throws Exception {
 		return problemMapper.selectProblemList();
 	}
+	
+	public List<ProblemDto> selectRecommendProblemList(int problemNo) throws Exception{
+		return problemMapper.selectRecommendProblemList(problemNo);
+	}
 
 	@Override
 	public HashMap<String, Object> selectProblem(int problemNo) throws Exception {

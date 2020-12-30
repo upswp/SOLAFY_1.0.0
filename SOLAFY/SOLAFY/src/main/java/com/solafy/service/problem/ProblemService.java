@@ -26,6 +26,15 @@ public interface ProblemService {
 	* @변경이력 :
 	*/
 	public List<ProblemDto> selectProblemList() throws Exception;
+
+	/**
+	* @param problemNo - 문제 번호
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title
+	* @throws Exception
+	* @Method 설명 : 문제번호를 받아와서 카테고리번호가 같은(소분류가 같은)문제들 중 랜덤하게 10개를 뽑은 리스트 반환 (문제 추천용)
+	* @변경이력 :
+	*/
+	public List<ProblemDto> selectRecommendProblemList(int problemNo) throws Exception;
 	
 	/**
 	* @param problemNo - 문제 번호
