@@ -4,6 +4,7 @@
     <!-- 글 목록보기 시작 -->
     <div v-if="showFlag == 'list'">
       <!-- q-markup-table 시작 -->
+      <!-- <board-list boardType="free"> </board-list> -->
       <q-markup-table>
         <thead>
           <tr>
@@ -286,15 +287,19 @@ import Axios from "axios";
 // 자유게시판 댓글 컴포넌트 가져오기
 import FreeReplyWrite from "./freeReply/FreeReplyWrite.vue";
 import FreeReplyRow from "./freeReply/FreeReplyRow.vue";
+
+// 컴포넌트에서 vuex사용
+import { mapMutations } from "vuex";
+
+// import BoardList from "./material/BoardList.vue";
 export default {
-  components: { FreeReplyRow, FreeReplyWrite },
-  conponents: {
+  components: {
+    // BoardList,
     FreeReplyRow,
     FreeReplyWrite
   },
   data() {
     return {
-      replies: [],
       article: {
         title: null,
         contents: null,
@@ -311,8 +316,12 @@ export default {
       showFlag: "list",
       selection: "제목",
       options: ["제목", "작성자"],
+
+      // 댓글, 게시글, 공지글의 정보를 담는 변수
+      replies: [],
       articles: [],
       notices: [],
+
       errored: false,
       keyword: null,
       columns: [
@@ -365,6 +374,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["SETBOARDCOLUMNS", "SETBOARDSEARCHKEYWORDS"]),
     selectAllArticles: function() {
       Axios.get(`/free/selectAllArticles`)
         .then(response => {
@@ -610,6 +620,18 @@ export default {
   },
   created() {
     this.showList();
+    this.$store.commit("SETBOARDSEARCHKEYWORDS", [
+      "제목",
+      "작성자",
+      "문제번호"
+    ]);
+    this.$store.commit("SETBOARDCOLUMNS", [
+      "글번호",
+      "제목",
+      "작성자",
+      "좋아요수",
+      "작성일"
+    ]);
   }
 };
 </script>

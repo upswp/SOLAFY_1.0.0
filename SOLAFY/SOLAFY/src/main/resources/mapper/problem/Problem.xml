@@ -19,6 +19,14 @@
 		on p.uid = u.uid
 		where p.flag = 1
 	</select>
+	
+	<!-- 문제번호를 받아와서 카테고리번호가 같은(소분류가 같은)문제들 중 랜덤하게 10개를 뽑은 리스트 반환 (문제 추천용)-->
+	<select id="selectRecommendProblemList" parameterType="int" resultType="ProblemDto">
+		select problemNo, title
+		from problem
+		where flag = 1 and categoryNo = (select categoryNo from problem where problemNo=#{problemNo})
+		order by rand() limit 10
+	</select>
 
 	<!-- 문제의 정보 반환(상세보기 용) -->
 	<select id="selectProblem" parameterType="int" resultType="ProblemDto">
