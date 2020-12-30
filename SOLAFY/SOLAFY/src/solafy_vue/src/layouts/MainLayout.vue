@@ -188,8 +188,7 @@ export default {
     },
     logout() {
       firebaseAuth.signOut();
-      console.log(this.$router.currentRoute);
-
+      if (this.$$router.currentRoute.path == "/main") this.$router.push("/");
       this.$router.push("/main");
     },
     goUserManage() {}
