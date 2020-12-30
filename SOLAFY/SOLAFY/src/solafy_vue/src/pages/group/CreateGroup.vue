@@ -162,12 +162,7 @@ export default {
          });
         }
       } else {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "그룹명 중복 체크 필요"
-        });
+        notify("red-6", "white", "warning", "그룹명 중복 체크 필요");
       }
     },
 
