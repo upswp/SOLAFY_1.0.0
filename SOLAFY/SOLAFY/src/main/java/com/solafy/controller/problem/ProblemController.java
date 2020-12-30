@@ -167,6 +167,23 @@ public class ProblemController {
 	}
 	
 	/**
+	* @param uid - 유저토큰값
+	* @return boolean - 성공, 실패 여부
+	* @throws Exception
+	* @Method 설명 : 임시 저장된 문제들의 flag를 0에서 1로 변환
+	* @변경이력 :
+	*/
+	@ApiOperation(value = "임시 저장된 문제들의 flag를 0에서 1로 변환. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@PutMapping(value = "/updateflag/{uid}")
+	public ResponseEntity<String> updateProblemFlag(@PathVariable String uid) throws Exception{
+		logger.debug("updateProblemFlag - 호출");
+		if(problemService.updateProblemFlag(uid)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+	
+	/**
 	* @param map : problemDto - 문제정보, problemAnswerDto - 문제 정답 정보, hashTagList(List<String>) - 해시태그명 리스트
 	* @return ResponseEntity<String> - 응답형태
 	* @throws Exception
