@@ -103,7 +103,8 @@ export default {
         });
     },
     onSubmit() {
-      if (!this.nicknameDup) return;
+      if (!this.nicknameDup && this.beforenickname != this.modifydata.nickname)
+        return;
       axios
         .put("/user/update", this.modifydata)
         .then(response => {
