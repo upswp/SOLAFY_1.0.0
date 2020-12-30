@@ -129,6 +129,8 @@
 <script>
 import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
+import { createGroup } from 'src/api/Group/group.js';
+import { notify } from 'src/api/common.js';
 export default {
   data() {
     return {
@@ -149,28 +151,15 @@ export default {
       if (this.check) {
         if (this.step < 3) this.$refs.stepper.next();
         else {
-          Axios.post(
-            "group/createGroup/" + firebaseAuth.currentUser.uid,
-            this.groupData
-          )
-            .then(Response => {
-              this.$q.notify({
-                color: "green",
-                textColor: "white",
-                icon: "cloud",
-                message: "그룹 생성 완료"
-              });
+         createGroup(this.groupData, 
+         (Response) => {
+              notify("green", "white", "cloud", "그룹 생성 완료");
               this.$router.go(-1);
-            })
-            .catch(error => {
-              this.$q.notify({
-                color: "red-6",
-                textColor: "white",
-                icon: "warning",
-                message: "그룹 생성 실패"
-              });
+         },
+         (error) => {
+           notify("red-6", "white", "warning", "그룹 생성 실패");
               this.$router.go(-1);
-            });
+         });
         }
       } else {
         this.$q.notify({
