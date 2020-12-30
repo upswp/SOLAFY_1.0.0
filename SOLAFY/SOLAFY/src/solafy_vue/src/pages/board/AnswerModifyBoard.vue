@@ -1,7 +1,18 @@
-<template> <div>AnswerModifyBoard</div> </template>
+<template>
+  <div>
+    AnswerModifyBoard
+
+    <free-board />
+  </div>
+</template>
 
 <script>
-export default {};
+import FreeBoard from "./FreeBoard.vue";
+export default {
+  components: {
+    FreeBoard
+  }
+};
 </script>
 
 <style></style>
