@@ -152,7 +152,7 @@ public class UserController {
 	 * @변경이력
 	 */
 	@ApiOperation(value = "사용자를 삭제하고 결과를 반환한다.", response = String.class)
-	@DeleteMapping(value = "/delelte/{uid}")
+	@DeleteMapping(value = "/delete/{uid}")
 	public ResponseEntity<String> deleteUser(@PathVariable String uid) throws Exception {
 		logger.debug("deleteUser");
 		if (userService.deleteUser(uid))
