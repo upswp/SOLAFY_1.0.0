@@ -35,7 +35,29 @@
     </q-form>
     <div>
       <q-btn label="회원가입" @click="goUserRegi" />
+      <q-btn label="비밀번호 재설정" @click="pwdprompt = true" />
     </div>
+
+    <q-dialog v-model="pwdprompt" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">비밀번호를 재설정할 이메일을 입력해주세요</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-input
+            v-model="promptemail"
+            autofocus
+            @keyup.enter="sendPwdEmail"
+          />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="취소" v-close-popup />
+          <q-btn flat label="메일 보내기" @click="sendPwdEmail" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 <script>
@@ -49,7 +71,9 @@ export default {
         email: "",
         password: ""
       },
-      idsave: null
+      idsave: null,
+      pwdprompt: false,
+      promptemail: ""
     };
   },
   mounted() {
@@ -103,6 +127,27 @@ export default {
         localStorage.idsave = false;
         localStorage.email = "";
       }
+    },
+    sendPwdEmail() {
+      this.pwdprompt = false;
+      firebaseAuth
+        .sendPasswordResetEmail(this.promptemail)
+        .then(() => {
+          this.$q.notify({
+            color: "green",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "비밀번호 재설정 이메일을 전송했습니다"
+          });
+        })
+        .catch(() => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "warning",
+            message: "이메일 전송에 실패했습니다"
+          });
+        });
     }
   }
 };
