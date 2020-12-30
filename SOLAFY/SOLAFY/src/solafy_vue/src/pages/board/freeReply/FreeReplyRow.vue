@@ -1,23 +1,55 @@
 <template>
-  <div style="margin-bottom:40px">
-    <div v-if="!modiFlag">
-      <strong>{{ reply.contents }}</strong
-      ><br />
-      <strong>{{ reply.nickname }}</strong>
-      작성일자 : {{ reply.regiTime }}
-
-      <q-btn variant="link" @click="modifyThis">수정</q-btn>
-      <q-btn variant="link" @click="deleteThis">삭제</q-btn>
-    </div>
-    <div v-else>
-      <textarea
-        id="content"
-        v-model="reply.contents"
-        placeholder="댓글 수정..."
-        rows="2"
-      ></textarea>
-
-      <q-btn @click="updateReply" variant="dark">댓글수정</q-btn>
+  <div>
+    <div class="q-pa-md" style="max-width: 600px">
+      <div v-if="!modiFlag">
+        <template>
+          <strong>{{ reply.nickname }}</strong
+          ><br />
+          <q-input
+            type="textarea"
+            v-model="reply.contents"
+            label-slot
+            readonly
+            autogrow
+          >
+            <template v-slot:prepend>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              </q-avatar>
+            </template>
+            <template v-slot:label> </template>
+          </q-input>
+          <span style="font-size:0.5em">작성일자 : {{ reply.regiTime }}</span>
+          <q-btn style="margin-left:60%" @click="modifyThis" dense flat
+            >수정</q-btn
+          >
+          /
+          <q-btn @click="deleteThis" dense flat>삭제</q-btn>
+        </template>
+      </div>
+      <div v-else>
+        <strong>{{ reply.nickname }}</strong>
+        <q-input
+          type="textarea"
+          v-model="reply.contents"
+          label-slot
+          autogrow
+          outlied
+          filled
+        >
+          <template v-slot:prepend>
+            <q-avatar>
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+          </template>
+          <template v-slot:label> </template>
+        </q-input>
+        <span></span>
+        <span style="font-size:0.5em">작성일자 : {{ reply.regiTime }}</span>
+        <q-btn style="margin-left:69%" @click="updateReply" dense flat
+          >확인</q-btn
+        >
+      </div>
     </div>
   </div>
 </template>
