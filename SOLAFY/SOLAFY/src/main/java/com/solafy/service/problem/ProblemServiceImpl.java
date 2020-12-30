@@ -41,6 +41,7 @@ public class ProblemServiceImpl implements ProblemService {
 		return problemMapper.selectProblemList();
 	}
 	
+	@Override
 	public List<ProblemDto> selectRecommendProblemList(int problemNo) throws Exception{
 		return problemMapper.selectRecommendProblemList(problemNo);
 	}
@@ -160,6 +161,11 @@ public class ProblemServiceImpl implements ProblemService {
 		}
 
 		return result;
+	}
+	
+	@Override
+	public boolean updateProblemFlag(String uid) throws Exception{
+		return problemMapper.updateProblemFlag(uid)>0;
 	}
 
 	@Override
