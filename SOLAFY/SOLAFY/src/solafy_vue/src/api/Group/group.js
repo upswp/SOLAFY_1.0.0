@@ -4,7 +4,6 @@ const { default: Axios } = require("axios");
 // success, fail은 callback method
 
 //그룹을 생성한다
-
 /**
  * 
  * @param {*} param 
