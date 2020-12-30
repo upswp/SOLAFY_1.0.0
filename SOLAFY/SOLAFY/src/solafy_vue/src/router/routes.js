@@ -3,31 +3,21 @@ import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
 // 로그인 완료 + 이메일 인증 완료
 // ex) 문제, 게시판, 그룹 등등 모든 조건이 모두 필요한 경우
 const requireAuth = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(function (user) {
+    // 로그인 (O) 이메일 인증(O) : 라우팅 된 페이지로 이동
     if (user && user.emailVerified) {
       return next();
+    // 로그인 (O) 이메일 인증(X) : 이메일 인증 경고 페이지로 이동
     } else if (user) { 
-      return next('/VerifyEmailWarn');
+      return next('/verifyemailwarn');
+    // 로그인 (X) 이메일 인증(X) : 로그인 페이지로 이동 
     }else {
       return next('/');
     }
   });
 };
 
-// 이메일 인증만 필요한 경우 (로그인 여부는 상관 없는 경우) 
-// ex) 메인 페이지는 로그인 여부에 관계 없이 누구나 볼 수 있음 
-//     하지만 이메일 인증이 안 되어 있는 겅우엔 아무데도 못감!@
-const requireEmailVerified = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (!user && !user.emailVerified) {
-      return next('/VerifyEmailWarn');
-    }else {
-      return next();
-    }
-  });
-};
-
-// 로그인 안한 상태가 필요한 경우 (로그인 한 상태에서는 갈 수 없음)
+// 로그인 한 상태에서는 갈 수 없는 페이지
 // ex) 회원 가입, 로그인 페이지 
 const requireNullAuth = () => (to, from, next) => {
   firebase.auth().onAuthStateChanged(function (user) {
@@ -39,11 +29,25 @@ const requireNullAuth = () => (to, from, next) => {
   });
 };
 
-// 로그인 되어 있지만 이메일 인증이 완료되지 않은 경우
+// 로그인 (O) 이메일 인증(X) 상태에서 갈 수 없는 페이지
+// 로그인 (X) 상태에서는 갈 수 있음
+// ex) main, about 페이지 
+const requireEmailVerified = () => (to, from, next) => {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user && !user.emailVerified) { 
+      return next('/verifyemailwarn');
+    }else {
+      return next();
+    }
+  });
+};
+
+// 로그인 (O) 이메일 인증(O) 상태에서 갈 수 없는 페이지
+// 로그인 (X) 에서도 갈 수 없음
 // ex) email warning 페이지 
 const requireEmailNotVerified = () => (to, from, next) => {
   firebase.auth().onAuthStateChanged(function (user) {
-    if (user.emailVerified) {
+    if (!user || user.emailVerified) {
       return next('/main');
     } else {
       return next();
@@ -187,13 +191,13 @@ const routes = [
 
       // user
       {
-        path: "/userRegi",
+        path: "/userregi",
         name: "UserRegi",
         component: () => import("pages/user/CreateUser.vue"),
         beforeEnter: requireNullAuth()
       },
       {
-        path: "/verifyEmailWarn",
+        path: "/verifyemailwarn",
         component: () => import("pages/user/VerifyEmailWarn.vue"),
         beforeEnter: requireEmailNotVerified()
       },
