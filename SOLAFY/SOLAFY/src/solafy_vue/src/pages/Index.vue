@@ -60,12 +60,16 @@ export default {
     ...mapActions("store", ["loginUser"]),
     onSubmit() {
       this.checkidsave();
-      firebaseAuth
-        .signInWithEmailAndPassword(this.formData.email, this.formData.password)
-        .then(Response => {
-          console.log(Response);
 
-          firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      firebaseAuth
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        .then(() => {
+          return firebaseAuth.signInWithEmailAndPassword(
+            this.formData.email,
+            this.formData.password
+          );
+        })
+        .then(() => {
           this.$q.notify({
             color: "green",
             textColor: "white",

@@ -1,17 +1,58 @@
 import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
 
+// 로그인 완료 + 이메일 인증 완료
+// ex) 문제, 게시판, 그룹 등등 모든 조건이 모두 필요한 경우
 const requireAuth = () => (to, from, next) => {
-  if (firebaseAuth.currentUser == null)
-    return next('/');
-  else if (!firebaseAuth.currentUser.emailVerified)
-    return next('/VerifyEmailWarn');
-  next();
+  firebase.auth().onAuthStateChanged(function (user) {
+    // 로그인 (O) 이메일 인증(O) : 라우팅 된 페이지로 이동
+    if (user && user.emailVerified) {
+      return next();
+    // 로그인 (O) 이메일 인증(X) : 이메일 인증 경고 페이지로 이동
+    } else if (user) { 
+      return next('/verifyemailwarn');
+    // 로그인 (X) 이메일 인증(X) : 로그인 페이지로 이동 
+    }else {
+      return next('/');
+    }
+  });
 };
 
+// 로그인 한 상태에서는 갈 수 없는 페이지
+// ex) 회원 가입, 로그인 페이지 
+const requireNullAuth = () => (to, from, next) => {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      return next('/main');
+    } else {
+      return next();
+    }
+  });
+};
+
+// 로그인 (O) 이메일 인증(X) 상태에서 갈 수 없는 페이지
+// 로그인 (X) 상태에서는 갈 수 있음
+// ex) main, about 페이지 
 const requireEmailVerified = () => (to, from, next) => {
- if (firebaseAuth.currentUser != null &&!firebaseAuth.currentUser.emailVerified)
-    return next('/VerifyEmailWarn');
-  next();
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user && !user.emailVerified) { 
+      return next('/verifyemailwarn');
+    }else {
+      return next();
+    }
+  });
+};
+
+// 로그인 (O) 이메일 인증(O) 상태에서 갈 수 없는 페이지
+// 로그인 (X) 에서도 갈 수 없음
+// ex) email warning 페이지 
+const requireEmailNotVerified = () => (to, from, next) => {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (!user || user.emailVerified) {
+      return next('/main');
+    } else {
+      return next();
+    }
+  });
 };
 
 const routes = [
@@ -22,11 +63,7 @@ const routes = [
       {
         path: "",
         component: () => import("pages/Index.vue"),
-        beforeEnter: (to, from, next) => {
-          if (firebaseAuth.currentUser == null)
-            return next();
-          next('/main');
-        }
+        beforeEnter: requireNullAuth()
       },
       {
         path: "/main",
@@ -154,23 +191,15 @@ const routes = [
 
       // user
       {
-        path: "/userRegi",
+        path: "/userregi",
         name: "UserRegi",
         component: () => import("pages/user/CreateUser.vue"),
-        beforeEnter: (to, from, next) => {
-          if (firebaseAuth.currentUser == null)
-            return next();
-          next('/main');
-        }
+        beforeEnter: requireNullAuth()
       },
       {
-        path: "/verifyEmailWarn",
+        path: "/verifyemailwarn",
         component: () => import("pages/user/VerifyEmailWarn.vue"),
-        beforeEnter: (to, from, next) => {
-          if (firebaseAuth.currentUser.emailVerified)
-          return next('/main');
-        next();
-        }
+        beforeEnter: requireEmailNotVerified()
       },
       {
         path: "/mypage",
