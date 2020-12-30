@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // BOARD쪽 사용을 위한 요소 추가
-import { SETBOARDCOLUMN, SETBOARDSEARCHKEYWORDS } from "./mutation-type";
+import { SETBOARDCOLUMNS, SETBOARDSEARCHKEYWORDS } from "./mutation-type";
 
 // import example from './module-example'
 
@@ -34,7 +34,7 @@ export default function(/* { ssrContext } */) {
     },
     // state를 변경할 수 있는 유일한 수단인 mutations
     mutations: {
-      [SETBOARDCOLUMN](state, payload) {
+      [SETBOARDCOLUMNS](state, payload) {
         state.boardColumns = payload;
       },
       [SETBOARDSEARCHKEYWORDS](state, payload) {
@@ -43,7 +43,7 @@ export default function(/* { ssrContext } */) {
     },
     // 비동기나 순차적 call이 필요할 때 사용
     actions: {
-      [SETBOARDCOLUMN](state, payload) {
+      [SETBOARDCOLUMNS](state, payload) {
         state.boardColumns = payload;
       },
       [SETBOARDSEARCHKEYWORDS](state, payload) {
