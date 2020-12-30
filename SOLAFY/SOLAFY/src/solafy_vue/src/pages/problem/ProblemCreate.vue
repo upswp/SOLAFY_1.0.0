@@ -200,7 +200,7 @@ export default {
         hashTag: [],
         problemSetNo: 0
       },
-      nickname: "닉네임파베에서 받아오기",
+      nickname: "",
       largeList: [],
       selectLarge: null,
       mediumList: [],
@@ -268,34 +268,49 @@ export default {
     // 카테고리 대분류 선택
     selectLargeList() {
       axios
-        .get(`/category/large`)
+        .get("category/large")
         .then(response => {
           this.largeList = response.data;
         })
         .catch(error => {
-          alert(error);
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "카테고리 대분류 불러오기 실패"
+          });
         });
     },
     // 카테고리 중분류 선택
     selectMediumList() {
       axios
-        .get(`/category/medium/${this.selectLarge.categoryNo}`)
+        .get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
         })
         .catch(error => {
-          alert(error);
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "카테고리 중분류 불러오기 실패"
+          });
         });
     },
     // 카테고리 소분류 선택
     selectSmallList() {
       axios
-        .get(`/category/small/${this.selectMedium.categoryNo}`)
+        .get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
         })
         .catch(error => {
-          alert(error);
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "카테고리 소분류 불러오기 실패"
+          });
         });
     },
     // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
@@ -317,9 +332,7 @@ export default {
       // 객관식인 경우
       if (this.item.problem.type == 0) {
         // 선지 저장
-        this.item.problem.multipleChoice = this.choiceList.map(el => {
-          return el.choice;
-        });
+        this.item.problem.multipleChoice = this.choiceList.map(el=>{return el.choice;}).toString();
         // 정답 저장
         var tmp = [];
         for (var i = 0; i < this.choiceList.length; i++) {
@@ -334,18 +347,50 @@ export default {
       // uid 저장
       this.item.problem.uid = firebaseAuth.currentUser.uid;
       // 카테고리번호저장
-      this.item.problem.categoryNo = String(this.selectLarge.categoryNo).padStart(2, "0") +
+      this.item.problem.categoryNo =
+        String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
+      console.log(this.item);
       // 백엔드 연결
-      // axios
-      //   .get(`/category/small/${this.selectMedium.categoryNo}`)
-      //   .then(response => {
-      //     this.smallList = response.data;
-      //   })
-      //   .catch(error => {
-      //     alert(error);
-      //   });
+      axios
+        .post("problem/create", this.item)
+        .then(response => {
+          this.updateFlag();
+          this.$q.notify({
+            color: "positive",
+            textColor: "white",
+            icon: "done",
+            message: "문제 등록 성공"
+          });
+          this.$router.push({
+            name: "Problem",
+          });
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "문제 등록 실패"
+          });
+        });
+    },
+    // 문제의 flag를 0에서 1로 변경
+    updateFlag(){
+      axios
+        .put("problem/updateflag/"+firebaseAuth.currentUser.uid)
+        .then(response => {
+
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "문제 등록 실패"
+          });
+        });
     },
     // 탭 클릭 시 type 설정
     setType(name) {
@@ -356,10 +401,27 @@ export default {
       } else {
         this.item.problem.type = 2;
       }
+    },
+    // User의 Nickname반환
+    selectNickname() {
+      axios
+        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
+        .then(response => {
+          this.nickname = response.data.nickname;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red",
+            textColor: "white",
+            icon: "error",
+            message: "닉네임 불러오기 실패"
+          });
+        });
     }
   },
   created() {
     this.selectLargeList();
+    this.selectNickname();
   }
 };
 </script>
