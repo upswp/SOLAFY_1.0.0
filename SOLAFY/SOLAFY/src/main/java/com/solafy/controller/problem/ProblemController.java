@@ -61,6 +61,20 @@ public class ProblemController {
 	}
 	
 	/**
+	* @param problemNo - 문제 번호
+	* @return List<ProblemDto> - 문제 리스트 : problemNo, title
+	* @throws Exception
+	* @Method 설명 : 문제번호를 받아와서 카테고리번호가 같은(소분류가 같은)문제들 중 랜덤하게 10개를 뽑은 리스트 반환 (문제 추천용)
+	* @변경이력 :
+	*/
+	@ApiOperation(value=" 문제번호를 받아와서 카테고리번호가 같은(소분류가 같은)문제들 중 랜덤하게 10개를 뽑은 리스트를 반환한다.",response = List.class)
+	@GetMapping(value="/recommend/{problemNo}")
+	public ResponseEntity<List<ProblemDto>> selectRecommendProblemList(@PathVariable int problemNo) throws Exception{
+		logger.debug("selectRecommendProblemList - 호출");
+		return new ResponseEntity<List<ProblemDto>>(problemService.selectRecommendProblemList(problemNo), HttpStatus.OK);
+	}
+	
+	/**
 	* @param problemNo - 문제번호
 	* @return ResponseEntity<Map<String,Object>> - 문제의 정보들, 응답형태
 	 * @throws Exception 
