@@ -119,19 +119,25 @@ const linksData = [
     title: "Free Board",
     caption: "범석&기현",
     icon: "dashboard",
-    link: "/freeboard"
+    link: "/free"
   },
   {
     title: "Practice Board",
     caption: "범석&기현",
     icon: "api",
-    link: "/practiceboard"
+    link: "/practice"
   },
   {
     title: "Answer Modify Board",
     caption: "범석&기현",
     icon: "announcement",
-    link: "/answermodifyboard"
+    link: "/answermodify"
+  },
+  {
+    title: "Q&A Board",
+    caption: "범석&기현",
+    icon: "announcement",
+    link: "/qna"
   },
   {
     title: "Group",

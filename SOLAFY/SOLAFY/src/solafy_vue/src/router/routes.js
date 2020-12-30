@@ -3,26 +3,26 @@ import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
 // 로그인 완료 + 이메일 인증 완료
 // ex) 문제, 게시판, 그룹 등등 모든 조건이 모두 필요한 경우
 const requireAuth = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(function(user) {
     // 로그인 (O) 이메일 인증(O) : 라우팅 된 페이지로 이동
     if (user && user.emailVerified) {
       return next();
-    // 로그인 (O) 이메일 인증(X) : 이메일 인증 경고 페이지로 이동
-    } else if (user) { 
-      return next('/verifyemailwarn');
-    // 로그인 (X) 이메일 인증(X) : 로그인 페이지로 이동 
-    }else {
-      return next('/');
+      // 로그인 (O) 이메일 인증(X) : 이메일 인증 경고 페이지로 이동
+    } else if (user) {
+      return next("/verifyemailwarn");
+      // 로그인 (X) 이메일 인증(X) : 로그인 페이지로 이동
+    } else {
+      return next("/");
     }
   });
 };
 
 // 로그인 한 상태에서는 갈 수 없는 페이지
-// ex) 회원 가입, 로그인 페이지 
+// ex) 회원 가입, 로그인 페이지
 const requireNullAuth = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      return next('/main');
+      return next("/main");
     } else {
       return next();
     }
@@ -31,12 +31,12 @@ const requireNullAuth = () => (to, from, next) => {
 
 // 로그인 (O) 이메일 인증(X) 상태에서 갈 수 없는 페이지
 // 로그인 (X) 상태에서는 갈 수 있음
-// ex) main, about 페이지 
+// ex) main, about 페이지
 const requireEmailVerified = () => (to, from, next) => {
   firebase.auth().onAuthStateChanged(function(user) {
-    if (user && !user.emailVerified) { 
-      return next('/verifyemailwarn');
-    }else {
+    if (user && !user.emailVerified) {
+      return next("/verifyemailwarn");
+    } else {
       return next();
     }
   });
@@ -44,11 +44,11 @@ const requireEmailVerified = () => (to, from, next) => {
 
 // 로그인 (O) 이메일 인증(O) 상태에서 갈 수 없는 페이지
 // 로그인 (X) 에서도 갈 수 없음
-// ex) email warning 페이지 
+// ex) email warning 페이지
 const requireEmailNotVerified = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(function(user) {
     if (!user || user.emailVerified) {
-      return next('/main');
+      return next("/main");
     } else {
       return next();
     }
@@ -111,8 +111,10 @@ const routes = [
         path: "/problemsetdetail/problemSetListByProblem/:problemSetNo",
         name: "ProblemDetailByProblem",
         component: () =>
-          import("pages/problemSet/problemSetDetail/ProblemDetailByProblem.vue"),
-          beforeEnter: requireAuth()
+          import(
+            "pages/problemSet/problemSetDetail/ProblemDetailByProblem.vue"
+          ),
+        beforeEnter: requireAuth()
       },
       {
         path: "/problemsetdetail/problemSetInfo/:problemSetNo",
@@ -121,7 +123,7 @@ const routes = [
           import(
             "pages/problemSet/problemSetDetail/ProblemDetailByProblemSetInfo.vue"
           ),
-          beforeEnter: requireAuth()
+        beforeEnter: requireAuth()
       },
       {
         path: "/problemsetcreate",
@@ -144,22 +146,48 @@ const routes = [
 
       // board
       {
-        path: "/freeboard",
+        path: "/free",
+        name: "free",
+        component: () => import("pages/board/FreeBoard.vue"),
+        children: [
+          {
+            path: "",
+            name: "free-board-list",
+            component: () => import("components/board/BoardList.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "write",
+            name: "free-board-write",
+            component: () => import("components/board/BoardWrite.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "detail/:articleNo",
+            name: "free-board-detail",
+            component: () => import("components/board/BoardDetail.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "update",
+            name: "free-board-update",
+            component: () => import("components/board/BoardUpdate.vue"),
+            beforeEnter: requireAuth()
+          }
+        ]
+      },
+      {
+        path: "/qna",
         component: () => import("pages/board/FreeBoard.vue"),
         beforeEnter: requireAuth()
       },
       {
-        path: "/qnaboard",
-        component: () => import("pages/board/FreeBoard.vue"),
-        beforeEnter: requireAuth()
-      },
-      {
-        path: "/answermodifyboard",
+        path: "/answermodify",
         component: () => import("pages/board/AnswerModifyBoard.vue"),
         beforeEnter: requireAuth()
       },
       {
-        path: "/practiceboard",
+        path: "/practice",
         component: () => import("pages/board/PracticeBoard.vue"),
         beforeEnter: requireAuth()
       },
@@ -212,7 +240,7 @@ const routes = [
         name: "MyPage",
         component: () => import("pages/user/MyPage.vue"),
         beforeEnter: requireAuth()
-      },
+      }
     ]
   },
 

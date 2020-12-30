@@ -57,7 +57,7 @@
 <script>
 import Axios from "axios";
 export default {
-  name: "freereplyrow",
+  name: "replyrow",
   props: ["reply"],
   data() {
     return {

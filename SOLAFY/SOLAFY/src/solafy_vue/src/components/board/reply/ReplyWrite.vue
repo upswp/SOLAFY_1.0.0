@@ -25,7 +25,7 @@
 // import { mapState } from "vuex";
 import Axios from "axios";
 export default {
-  name: "freereplywrite",
+  name: "replywrite",
   data() {
     return {
       replyForm: {
