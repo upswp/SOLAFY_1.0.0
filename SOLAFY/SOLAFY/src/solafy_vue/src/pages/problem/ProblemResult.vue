@@ -3,14 +3,14 @@
     <div class="column">
       <!-- 상단 제목 및 돌아가기 버튼 -->
       <div class="col" id="header-title">
-        <h3>문제 타이틀</h3>
+        <h3 v-html="itemProblem.problem.title"></h3>
       </div>
       <!-- contents -->
       <div class="col">
         <div class="row justify-center">
           <q-tab-panel name="alarms">
             <div class="text-h6">채점 결과</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <h5>{{ resultText }}</h5>
           </q-tab-panel>
         </div>
         <br />
@@ -19,7 +19,7 @@
             <div class="q-pa-md">
               <q-table
                 title="추천 문제 List"
-                :data="item.problemList"
+                :data="itemList.problemList"
                 :columns="listColumns"
                 hide-pagination
                 :pagination.sync="pagination"
@@ -42,7 +42,7 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="돌아가기" />
+            <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
           </div>
         </div>
       </div>
@@ -64,6 +64,10 @@ export default {
         page: 1,
         rowsPerPage: 3
         // rowsNumber: xx if getting data from a server
+      },
+      resultText: {
+        fail: "오답입니다.",
+        success: "정답입니다."
       },
       columns: [
         { name: "title", align: "left", label: "title", field: "title" },
@@ -90,45 +94,46 @@ export default {
           align: "center"
         }
       ],
-      item: {
-        problemSet: {
-          problemSetNo: 0,
+      itemProblem: {
+        problem: {
+          problemNo: 0,
+          multipleChoice: "",
           title: "",
+          contents: "",
+          categoryNo: "",
+          type: 0,
+          regiTime: "",
+          nickname: ""
+        }
+      },
+      itemList: {
+        problem: {
+          problemNo: 0,
+          multipleChoice: "",
+          title: "",
+          contents: "",
+          categoryNo: "",
+          type: 0,
           regiTime: "",
           nickname: ""
         },
         problemList: []
-      },
-      data: [
-        {
-          title: "문제집 제목",
-          content: ""
-        },
-        {
-          title: "문제 작성자",
-          content: ""
-        },
-        {
-          title: "문제 작성일자",
-          content: ""
-        }
-      ]
+      }
     };
   },
   methods: {
-    //ProblemSet Contents - table 반환
+    checkResult: function() {
+      if (this.$route.params.result === "false") {
+        this.resultText = this.resultText.fail;
+      } else {
+        this.resultText = this.resultText.success;
+      }
+    },
     selectProblemByNo: function() {
-      //   this.showLoading();
-      Axios.get(
-        "/problem/problemset/problemSetSelectByNo/" +
-          this.$route.params.problemSetNo
-      )
+      this.showLoading();
+      Axios.get("problem/" + this.$route.params.problemNo)
         .then(Response => {
-          console.log(Response.data);
-          this.item = Response.data;
-          this.data[0].content = this.item.problemSet.title;
-          this.data[1].content = this.item.problemSet.nickname;
-          this.data[2].content = this.item.problemSet.regiTime;
+          this.itemProblem = Response.data;
         })
         .catch(error => {
           this.$q.notify({
@@ -143,31 +148,28 @@ export default {
           this.loading = false;
         });
     },
-    //ProblemSetDelete 반환
-    ProblemSetDelete: function() {
-      this.showLoading();
-      Axios.delete(
-        "/problem/problemset/deleteProblemSet/" +
-          this.item.problemSet.problemSetNo
-      )
+    //ProblemSet Contents - table 반환
+    selectProbleListmByNo: function() {
+      //   this.showLoading();
+      Axios.get("problem/recommend/" + this.$route.params.problemSetNo)
         .then(Response => {
-          this.$q.notify({
-            color: "positive",
-            textColor: "white",
-            icon: "done",
-            message: "삭제 완료"
-          });
-          this.GoProblemSetList();
+          console.log(Response.data);
+          this.itemList = Response.data;
         })
         .catch(error => {
           this.$q.notify({
-            color: "red",
+            color: "negative",
             textColor: "white",
             icon: "error",
-            message: "삭제 실패"
+            message: "조회 실패"
           });
+          this.goToproblemList();
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
+
     // show LoadingPage
     showLoading() {
       this.$q.loading.show();
@@ -178,32 +180,23 @@ export default {
         this.timer = void 0;
       }, 2000);
     },
-    //ProblemDetailByProblem 이동
-    GoProblemSolving: function() {
-      this.$router.push({
-        name: "ProblemDetailByProblem"
-      });
-    },
+
     //ProblemSetList 이동
     GoProblemSetList: function() {
       this.$router.push({
-        name: "ProblemSet"
-      });
-    },
-    //ProblemSet Update 이동
-    GoProblemSetUpdate: function() {
-      this.$router.push({
-        name: "ProblemSetUpdate"
+        name: "Problem"
       });
     }
   },
   created() {
     this.selectProblemByNo();
+    this.selectProbleListmByNo();
+    this.checkResult();
   },
   computed: {
     pagesNumber() {
       return Math.ceil(
-        this.item.problemList.length / this.pagination.rowsPerPage
+        this.itemList.problemList.length / this.pagination.rowsPerPage
       );
     }
   },
