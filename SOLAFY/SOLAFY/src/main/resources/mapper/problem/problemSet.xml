@@ -28,7 +28,7 @@
 	<!-- 작성자 uid로 검색하게 할것인가? -->
 	<select id="selectProblemByWriter" resultType="problemSetDto">
 		SELECT p.problemSetNo, u.nickname, p.title, p.regiTime
-		FROM problem p join userinfo u
+		FROM problemset p join userinfo u
 		ON p.uid = u.uid
 		WHERE u.nickname = #{nickname} and flag = 1
 		ORDER BY problemSetNo
