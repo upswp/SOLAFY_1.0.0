@@ -19,12 +19,14 @@ function createApplyGroupSignUp(param, success, fail){
 }
 
 //일반회원을 그룹에 초대한다
-function createGroupInvitation(param, success, fail){
+function createGroupInvitation(param, success, fail){}
 
+//모든 그룹 리스트를 받아온다 uid값은 해당 그룹에 가입되어 있는지 확인하기 위해 전달
+function selectAllGroup(success, fail){
+    Axios.get("group/selectAllGroup/"+ firebaseAuth.currentUser.uid)
+    .then(success)
+    .catch(fail)
 }
-
-
-function selectAllGroup(param, success, fail){}
 
 //선택한 그룹의 정보를 받아온다
 function selectGroupByNo(param, success, fail){

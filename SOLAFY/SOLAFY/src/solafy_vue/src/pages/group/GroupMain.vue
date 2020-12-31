@@ -25,6 +25,17 @@
           </div>
         </q-td>
       </template>
+
+      <template v-slot:body-cell-type="props">
+        <q-td :props="props">
+           <div :props="props" v-if="props.row.type == 0">
+            <q-chip color="green" dense text-color="white" label="Public" />
+          </div>
+          <div :props="props" v-if="props.row.type == 1">
+            <q-chip color="red" dense text-color="white" label="Private" />
+          </div>
+        </q-td>
+      </template>
       <template v-slot:top-right>
         <q-input
           borderless
@@ -53,9 +64,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import routes from "src/router/routes";
 import { firebaseAuth } from "src/boot/firebase";
+import {selectAllGroup} from "src/api/Group/group.js"
+import { notify } from 'src/api/common';
 export default {
   data() {
     return {
@@ -66,7 +78,7 @@ export default {
         sortBy: "desc",
         descending: false,
         page: 1,
-        rowsPerPage: 3
+        rowsPerPage: 10
         // rowsNumber: xx if getting data from a server
       },
       columns: [
@@ -110,20 +122,14 @@ export default {
     }
   },
   mounted() {
-    axios
-      .get("group/selectAllGroup/" + firebaseAuth.currentUser.uid)
-      .then(Response => {
+    selectAllGroup(
+      (Response)=>{
         this.data = Response.data;
-        console.log(this.data);
-      })
-      .catch(error => {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "조회 실패"
-        });
-      });
+      },
+      (error)=>{
+        notify("red-6", "white", "warning", "message");
+      }
+    );
   },
   computed: {
     pagesNumber() {
