@@ -31,6 +31,8 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth } from "boot/firebase";
+import { notify } from "src/api/common.js";
+
 export default {
   data() {
     return {
@@ -39,33 +41,32 @@ export default {
     };
   },
   methods: {
+    // 이메일 변경하기 버튼 클릭 시 호출
     onSubmit() {
+      // 이메일 업데이트 요청
       firebaseAuth.currentUser
         .updateEmail(this.email)
+        // 이메일이 업데이트 되었을 경우 확인 이메일 전송
         .then(Response => {
           this.sendEmail();
         })
         .catch(error => {
           console.log(error);
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "warning",
-            message: "변경 실패"
-          });
+          notify("red", "white", "warning", "이메일 변경 실패");
         });
     },
+    // 인증 메일 전송
     sendEmail() {
       firebaseAuth.currentUser
         .sendEmailVerification()
         .then(Response => {
           console.log("이메일이 전송됨");
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "메일 전송 완료, 이메일 인증을 완료해주세요!"
-          });
+          notify(
+            "green",
+            "white",
+            "cloud_done",
+            "메일 전송 완료, 이메일 인증을 완료해주세요!"
+          );
           this.goindex();
         })
         .catch("email not sent");

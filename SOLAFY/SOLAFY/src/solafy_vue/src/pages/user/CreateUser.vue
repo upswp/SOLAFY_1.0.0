@@ -2,6 +2,7 @@
   <div>
     <q-form @submit="onSubmit" class="q-gutter-md">
       <q-stepper v-model="step" ref="stepper" color="primary" animated>
+        <!-- 1. 이메일 입력 -->
         <q-step
           :name="1"
           title="이메일 입력"
@@ -30,6 +31,7 @@
           </q-input>
         </q-step>
 
+        <!-- 2. 비밀번호 입력 -->
         <q-step
           :name="2"
           title="비밀번호 입력"
@@ -60,6 +62,7 @@
           />
         </q-step>
 
+        <!-- 명찰 사진 등록 -->
         <q-step
           :name="3"
           title="명찰 사진 등록"
@@ -99,6 +102,7 @@
           </q-file>
         </q-step>
 
+        <!-- 4. 별명, 상태메시지, 프로필 사진 입력 -->
         <q-step
           :name="4"
           title="추가 정보 입력"
@@ -143,6 +147,7 @@
           </q-file>
         </q-step>
 
+        <!-- 각 스텝 하단에 출력되는 버튼 두개 -->
         <template v-slot:navigation>
           <q-stepper-navigation>
             <q-btn
@@ -169,6 +174,7 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { notify } from "src/api/common.js";
 export default {
   name: "CreateMember",
   data() {
@@ -213,15 +219,15 @@ export default {
       // data가 유효하여 flag가 true로 변경되었다면 다음 페이지로 넘어감
       if (flag) this.$refs.stepper.next();
     },
-    // finish 버튼을 눌렀을 때 회원 가입 요청을 보냄
+    // 각 단계에서 continue or finish 버튼 클릭 시 호출
     onSubmit() {
-      console.log(this.step);
-
+      // 1, 2, 3 단계일 경우 dataVal을 호출하여 데이터의 유효성 검사
       if (this.step < 4) {
         this.dataVal();
         return;
       }
 
+      // 4단계에서 데이터 유효성 검사
       if (this.nickname == null || this.nickname == "") return;
 
       // firebase에 회원가입 요청
@@ -229,31 +235,25 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(Response => {
           let uid = firebaseAuth.currentUser.uid;
-          // DB에 회원 정보 등록
+          // 회원 데이터 등록
           this.createUser_DB(uid);
-          //email 인증 메일 전송
-          this.sendEmail();
-          // 명찰 사진을 firebase에 전송
           this.uploadImg_FB(uid, true);
-          // 프로필 사진을 등록했을 경우에만 firebase에 이미지 전송
+          // 프로필 사진의 경우, 등록되어 있을 때만 이미지 등록
           if (this.profileimg.name != "" && this.profileimg.name != null)
             this.uploadImg_FB(uid, false);
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "가입 성공, 이메일 인증을 해주세요!"
-          });
+          //email 인증 메일 전송
+          this.sendEmail();
+          notify(
+            "green",
+            "white",
+            "cloud_done",
+            "회원 가입 성공, 이메일 인증을 진행해주세요!"
+          );
           this.$router.push("/");
         })
         .catch(error => {
           console.log(error.message);
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "warning",
-            message: "가입 실패"
-          });
+          notify("red", "white", "warning", "회원 가입 실패");
         });
     },
     // DB에 회원 정보 전송
@@ -292,12 +292,7 @@ export default {
     },
     // 사진 등록에 실패했을 경우 알림
     onRejected() {
-      this.$q.notify({
-        color: "red",
-        textColor: "white",
-        icon: "warning",
-        message: "사진 등록 실패 "
-      });
+      notify("red", "white", "warning", "사진 등록 실패");
     }
   }
 };

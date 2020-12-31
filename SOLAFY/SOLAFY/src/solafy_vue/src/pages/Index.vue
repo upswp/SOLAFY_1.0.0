@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px">
+    <!-- 로그인 입력 폼 -->
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input
         filled
@@ -33,11 +34,14 @@
         <q-btn label="reset" type="reset" color="negative" flat class="q-ml" />
       </div>
     </q-form>
+
+    <!-- 버튼 -->
     <div>
       <q-btn label="회원가입" @click="goUserRegi" />
       <q-btn label="비밀번호 재설정" @click="pwdprompt = true" />
     </div>
 
+    <!-- 비밀번호 재설정 다이얼로그 -->
     <q-dialog v-model="pwdprompt" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
@@ -62,7 +66,9 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import { notify } from "src/api/common.js";
 import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
+
 export default {
   name: "PageIndex",
   data() {
@@ -76,40 +82,35 @@ export default {
       promptemail: ""
     };
   },
+  // 로컬 저장소에 저장되어 있는 이메일과 이메일 저장 여부(boolean) 가져옴
   mounted() {
     this.idsave = localStorage.idsave;
     this.formData.email = localStorage.email;
   },
   methods: {
     ...mapActions("store", ["loginUser"]),
+    //로그인 버튼 클릭 시 호출
     onSubmit() {
+      // 이메일과 이메일 저장 여부를 로컬 저장소에 저장
       this.checkidsave();
-
+      // 로그인 결과를 세션에 저장
       firebaseAuth
         .setPersistence(firebase.auth.Auth.Persistence.SESSION)
         .then(() => {
+          // 로그인
           return firebaseAuth.signInWithEmailAndPassword(
             this.formData.email,
             this.formData.password
           );
         })
         .then(() => {
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "로그인 성공"
-          });
+          notify("green", "white", "cloud_done", "로그인 성공");
+
           this.$router.push("main");
         })
         .catch(error => {
           console.log(error);
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "warning",
-            message: "로그인 실패"
-          });
+          notify("red-6", "white", "warning", "로그인 실패");
         });
     },
     onReset() {
@@ -119,6 +120,7 @@ export default {
     goUserRegi() {
       this.$router.push("UserRegi");
     },
+    // 이메일과 이메일 저장 여부를 로컬 저장소에 저장
     checkidsave() {
       if (this.idsave) {
         localStorage.idsave = true;
@@ -128,25 +130,24 @@ export default {
         localStorage.email = "";
       }
     },
+    // 비밀번호 재설정 다이얼로그의 메일보내기 버튼 클릭 시 호출
     sendPwdEmail() {
+      // 다이얼로그 닫음
       this.pwdprompt = false;
+
+      // 비밀번호 재설정 메일 보냄
       firebaseAuth
         .sendPasswordResetEmail(this.promptemail)
         .then(() => {
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "비밀번호 재설정 이메일을 전송했습니다"
-          });
+          notify(
+            "green",
+            "white",
+            "cloud_done",
+            "비밀번호 재설정 이메일을 전송했습니다"
+          );
         })
         .catch(() => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "warning",
-            message: "이메일 전송에 실패했습니다"
-          });
+          notify("red-6", "white", "warning", "메일 전송에 실패했습니다");
         });
     }
   }

@@ -49,6 +49,8 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth } from "boot/firebase";
+import { notify } from "src/api/common.js";
+
 export default {
   data() {
     return {
@@ -57,6 +59,7 @@ export default {
       nicknameDup: false
     };
   },
+  // DB에서 회원 정보 가져옴
   mounted: function() {
     axios
       .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
@@ -69,60 +72,52 @@ export default {
       });
   },
   methods: {
+    // 중복체크 버튼 클릭 시 호출
     clickDupbtn() {
+      // input 태그에 입력된 닉네임과 DB에 등록되어 있는 닉네임이 같으면
+      // == 닉네임이 변경되지 않았으면
       if (this.modifydata.nickname == this.beforenickname) {
         return;
       }
 
+      // 입력된 닉네임을 DB에서 검색
       axios
         .get("user/searchnickname/" + this.modifydata.nickname)
         .then(response => {
-          console.log(response);
-          console.log(response.data);
+          // 사용 중인 닉네임일 경우
           if (response.data == "success") {
             this.nicknameDup = false;
             this.modifydata.nickname = "";
-            this.$q.notify({
-              color: "red",
-              textColor: "white",
-              icon: "warning",
-              message: "사용할 수 없는 별명입니다"
-            });
+            notify("red-6", "white", "warning", "사용할 수 없는 별명입니다");
+
+            // 사용 중이지 않은 닉네임일 경우
           } else {
             this.nicknameDup = true;
-            this.$q.notify({
-              color: "green",
-              textColor: "white",
-              icon: "check",
-              message: "사용 가능한 별명입니다"
-            });
+            notify("green", "white", "check", "사용 가능한 별명입니다");
           }
         })
         .catch(error => {
           console.log(error);
+          notify("red", "white", "warning", "중복 검사 중 오류 발생");
         });
     },
+
+    // 수정 버튼 클릭 시 호출
     onSubmit() {
+      // 닉네임이 변경되었는데 중복확인 버튼을 안 누른 경우
       if (!this.nicknameDup && this.beforenickname != this.modifydata.nickname)
         return;
+
+      // 닉네임 수정 요청
       axios
         .put("/user/update", this.modifydata)
         .then(response => {
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "cloud",
-            message: "수정되었습니다"
-          });
+          notify("green", "white", "cloud", "사용 가능한 별명입니다");
           this.$router.push("/mypage");
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "warning",
-            message: "수정 실패"
-          });
+          console.log(error);
+          notify("red", "white", "warning", "수정 중 오류 발생");
         });
     },
     goMypage() {

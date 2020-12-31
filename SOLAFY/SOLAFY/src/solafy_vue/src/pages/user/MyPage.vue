@@ -2,6 +2,7 @@
   <div>
     <div class="q-pa-md">
       <div class="q-gutter-y-md">
+        <!-- 상단의 메뉴탭 -->
         <q-tabs v-model="tab" dense class="bg-grey-2 text-teal">
           <q-tab name="mypage" icon="mail" label="MyPage" />
           <q-tab name="withdrawal" icon="mail" label="Withdrawal" />
@@ -9,6 +10,7 @@
           <q-tab name="problemset" icon="movie" label="ProblemSets" />
         </q-tabs>
 
+        <!-- 회원 정보 탭 -->
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="mypage">
             <div class="text-h6">{{ userinfo.nickname }} 님 ({{ email }})</div>
@@ -21,6 +23,7 @@
             </div>
           </q-tab-panel>
 
+          <!-- 탈퇴 탭 -->
           <q-tab-panel name="withdrawal">
             <div class="text-h6">비밀번호를 입력해주세요</div>
             <div>
@@ -39,11 +42,13 @@
             </div>
           </q-tab-panel>
 
+          <!-- 문제 탭 -->
           <q-tab-panel name="problem">
             <div class="text-h6">Alarms</div>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </q-tab-panel>
 
+          <!-- 문제집 탭 -->
           <q-tab-panel name="problemset">
             <div class="text-h6">Movies</div>
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -51,6 +56,8 @@
         </q-tab-panels>
       </div>
     </div>
+
+    <!-- 탈퇴 컨펌 다이얼로그 -->
     <q-dialog v-model="dialog" persistent>
       <q-card>
         <q-card-section class="row items-center">
@@ -76,6 +83,8 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { notify } from "src/api/common.js";
+
 export default {
   data() {
     return {
@@ -86,6 +95,7 @@ export default {
       dialog: false
     };
   },
+  // uid로 회원 정보 가져옴
   mounted: function() {
     axios
       .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
@@ -97,39 +107,48 @@ export default {
       });
   },
   methods: {
+    // 회원 정보 수정 버튼을 누르면 페이지 이동
     goUpdateUserInfo() {
       this.$router.push("/updateuser");
     },
+    // 탈퇴 버튼 클릭 시 호출
     clickwithdrawalbtn() {
+      // 비밀번호 입력하지 않으면
       if (this.password == "") return;
+      // 입력된 비밀번호로 회원 인증
       firebaseAuth
         .signInWithEmailAndPassword(
           firebaseAuth.currentUser.email,
           this.password
         )
+        // 입력된 비밀번호 인증이 되면 컨펌 다이얼로그 띄움
         .then(() => {
           this.dialog = true;
         })
         .catch(error => {
-          console.log(error);
+          // 입력된 비밀번호가 다르면 notify
+          if (error.code == "auth/wrong-password") {
+            this.password = "";
+            notify("red-6", "white", "warning", "비밀번호를 확인해주세요");
+          } else {
+            console.log(error);
+          }
         });
     },
+    // 컨펌 다이얼로그에서 탈퇴하기 버튼 클릭 시 호출
     clickRealWithdrawalbtn() {
+      //컨펌 다이얼로그를 끄고
       this.dialog = false;
-
+      //관련 데이터 전부 삭제
       this.deleteImg_FB();
       this.deleteUser_DB();
       this.deleteUser_FB();
 
-      this.$q.notify({
-        color: "green",
-        textColor: "white",
-        icon: "check",
-        message: "계정이 삭제되었습니다."
-      });
+      notify("green", "white", "cloud_done", "계정이 삭제되었습니다");
 
       this.$router.push("/main");
     },
+    // FB의 명찰 사진, 프로필 사진 삭제
     deleteImg_FB() {
       var nametagRef = firebaseSt
         .ref()
@@ -141,9 +160,11 @@ export default {
       nametagRef.delete();
       profileRef.delete();
     },
+    // DB의 회원 정보 삭제
     deleteUser_DB() {
       axios.delete("/user/delete/" + firebaseAuth.currentUser.uid);
     },
+    // FB의 인증 정보 삭제
     deleteUser_FB() {
       firebaseAuth.currentUser
         .delete()
