@@ -7,7 +7,7 @@
           color="primary"
           :disable="loading"
           label="문제 List"
-          @click="ProblemList"
+          @click="problemList"
         />
         <q-btn
           class="q-ml-sm"
@@ -22,7 +22,7 @@
           color="primary"
           :disable="loading"
           label="문제집 등록"
-          @click="ProblemSetCreate"
+          @click="problemSetCreate"
         />
       </div>
       <div class="col">
@@ -33,25 +33,27 @@
           row-key="name"
           :filter="filter"
           :loading="loading"
-          @row-click="problemDetail"
+          @row-click="problemSetDetail"
+          no-data-label="검색결과가 없습니다"
         >
-          <template v-slot:top>
-            <q-space />
-            <q-select
-              id="selectbox"
-              filled
-              v-model="selection"
-              :options="options"
-              label="검색조건"
-            />
+          <template v-slot:top-right>
             <q-input
               bottom-slots
               v-model="keyword"
               label="검색어를 입력해주세요"
               counter
               maxlength="12"
-              @keyup.enter="searchProblem()"
+              @keyup.enter="searchProblemSet"
             >
+              <template v-slot:before>
+                <q-select
+                  id="selectbox"
+                  filled
+                  v-model="option"
+                  :options="options"
+                  label="검색조건"
+                />
+              </template>
               <template v-slot:append>
                 <q-icon
                   v-if="keyword !== ''"
@@ -59,9 +61,16 @@
                   @click="keyword = ''"
                   class="cursor-pointer"
                 />
-                <q-icon name="search" @click="searchProblem()" />
+                <q-icon name="search" @click="searchProblemSet" />
               </template>
             </q-input>
+          </template>
+
+          <template v-slot:no-data="{ message }">
+            <div class="full-width row flex-center text-accent q-gutter-sm">
+              <q-icon size="2em" name="sentiment_dissatisfied" />
+              <b style="font-size:15px">{{ message }} </b>
+            </div>
           </template>
         </q-table>
       </div>
@@ -72,6 +81,7 @@
 <script>
 import axios from "axios";
 import routes from "src/router/routes";
+import { notify } from "src/api/common";
 
 export default {
   data() {
@@ -82,7 +92,7 @@ export default {
       rowCount: 10,
       errored: false,
       keyword: null,
-      selection: "제목",
+      option: "제목",
       options: ["제목", "문제집번호", "작성자"],
       columns: [
         {
@@ -124,7 +134,7 @@ export default {
   },
   methods: {
     //문제집 전체 리스트 반환
-    selectproblemSetList: function() {
+    selectProblemSetList() {
       this.loading = true;
       axios
         .get("problem/problemset/problemSetSelect")
@@ -132,41 +142,62 @@ export default {
           this.problemSetList = response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "조회 실패"
-          });
+          notify("negative", "white", "error", "조회 실패");
+          this.$router.go(-1);
         })
         .finally(() => {
           this.loading = false;
         });
     },
     //문제 검색 및 검색 예외처리
-    searchProblem: function() {
+    searchProblemSet() {
       this.loading = true;
+      if(this.keyword==""){
+        this.selectProblemSetList();
+        return;
+      }
+      if (this.option == "제목") {
+        this.selectProblemByTitle();
+      } else if (this.option == "문제집번호") {
+        this.selectProblemByNo();
+      } else {
+        this.selectProblemByWriter();
+      }
+    },
+    // 문제집 제목으로 검색
+    selectProblemByTitle() {
       axios
-        .get(`/problem/search/${this.selection}/${this.keyword}`)
+        .get("problem/problemset/problemSetSelectByTitle/" + this.keyword)
         .then(response => {
-          this.problems = response.data;
-          if (this.problems.length === 0) {
-            this.$q.notify({
-              color: "red-6",
-              textColor: "white",
-              icon: "warning",
-              message: "조회 실패"
-            });
-          }
-          console.log(this.problems[0]);
+          this.problemSetList = response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red-6",
-            textColor: "white",
-            icon: "warning",
-            message: "조회 실패"
-          });
+          notify("negative", "white", "error", "조회 실패");
+        })
+        .finally(() => (this.loading = false));
+    },
+    // 문제집 번호로 검색
+    selectProblemByNo() {
+      axios
+        .get("problem/problemset/problemSetSelectByNo/" + this.keyword)
+        .then(response => {
+          this.problemSetList=[];
+          this.problemSetList.push(response.data.problemSet);
+        })
+        .catch(error => {
+          notify("negative", "white", "error", "조회 실패");
+        })
+        .finally(() => (this.loading = false));
+    },
+    // 문제집 작성자로 검색
+    selectProblemByWriter() {
+      axios
+        .get("problem/problemset/problemSetSelectByWriter/" + this.keyword)
+        .then(response => {
+          this.problemSetList = response.data;
+        })
+        .catch(error => {
+          notify("negative", "white", "error", "조회 실패");
         })
         .finally(() => (this.loading = false));
     },
@@ -177,31 +208,30 @@ export default {
         name: "Problem"
       });
     },
-    //ProblemSetCreate page로 이동
-    ProblemSetCreate() {
-      this.loading = true;
+    //problemSetCreate page로 이동
+    problemSetCreate() {
       this.$router.push({
-        name: "ProblemSetCreate"
+        name: "ProblemSetCreateByProblemSetInfo"
       });
     },
-    //problemDetail page로 이동
-    problemDetail(evt, row) {
+    //problemSetDetail page로 이동
+    problemSetDetail(evt, row) {
       this.loading = true;
       this.$router.push({
-        name: "ProblemDetail",
+        name: "ProblemDetailByProblemSetInfo",
         params: {
-          problemNo: row.problemNo
+          problemSetNo: row.problemSetNo
         }
       });
     }
   },
   created() {
-    this.selectproblemSetList();
+    this.selectProblemSetList();
   }
 };
 </script>
 <style>
 #selectbox {
-  width: 70px;
+  width: 80px;
 }
 </style>
