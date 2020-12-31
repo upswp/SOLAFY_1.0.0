@@ -161,6 +161,7 @@ export default {
   methods: {
     onSubmit() {
       if (this.check) {
+        // ! 현재 step 값으로 다음 step으로 넘어갈지 경정 
         if (this.step < 3) this.$refs.stepper.next();
         else {
           // ! checkgroup(param, success, fail)
