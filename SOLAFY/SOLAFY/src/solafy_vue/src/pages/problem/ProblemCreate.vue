@@ -64,11 +64,22 @@
             indicator-color="primary"
             align="justify"
             narrow-indicator
-           
           >
-            <q-tab name="객관식" label="객관식"  @click.prevent="setType('객관식')"/>
-            <q-tab name="주관식" label="주관식"  @click.prevent="setType('주관식')"/>
-            <q-tab name="서술형" label="서술형"  @click.prevent="setType('서술형')"/>
+            <q-tab
+              name="객관식"
+              label="객관식"
+              @click.prevent="setType('객관식')"
+            />
+            <q-tab
+              name="주관식"
+              label="주관식"
+              @click.prevent="setType('주관식')"
+            />
+            <q-tab
+              name="서술형"
+              label="서술형"
+              @click.prevent="setType('서술형')"
+            />
           </q-tabs>
 
           <q-separator />
@@ -211,7 +222,7 @@ export default {
       selectSmall: null,
       hashTagText: "",
       tab: "객관식",
-      tab_pre:"객관식",
+      tab_pre: "객관식",
       choiceList: [],
       result: true,
       options: {
@@ -345,21 +356,14 @@ export default {
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
       this.createProblem();
-      this.updateFlag();
-      if (this.result) {
-        notify("positive", "white", "done", "문제 등록 성공");
-        this.$router.push({
-          name: "Problem"
-        });
-      } else {
-        notify("red", "white", "error", "문제 등록 실패");
-      }
     },
     // 문제 등록
     createProblem() {
       axios
         .post("problem/create", this.item)
-        .then(response => {})
+        .then(response => {
+          this.updateFlag();
+        })
         .catch(error => {
           console.log(error);
           this.result = false;
@@ -373,23 +377,48 @@ export default {
         .catch(error => {
           console.log(error);
           this.result = false;
+        })
+        .finally(() => {
+          if (this.result) {
+            notify("positive", "white", "done", "문제 등록 성공");
+            this.$router.push({
+              name: "Problem"
+            });
+          } else {
+            notify("red", "white", "error", "문제 등록 실패");
+          }
         });
     },
     // 탭 클릭 시 type 설정
     setType(name) {
       this.$q.notify({
         progress: true,
-        message: '이때까지 입력한 정답 데이터가 날아갑니다. \n넘어가시겠습니까?',
-        color: 'primary',
-        icon:"warning",
-        position:"center",
+        message:
+          "이때까지 입력한 정답 데이터가 날아갑니다. \n넘어가시겠습니까?",
+        color: "primary",
+        icon: "warning",
+        position: "center",
         // '네' 클릭 시 tab과 이전상태tab을 현재 클릭한 탭으로 변경
         // '아니오' 클릭 시 tab을 이전상태의 tab으로 변경
         actions: [
-          { label: '네', color: 'yellow', handler: () => {this.clearInput();this.tab=name;this.tab_pre=name;} },
-          { label: '아니오', color: 'white', handler: () => {this.tab=this.tab_pre;} }
+          {
+            label: "네",
+            color: "yellow",
+            handler: () => {
+              this.clearInput();
+              this.tab = name;
+              this.tab_pre = name;
+            }
+          },
+          {
+            label: "아니오",
+            color: "white",
+            handler: () => {
+              this.tab = this.tab_pre;
+            }
+          }
         ]
-      })
+      });
       if (name == "객관식") {
         this.item.problem.type = 0;
       } else if (name == "주관식") {
@@ -399,10 +428,10 @@ export default {
       }
     },
     // input값 초기화
-    clearInput(){
+    clearInput() {
       this.item.problemAnswer.answer = "";
       this.item.problemAnswer.keyword = "";
-      this.choiceList=[];
+      this.choiceList = [];
     },
     // User의 Nickname반환
     selectNickname() {
