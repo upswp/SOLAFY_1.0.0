@@ -126,9 +126,15 @@ const routes = [
         beforeEnter: requireAuth()
       },
       {
-        path: "/problemsetcreate",
-        name: "ProblemSetCreate",
-        component: () => import("pages/problemSet/ProblemSetCreate.vue"),
+        path: "/problemsetcreate/problemSetListByProblem",
+        name: "ProblemSetCreateByProblem",
+        component: () => import("pages/problemSet/problemSetCreate/ProblemSetCreateByProblem.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
+        path: "/problemsetcreate/problemSetInfo",
+        name: "ProblemSetCreateByProblemSetInfo",
+        component: () => import("pages/problemSet/problemSetCreate/ProblemSetCreateByProblemSetInfo.vue"),
         beforeEnter: requireAuth()
       },
       {
