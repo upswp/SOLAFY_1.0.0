@@ -51,8 +51,8 @@ public class GroupServiceImpl implements GroupService {
 		return groupMapper.selectGroupMember(groupNo);
 	}
 	@Override
-	public boolean checkDuplicateName(String title) throws Exception {
-		return groupMapper.checkDuplicateName(title) == 0 ? true : false;
+	public int checkDuplicateName(String title) throws Exception {
+		return groupMapper.checkDuplicateName(title);
 	}
 
 	@Override

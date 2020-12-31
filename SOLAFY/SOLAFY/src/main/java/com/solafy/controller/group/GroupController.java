@@ -150,9 +150,12 @@ public class GroupController {
 	@ApiOperation(value = "그룹 이름 중복을 확인한다.", response = String.class)
 	@GetMapping(value = "/checkDuplicateName/{title}")
 	public ResponseEntity<String> checkDuplicateName(@PathVariable String title)throws Exception{
-		logger.debug("checkDuplicateName 호출");
-		if(groupService.checkDuplicateName(title))
+		logger.debug("checkDuplicateName 호출 :" + title);
+		int res = groupService.checkDuplicateName(title.trim());
+		if(res == 0)
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else if(res == 1)
+			return new ResponseEntity<String>(FAIL, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}

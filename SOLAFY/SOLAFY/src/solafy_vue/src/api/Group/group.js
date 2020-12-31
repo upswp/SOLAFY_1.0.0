@@ -19,12 +19,18 @@ function createApplyGroupSignUp(param, success, fail){
 }
 
 //일반회원을 그룹에 초대한다.
-function createGroupInvitation(param, success, fail){}
+function createGroupInvitation(param, success, fail){
+
+}
 
 
 function selectAllGroup(param, success, fail){}
 function selectGroupByNo(param, success, fail){}
-function selectCheckDuplicateName(param, success, fail){}
+function selectCheckDuplicateName(param, success, fail){
+    Axios.get("group/checkDuplicateName/" + param)
+    .then(success)
+    .catch(fail)
+}
 function selectGroupMember(param, success, fail){}
 
 

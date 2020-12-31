@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-md">
-    <q-form class="q-gutter-md" @submit="onSubmit">
+  <div class="q-pa-md fit row justify-center content-center">
+    <q-form class="q-gutter-md col-6" @submit="onSubmit">
       <q-stepper
         v-model="step"
         ref="stepper"
@@ -15,10 +15,9 @@
           :error="step < 3"
           :done="step > 1"
         >
-          <!-- 그룹 명  -->
-          <div style="max-width: 440px;">
+          <!-- 그룹명 시작  -->
+          <div style="max-width: 420px;">
             <q-input
-              filled
               bottom-slots
               v-model="groupData.title"
               label="그룹명"
@@ -37,19 +36,25 @@
                   class="cursor-pointer"
                 />
               </template>
-              <!-- 중복 체크 -->
+              <!-- 중복 체크 시작 -->
               <template v-slot:after>
-                <q-btn :text-color="checkColor" flat @click="titleDuplicate"
-                  ><strong>Check</strong></q-btn
-                >
+                <q-btn 
+                  :text-color="DupCheck ? 'green':'red'" 
+                  flat 
+                  @click="titleDuplicate"
+                  :icon="DupCheck ? 'check':'warning'"
+                  >
+                </q-btn>
               </template>
+              <!-- 중복 체크 끝-->   
             </q-input>
           </div>
-          <!-- 그룹 소개 -->
+          <!-- 그룹명 끝 -->
+
+          <!-- 그룹 소개 시작 -->
           <div style="max-width: 350px;">
             <q-input
               v-model="groupData.description"
-              filled
               clearable
               autogrow
               color="green-8"
@@ -62,6 +67,9 @@
               ]"
             />
           </div>
+          <!-- 그룹 소개 끝-->
+
+          <!-- 그룹 타입 시작 -->
           <div class="q-gutter-sm">
             <q-radio
               keep-color
@@ -79,6 +87,7 @@
               color="orange"
             />
           </div>
+           <!-- 그룹 타입 끝 -->
         </q-step>
 
         <q-step
@@ -91,6 +100,7 @@
           keywords.
         </q-step>
 
+        <!-- 최종 확인 시작-->
         <q-step :name="3" title="Create an ad" icon="add_comment">
           <div class="row">
             <strong>그룹명 : {{ groupData.title }}</strong>
@@ -103,7 +113,9 @@
             <strong v-else>타입 : private</strong>
           </div>
         </q-step>
+        <!-- 최종 확인 끝-->
 
+        <!-- 페이지네이션 시작 -->
         <template v-slot:navigation>
           <q-stepper-navigation>
             <q-btn
@@ -121,6 +133,7 @@
             />
           </q-stepper-navigation>
         </template>
+        <!-- 페이지네이션 끝 -->
       </q-stepper>
     </q-form>
   </div>
@@ -129,7 +142,7 @@
 <script>
 import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
-import { createGroup } from 'src/api/Group/group.js';
+import { createGroup, selectCheckDuplicateName } from 'src/api/Group/group.js';
 import { notify } from 'src/api/common.js';
 export default {
   data() {
@@ -139,8 +152,7 @@ export default {
         title: "",
         type: "0"
       },
-      check: false,
-      checkColor: "red",
+      titleCheck : '',
       dense: false,
       inputModel: "",
       step: 1
@@ -151,6 +163,7 @@ export default {
       if (this.check) {
         if (this.step < 3) this.$refs.stepper.next();
         else {
+          // ! checkgroup(param, success, fail)
          createGroup(this.groupData, 
          (Response) => {
               notify("green", "white", "cloud", "그룹 생성 완료");
@@ -167,17 +180,21 @@ export default {
     },
 
     titleDuplicate() {
-      Axios.get("group/checkDuplicateName/" + this.title)
-        .then(Response => {
-          if (Response.data == "success") {
-            this.check = true;
-            this.checkColor = "green";
-          } else {
-            this.check = false;
-            this.checkColor = "red";
-          }
-        })
-        .catch(error => {});
+      // ! selectCheckDuplicateName(param, success, fail)
+      selectCheckDuplicateName(this.groupData.title,
+      (Response)=> {
+        if(Response.data == "success"){
+          this.titleCheck = this.groupData.title;
+          notify("green", "white", "cloud", "사용하셔도 좋습니다");
+        }
+        else if(Response.data == "fail"){
+          notify("red-6", "white", "warning", "그룹명이 중복되었습니다");
+        }
+      },
+      (error) =>{
+        notify("red-6", "white", "warning", "다시 시도해 주세요");
+      }
+      );
     },
 
     processInputFill(e) {
@@ -250,8 +267,15 @@ export default {
         .slice(1)
         .join(this.description)
         .split("\n")[0];
+    },
+    // ! title이 변경되었을 때
+    DupCheck : function(){
+      if(this.groupData.title=='' || this.groupData.title != this.titleCheck)
+        return false;
+      else
+        return true;
     }
-  }
+  },
 };
 </script>
 

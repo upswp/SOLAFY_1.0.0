@@ -68,8 +68,9 @@ public interface GroupService {
 	* @throws Exception
 	* @Method 설명 : 그룹명이 중복인지 확인한다.
 	* @변경이력 :
+	* 2020.12.31 return type : boolean -> int로 변경
 	*/
-	boolean checkDuplicateName(String title)throws Exception;
+	int checkDuplicateName(String title)throws Exception;
 	
 	List<GroupMemberDto> selectGroupMember(int groupNo)throws Exception;
 	
