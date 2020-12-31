@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          SOLAFY
+          <span @click="goMain">SOLAFY</span>
         </q-toolbar-title>
 
         <div class="cursor-pointer non-selectable">
@@ -187,6 +187,9 @@ export default {
     }
   },
   methods: {
+    goMain() {
+      this.$router.push("/main");
+    },
     goMypage() {
       this.$router.push("MyPage");
     },
