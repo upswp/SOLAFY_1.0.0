@@ -14,10 +14,20 @@
  <div class="description text-center rounded-borders">
       <q-flashcard :no-hover="hover" :style="style">
         <q-flashcard-section transition="spin-out" :active="active">
+          <img src="~src/assets/ggg5.png" width=600 height=400>
+        </q-flashcard-section>
+      </q-flashcard>
+    </div>
+    <div class="description text-center rounded-borders">
+      <q-flashcard :no-hover="hover" :style="style">
+        <q-flashcard-section transition="spin-out" :active="active">
           <img src="~src/assets/ggg.png" width=600 height=400>
         </q-flashcard-section>
       </q-flashcard>
     </div>
+
+
+
 
     <div class="description text-center rounded-borders">
       <q-flashcard :no-hover="hover" :style="style">
@@ -31,6 +41,20 @@
       <q-flashcard :no-hover="hover" :style="style">
         <q-flashcard-section transition="spin-in" :active="active">
           <img src="~src/assets/ggg4.jpg" width=600 height=400>
+        </q-flashcard-section>
+      </q-flashcard>
+    </div>
+     <div class="description text-center rounded-borders">
+      <q-flashcard :no-hover="hover" :style="style">
+        <q-flashcard-section transition="spin-in" :active="active">
+          <img src="~src/assets/ggg6.jpg" width=600 height=400>
+        </q-flashcard-section>
+      </q-flashcard>
+    </div>
+     <div class="description text-center rounded-borders">
+      <q-flashcard :no-hover="hover" :style="style">
+        <q-flashcard-section transition="spin-in" :active="active">
+          <img src="~src/assets/ggg7.jpg" width=600 height=400>
         </q-flashcard-section>
       </q-flashcard>
     </div>
