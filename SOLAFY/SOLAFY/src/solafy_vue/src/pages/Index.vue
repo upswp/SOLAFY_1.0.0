@@ -1,9 +1,15 @@
 <template>
-  <div class="q-pa-md" style="max-width: 400px">
+  <div class="q-pa-md">
+    <!-- logo -->
+    <div class="fit row justify-center content-center">
+      <img style="width : 350px; height : 350px;"
+      src="~src/assets/mainLogo.png"
+      />
+    </div>
     <!-- 로그인 입력 폼 -->
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+    <div class="fit row justify-center content-center">
+    <q-form @submit="onSubmit" @reset="onReset" class="col-5 self-center" style="max-width : 300px">
       <q-input
-        filled
         dense
         type="email"
         v-model="formData.email"
@@ -13,7 +19,6 @@
       />
 
       <q-input
-        filled
         dense
         type="password"
         v-model="formData.password"
@@ -29,16 +34,16 @@
         v-model="idsave"
         label="이메일 저장"
       />
-      <div>
+      <div class="fit row justify-center content-center">
         <q-btn label="login" type="submit" color="positive" />
-        <q-btn label="reset" type="reset" color="negative" flat class="q-ml" />
+        <q-btn label="reset" type="reset" color="negative" flat />
       </div>
     </q-form>
-
+    </div>
     <!-- 버튼 -->
-    <div>
-      <q-btn label="회원가입" @click="goUserRegi" />
-      <q-btn label="비밀번호 재설정" @click="pwdprompt = true" />
+    <div class="fit row justify-center content-center">
+      <q-btn flat label="회원가입" @click="goUserRegi" />
+      <q-btn flat label="비밀번호 재설정" @click="pwdprompt = true" />
     </div>
 
     <!-- 비밀번호 재설정 다이얼로그 -->
