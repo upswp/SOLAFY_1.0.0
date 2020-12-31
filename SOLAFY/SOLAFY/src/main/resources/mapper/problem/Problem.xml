@@ -24,7 +24,7 @@
 	<select id="selectRecommendProblemList" parameterType="int" resultType="ProblemDto">
 		select problemNo, title
 		from problem
-		where flag = 1 and categoryNo = (select categoryNo from problem where problemNo=#{problemNo})
+		where flag = 1 and problemNo != #{problemNo} and categoryNo = (select categoryNo from problem where problemNo=#{problemNo})
 		order by rand() limit 10
 	</select>
 
