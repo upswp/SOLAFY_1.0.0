@@ -124,6 +124,21 @@ public class UserController {
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 * 21-01-01 추가
+	 */
+	@ApiOperation(value = "회원가입 신청한  회원들의 목록을 반환.", response = List.class)
+	@GetMapping(value = "/selectregirequest")
+	public ResponseEntity<List<UserDto>> selectRegiRequest() throws Exception {
+		logger.debug("selectRegiRequest");
+		return new ResponseEntity<List<UserDto>>(userService.selectRegiRequest(), HttpStatus.OK);
+	}
 
 	/**
 	 * 

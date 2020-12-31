@@ -34,6 +34,13 @@
 		WHERE  nickname = #{nickname}
 	</select>	
 	
+	<!-- 회원가입 신청한 사용자들 목록 반환 -->
+	<select id="selectRegiRequest" resultType="UserDto">
+		SELECT uid, nickname, statusMessage, admin
+		FROM   userinfo
+		WHERE  admin = 2
+	</select>	
+	
 	<!-- 사용자 정보 수정 -->
 	<update id="updateUser" parameterType="UserDto">
 		UPDATE userinfo

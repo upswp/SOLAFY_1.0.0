@@ -44,6 +44,11 @@ public class UserServiceImpl implements UserService {
 	public UserDto selectUserByNickname(String nickname) throws Exception {
 		return userMapper.selectUserByNickname(nickname);
 	}
+	
+	@Override
+	public List<UserDto> selectRegiRequest() throws Exception {
+		return userMapper.selectRegiRequest();
+	}
 
 	@Override
 	public boolean updateUser(UserDto uDto) throws Exception {

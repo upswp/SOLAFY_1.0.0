@@ -58,6 +58,17 @@ public interface UserService {
 	 * @변경이력
 	 */
 	public UserDto selectUserByNickname(String nickname) throws Exception;
+	
+	/**
+	 * 회원가입 신청한 사용자들 목록 반환 (admin column의 값이 2)
+	 * 
+	 * @return List<UserDto>
+	 * @throws Exception
+	 * 
+	 * @변경이력 
+	 * 21-01-01 추가
+	 */
+	public List<UserDto> selectRegiRequest() throws Exception;
 
 	/**
 	 * 사용자 정보 수정 - uid를 기준으로 별명과 상태메시지를 수정
