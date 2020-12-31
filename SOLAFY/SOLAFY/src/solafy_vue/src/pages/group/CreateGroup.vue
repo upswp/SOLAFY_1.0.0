@@ -140,7 +140,6 @@
 </template>
 
 <script>
-import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
 import { createGroup, selectCheckDuplicateName } from 'src/api/Group/group.js';
 import { notify } from 'src/api/common.js';

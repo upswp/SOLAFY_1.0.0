@@ -17,13 +17,13 @@
  </insert>
  
  <insert id="createApplyGroupSignUp" parameterType="GroupMemberDto">
- 	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
- 	values(#{uid}, #{groupNo}, #{grade}, #{statusMessage}, #{regiMessage})
+ 	insert into groupmember (uid, groupNo, grade, regiMessage)
+ 	values(#{uid}, #{groupNo}, #{grade}, #{regiMessage})
  </insert>
  
  <insert id="createGroupInvitation" parameterType="GroupMemberDto">
- 	insert into groupmember (uid, groupNo, grade, statusMessage, regiMessage)
- 	values(#{uid}, #{groupNo}, #{grade}, #{statusMessage}, #{regiMessage})
+ 	insert into groupmember (uid, groupNo, grade, regiMessage)
+ 	values(#{uid}, #{groupNo}, #{grade}, #{regiMessage})
  </insert>
 
 
