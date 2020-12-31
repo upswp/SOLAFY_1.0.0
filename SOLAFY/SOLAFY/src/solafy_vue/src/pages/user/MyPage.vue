@@ -15,7 +15,10 @@
             상태메시지: {{ userinfo.statusMessage }}
             <q-separator />
             <div>something ...</div>
-            <div><q-btn label="수정" @click="goUpdateUserInfo"></q-btn></div>
+            <div>
+              <q-btn label="수정" @click="goUpdateUserInfo"></q-btn>
+              <q-btn label="test" @click="deleteImg_FB"></q-btn>
+            </div>
           </q-tab-panel>
 
           <q-tab-panel name="withdrawal">
@@ -72,7 +75,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
-import { firebaseAuth } from "boot/firebase";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
 export default {
   data() {
     return {
@@ -99,32 +102,53 @@ export default {
     },
     clickwithdrawalbtn() {
       if (this.password == "") return;
-      this.dialog = true;
-    },
-    clickRealWithdrawalbtn() {
-      this.dialog = false;
-      axios.delete("/user/delete/" + firebaseAuth.currentUser.uid);
       firebaseAuth
         .signInWithEmailAndPassword(
           firebaseAuth.currentUser.email,
           this.password
         )
         .then(() => {
-          firebaseAuth.currentUser
-            .delete()
-            .then(function() {})
-            .catch(function(error) {
-              console.log(error);
-            });
-          this.$q.notify({
-            color: "green",
-            textColor: "white",
-            icon: "check",
-            message: "계정이 삭제되었습니다."
-          });
-          this.$router.push("/main");
+          this.dialog = true;
         })
         .catch(error => {
+          console.log(error);
+        });
+    },
+    clickRealWithdrawalbtn() {
+      this.dialog = false;
+
+      this.deleteImg_FB();
+      this.deleteUser_DB();
+      this.deleteUser_FB();
+
+      this.$q.notify({
+        color: "green",
+        textColor: "white",
+        icon: "check",
+        message: "계정이 삭제되었습니다."
+      });
+
+      this.$router.push("/main");
+    },
+    deleteImg_FB() {
+      var nametagRef = firebaseSt
+        .ref()
+        .child("nametagimg/" + firebaseAuth.currentUser.uid);
+
+      var profileRef = firebaseSt
+        .ref()
+        .child("profileimg/" + firebaseAuth.currentUser.uid);
+      nametagRef.delete();
+      profileRef.delete();
+    },
+    deleteUser_DB() {
+      axios.delete("/user/delete/" + firebaseAuth.currentUser.uid);
+    },
+    deleteUser_FB() {
+      firebaseAuth.currentUser
+        .delete()
+        .then(function() {})
+        .catch(function(error) {
           console.log(error);
         });
     }
