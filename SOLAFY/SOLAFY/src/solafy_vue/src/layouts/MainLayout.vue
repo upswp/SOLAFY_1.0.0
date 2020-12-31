@@ -160,7 +160,7 @@ export default {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData,
-      admin: "none",
+      admin: "",
       mem: "",
       non: "",
       loginUser: null
@@ -205,7 +205,9 @@ export default {
       if (this.$router.currentRoute.path == "/main") this.$router.push("/");
       else this.$router.push("/main");
     },
-    goUserManage() {}
+    goUserManage() {
+      this.$router.push("/manageuser");
+    }
   }
 };
 </script>

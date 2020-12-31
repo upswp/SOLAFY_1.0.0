@@ -231,6 +231,12 @@ const routes = [
         beforeEnter: requireAuth()
       },
       {
+        path: "/manageUser",
+        name: "ManageUser",
+        component: () => import("pages/user/ManageUser.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
         path: "/verifyemailwarn",
         component: () => import("pages/user/VerifyEmailWarn.vue"),
         beforeEnter: requireEmailNotVerified()
