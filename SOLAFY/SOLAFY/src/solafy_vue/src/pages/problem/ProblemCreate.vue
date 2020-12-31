@@ -64,10 +64,11 @@
             indicator-color="primary"
             align="justify"
             narrow-indicator
+           
           >
-            <q-tab name="객관식" label="객관식" @click="setType('객관식')" />
-            <q-tab name="주관식" label="주관식" @click="setType('주관식')" />
-            <q-tab name="서술형" label="서술형" @click="setType('서술형')" />
+            <q-tab name="객관식" label="객관식"  @click.prevent="setType('객관식')"/>
+            <q-tab name="주관식" label="주관식"  @click.prevent="setType('주관식')"/>
+            <q-tab name="서술형" label="서술형"  @click.prevent="setType('서술형')"/>
           </q-tabs>
 
           <q-separator />
@@ -176,6 +177,7 @@
 <script>
 import axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
+import { notify } from "src/api/common.js";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
 
@@ -209,7 +211,9 @@ export default {
       selectSmall: null,
       hashTagText: "",
       tab: "객관식",
+      tab_pre:"객관식",
       choiceList: [],
+      result: true,
       options: {
         content: "",
         editable: true,
@@ -273,12 +277,8 @@ export default {
           this.largeList = response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "카테고리 대분류 불러오기 실패"
-          });
+          notify("red", "white", "error", "카테고리 대분류 불러오기 실패");
+          this.$router.go(-1);
         });
     },
     // 카테고리 중분류 선택
@@ -289,12 +289,7 @@ export default {
           this.mediumList = response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "카테고리 중분류 불러오기 실패"
-          });
+          notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
         });
     },
     // 카테고리 소분류 선택
@@ -305,12 +300,7 @@ export default {
           this.smallList = response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "카테고리 소분류 불러오기 실패"
-          });
+          notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
     },
     // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
@@ -328,11 +318,14 @@ export default {
     },
     // 문제 등록 처리
     InsertProblem() {
-      //     categoryNo: "",
       // 객관식인 경우
       if (this.item.problem.type == 0) {
         // 선지 저장
-        this.item.problem.multipleChoice = this.choiceList.map(el=>{return el.choice;}).toString();
+        this.item.problem.multipleChoice = this.choiceList
+          .map(el => {
+            return el.choice;
+          })
+          .toString();
         // 정답 저장
         var tmp = [];
         for (var i = 0; i < this.choiceList.length; i++) {
@@ -351,49 +344,52 @@ export default {
         String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
-      console.log(this.item);
-      // 백엔드 연결
+      this.createProblem();
+      this.updateFlag();
+      if (this.result) {
+        notify("positive", "white", "done", "문제 등록 성공");
+        this.$router.push({
+          name: "Problem"
+        });
+      } else {
+        notify("red", "white", "error", "문제 등록 실패");
+      }
+    },
+    // 문제 등록
+    createProblem() {
       axios
         .post("problem/create", this.item)
-        .then(response => {
-          this.updateFlag();
-          this.$q.notify({
-            color: "positive",
-            textColor: "white",
-            icon: "done",
-            message: "문제 등록 성공"
-          });
-          this.$router.push({
-            name: "Problem",
-          });
-        })
+        .then(response => {})
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "문제 등록 실패"
-          });
+          console.log(error);
+          this.result = false;
         });
     },
     // 문제의 flag를 0에서 1로 변경
-    updateFlag(){
+    updateFlag() {
       axios
-        .put("problem/updateflag/"+firebaseAuth.currentUser.uid)
-        .then(response => {
-
-        })
+        .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
+        .then(response => {})
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "문제 등록 실패"
-          });
+          console.log(error);
+          this.result = false;
         });
     },
     // 탭 클릭 시 type 설정
     setType(name) {
+      this.$q.notify({
+        progress: true,
+        message: '이때까지 입력한 정답 데이터가 날아갑니다. \n넘어가시겠습니까?',
+        color: 'primary',
+        icon:"warning",
+        position:"center",
+        // '네' 클릭 시 tab과 이전상태tab을 현재 클릭한 탭으로 변경
+        // '아니오' 클릭 시 tab을 이전상태의 tab으로 변경
+        actions: [
+          { label: '네', color: 'yellow', handler: () => {this.clearInput();this.tab=name;this.tab_pre=name;} },
+          { label: '아니오', color: 'white', handler: () => {this.tab=this.tab_pre;} }
+        ]
+      })
       if (name == "객관식") {
         this.item.problem.type = 0;
       } else if (name == "주관식") {
@@ -401,6 +397,12 @@ export default {
       } else {
         this.item.problem.type = 2;
       }
+    },
+    // input값 초기화
+    clearInput(){
+      this.item.problemAnswer.answer = "";
+      this.item.problemAnswer.keyword = "";
+      this.choiceList=[];
     },
     // User의 Nickname반환
     selectNickname() {
@@ -410,12 +412,8 @@ export default {
           this.nickname = response.data.nickname;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red",
-            textColor: "white",
-            icon: "error",
-            message: "닉네임 불러오기 실패"
-          });
+          notify("red", "white", "error", "닉네임 불러오기 실패");
+          this.$router.go(-1);
         });
     }
   },
