@@ -17,9 +17,13 @@
       </div>
       <!-- 문제 내용 -->
       <div class="content">
-        <!-- 마크다운으로 문제 내용 출력 -->
+        <!-- tiptap으로 문제 내용 출력 -->
         <div>
-          <q-markdown no-linkify>{{ item.problem.contents }}</q-markdown>
+          <quasar-tiptap
+            class="shadow-3"
+            v-bind="options"
+            style="margin-top:10px;margin-bottom:10px"
+          />
         </div>
         <!-- 객관식인 경우 선지 -->
         <div class="answer" v-if="item.problem.type === 0">
@@ -78,6 +82,8 @@
 
 <script>
 import axios from "axios";
+import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
+import "quasar-tiptap/lib/index.css";
 
 export default {
   name: "ProblemDetail",
@@ -140,8 +146,19 @@ export default {
       answerChecklist: [],
       answerText: "",
       loading: true,
-      result: false
+      result: false,
+      options: {
+        content: "",
+        editable: false,
+        showToolbar: false,
+        extensions: [
+          ...RecommendedExtensions
+        ]
+      }
     };
+  },
+  components: {
+    QuasarTiptap
   },
   created() {
     // 문제 정보 받아온 후 데이터 후 가공
@@ -161,6 +178,7 @@ export default {
           this.item.categorySmall.categoryName;
         this.data[2].content = this.item.problem.nickname;
         this.data[3].content = this.item.problem.regiTime;
+        this.options.content = this.item.problem.contents;
       })
       .catch(error => {
         this.$q.notify({
@@ -266,7 +284,6 @@ export default {
 
 <style scoped>
 .content {
-  margin-left: 5%;
   margin-top: 2%;
 }
 .answer {
