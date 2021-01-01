@@ -31,24 +31,26 @@
       <q-card-section>
         <q-card-section class="col-4">{{ article.contents }} </q-card-section>
       </q-card-section>
-      <q-card-section align="right">
-        <q-rating
-          id="likeArea"
-          v-model="likeBtn"
-          max="1"
-          size="1em"
-          color="red"
-          color-selected="red-9"
-          icon="favorite_border"
-          icon-selected="favorite"
-          icon-half="favorite"
-          no-dimming
-        />
-        <label for="#likeArea">
-          LikeCount :
-          {{ article.likeCount + likeBtn }}
-        </label>
-      </q-card-section>
+      <template v-if="this.$store.state.boardType === `free`">
+        <q-card-section align="right">
+          <q-rating
+            id="likeArea"
+            v-model="likeBtn"
+            max="1"
+            size="1em"
+            color="red"
+            color-selected="red-9"
+            icon="favorite_border"
+            icon-selected="favorite"
+            icon-half="favorite"
+            no-dimming
+          />
+          <label for="#likeArea">
+            LikeCount :
+            {{ article.likeCount + likeBtn }}
+          </label>
+        </q-card-section>
+      </template>
       <q-separator />
       <q-card-actions align="right">
         <q-btn color="primary" label="글 수정" @click="goToUpdate" />
@@ -140,7 +142,7 @@ export default {
     }, // 댓글 목록
     getReplyRow: function() {
       console.log(this.articleNo);
-      Axios.get(`${this.boardType}reply/selectReplies//${this.articleNo}`)
+      Axios.get(`${this.boardType}reply/selectReplies/${this.articleNo}`)
         .then(response => {
           this.replies = response.data;
         })
@@ -161,7 +163,7 @@ export default {
     },
     goToUpdate: function() {
       this.$router.push({
-        name: "free-board-update",
+        name: `${this.boardType}-board-update`,
         params: { articleNo: this.articleNo }
       });
     }

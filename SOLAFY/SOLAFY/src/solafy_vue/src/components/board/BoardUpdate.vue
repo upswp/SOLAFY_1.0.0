@@ -130,7 +130,7 @@ export default {
     },
     goToDetail: function() {
       this.$router.push({
-        name: "free-board-detail",
+        name: `${this.$store.state.boardType}-board-detail`,
         params: { articleNo: this.articleNo }
       });
     }
