@@ -526,7 +526,6 @@ export default {
       this.choiceList = [];
     },
     getProblem(index) {
-      this.options.content = "";
       this.pIndex = index;
       this.choiceList = [];
       //TODO : 카테고뤼 저장하는 로직 구현 부탁드림 -견2-
