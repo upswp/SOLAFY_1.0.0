@@ -52,7 +52,7 @@
 	<!-- 문제집 업데이트 -->
 	<update id="updateProblemSet" parameterType="problemSetDto">
 		UPDATE problemset
-			set title = #{title},
+		set title = #{title}, regiTime = now()
 		WHERE problemSetNo = #{problemSetNo}	
 	</update>
 	
