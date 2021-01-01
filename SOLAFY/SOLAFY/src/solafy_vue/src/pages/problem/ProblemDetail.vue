@@ -151,9 +151,7 @@ export default {
         content: "",
         editable: false,
         showToolbar: false,
-        extensions: [
-          ...RecommendedExtensions
-        ]
+        extensions: [...RecommendedExtensions]
       }
     };
   },
@@ -182,11 +180,11 @@ export default {
       })
       .catch(error => {
         this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "조회 실패"
-          });
+          color: "negative",
+          textColor: "white",
+          icon: "error",
+          message: "조회 실패"
+        });
         this.goToproblemList();
       })
       .finally(() => {
@@ -206,11 +204,11 @@ export default {
         ((type === 1 || type === 2) && this.answerText == "")
       ) {
         this.$q.notify({
-            color: "warning",
-            textColor: "white",
-            icon: "warning",
-            message: "정답을 입력해주세요"
-          });
+          color: "warning",
+          textColor: "white",
+          icon: "warning",
+          message: "정답을 입력해주세요"
+        });
         return;
       }
       this.answerChecklist.sort();
@@ -236,26 +234,33 @@ export default {
           })
           .catch(error => {
             this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "채점 실패"
-          });
+              color: "negative",
+              textColor: "white",
+              icon: "error",
+              message: "채점 실패"
+            });
           })
           .finally(() => {
             this.loading = false;
           });
       } else if (type === 2) {
         this.$q.notify({
-            color: "positive",
-            textColor: "white",
-            icon: "done",
-            message: "주관식입니다"
-          });
+          color: "positive",
+          textColor: "white",
+          icon: "done",
+          message: "주관식입니다"
+        });
       }
     },
     goToAnswerModify() {},
-    goToproblemUpdate() {},
+    goToproblemUpdate() {
+      this.$router.push({
+        name: "ProblemUpdate",
+        params: {
+          problemNo: this.item.problem.problemNo
+        }
+      });
+    },
     // 문제 삭제
     problemDelete() {
       axios
