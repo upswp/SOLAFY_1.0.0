@@ -47,14 +47,26 @@
       <q-separator />
       <q-card-actions align="right">
         <q-btn color="primary" label="글 등록" @click="createArticle" />
-        <q-btn color="red" label="취소" @click="goToFreeBoard" />
+        <q-btn color="red" label="취소" @click="goToBoard" />
       </q-card-actions>
     </q-card>
   </q-page>
   <!-- 글 등록 form 끝 -->
 </template>
 <script>
+import Axios from "axios";
 export default {
+  data() {
+    return {
+      article: {
+        title: "",
+        contents: "",
+        isNotice: false,
+        groupNo: 1
+      },
+      boardType: this.$store.state.boardType
+    };
+  },
   methods: {
     createArticle: function() {
       var successFlag = true;
@@ -74,11 +86,11 @@ export default {
       }
       if (successFlag) {
         this.article.uid = "DFEIJC23WOSKXCNSWQ";
-        Axios.post(`/free/createArticle`, this.article)
+        Axios.post(`/${this.boardType}/createArticle`, this.article)
           .then(response => {
             if (response.data === "success") {
               this.showFlag = "list";
-              this.showList();
+              this.goToBoard();
               this.resetForm();
               this.$q.notify({
                 message: "게시물 등록 성공",
@@ -98,6 +110,11 @@ export default {
       } else {
         return;
       }
+    },
+    goToBoard: function() {
+      this.$router.push({
+        name: `${this.boardType}-board-list`
+      });
     },
     // 입력 form 초기화는 title, contents, isNotice에 적용된다
     resetForm: function() {

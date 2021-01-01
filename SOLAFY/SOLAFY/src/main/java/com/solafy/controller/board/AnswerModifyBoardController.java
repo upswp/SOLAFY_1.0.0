@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,14 +23,14 @@ import com.solafy.service.board.AnswerModifyBoardService;
 import io.swagger.annotations.ApiOperation;
 
 /**
-* @FileName : AnswerModifyBoardController.java
-* @Project : SOLAFY
-* @Date : 2020. 12. 22
-* @작성자 : BUMSEOK SEO
-
-* @변경이력 :
-* @프로그램 설명 : 답안수정 게시판 컨트롤러
-*/
+ * @FileName : AnswerModifyBoardController.java
+ * @Project : SOLAFY
+ * @Date : 2020. 12. 22
+ * @작성자 : BUMSEOK SEO
+ * 
+ * @변경이력 :
+ * @프로그램 설명 : 답안수정 게시판 컨트롤러
+ */
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
@@ -41,74 +42,130 @@ public class AnswerModifyBoardController {
 	private static final String FAIL = "fail";
 
 	@Autowired
-	private AnswerModifyBoardService answerModifyBoardService;	
-	
+	private AnswerModifyBoardService answerModifyBoardService;
+
 	/**
-	* @param answerModifyBoardDto
-	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	* @Method 설명 : 게시글 등록
-	* @변경이력 :
-	*/
+	 * @param answerModifyBoardDto
+	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	 * @Method 설명 : 게시글 등록
+	 * @변경이력 :
+	 */
 	@ApiOperation(value = "답안수정 게시판에 게시글을 등록한다.", response = String.class)
 	@PostMapping(value = "/createArticle")
-	public ResponseEntity<String> createArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto){
+	public ResponseEntity<String> createArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto) {
 		logger.info("createArticle - 호출" + new Date());
-		if(answerModifyBoardService.createArticle(answerModifyBoardDto)) {
+		if (answerModifyBoardService.createArticle(answerModifyBoardDto)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		}else {			
+		} else {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 	/**
-	* @return List<AnswerModifyBoardDto> 답안수정 게시판의 모든 게시글 반환
-	* 	AnswerModifyBoardDto엔
-	* 	articleNo, uid, problemNo, title, regiTime의 정보를 가지고 있다.
-	* @Method 설명 : 모든 게시글을 반환
-	* @변경이력 :
-	*/
+	 * @return List<AnswerModifyBoardDto> 답안수정 게시판의 모든 게시글 반환 AnswerModifyBoardDto엔
+	 *         articleNo, uid, problemNo, title, regiTime의 정보를 가지고 있다.
+	 * @Method 설명 : 모든 게시글을 반환
+	 * @변경이력 :
+	 */
 	@ApiOperation(value = "답안수정 게시판의 모든 게시글을 반환한다.", response = List.class)
-	@GetMapping(value="/selectArticles")
-	public ResponseEntity<List<AnswerModifyBoardDto>> selectArticles(){
+	@GetMapping(value = "/selectAllArticles")
+	public ResponseEntity<List<AnswerModifyBoardDto>> selectAllArticles() {
 		logger.info("selectArtilces - 호출" + new Date());
-		return new ResponseEntity<List<AnswerModifyBoardDto>>(answerModifyBoardService.selectArticles(),HttpStatus.OK);
+		return new ResponseEntity<List<AnswerModifyBoardDto>>(answerModifyBoardService.selectAllArticles(),
+				HttpStatus.OK);
 	}
-	
+
 	/**
-	* @param answerModifyBoardDto 
-	* 	articleNo, title, contents의 정보를 가지고 있다.
-	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	* @Method 설명 : 게시글 수정
-	* @변경이력 :
-	*/
+	 * @param articleNo
+	 * @return freeBoardDto
+	 * @Method 설명 : 게시글 번호에 해당하는 게시글을 반환한다.
+	 * @변경이력 : 2021-01-01(BUMSEOK SEO) : 해당 메서드 추가
+	 */
+	@ApiOperation(value = "게시글 번호에 해당하는 게시글을 반환한다", response = AnswerModifyBoardDto.class)
+	@GetMapping(value = "/selectArticleByArticleNo/{articleNo}")
+	public AnswerModifyBoardDto selectArticleByArticleNo(@PathVariable int articleNo) {
+		logger.info("selectAtricleByArticleNo - 호출" + new Date());
+		AnswerModifyBoardDto answerModifyBoardDto = answerModifyBoardService.selectArticleByArticleNo(articleNo);
+		return answerModifyBoardDto;
+	}
+
+	/**
+	 * @param title
+	 * @return List<AnswerModifyBoardDto> 게시글 list
+	 * @Method 설명 : 입력한 키워드를 포함하는 제목의 게시글들을 반환한다.
+	 * @변경이력 :
+	 */
+	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
+	@GetMapping(value = "/selectArticleByTitle/{title}")
+	public List<AnswerModifyBoardDto> selectArticleByTitle(@PathVariable String title) {
+		logger.info("selectAtricleByTitle - 호출" + new Date());
+		System.out.println(title);
+		List<AnswerModifyBoardDto> list = answerModifyBoardService.selectArticleByTitle(title);
+		return list;
+	}
+
+	/**
+	 * @param nickname
+	 * @return List<AnswerModifyBoardDto> 게시글 list
+	 * @Method 설명 : 입력한 닉네임에 해당하는 작성자의 게시글들을 반환한다.
+	 * @변경이력 :
+	 */
+	@ApiOperation(value = "입력한 닉네임에 해당하는 게시글을 반환한다", response = List.class)
+	@GetMapping(value = "/selectArticleByNickname/{nickname}")
+	public List<AnswerModifyBoardDto> selectArticleByNickname(@PathVariable String nickname) {
+		logger.info("selectAtricleByTitle - 호출" + new Date());
+		List<AnswerModifyBoardDto> list = answerModifyBoardService.selectArticleByNickname(nickname);
+		return list;
+	}
+
+	/**
+	 * @param nickname
+	 * @return List<AnswerModifyBoardDto> 게시글 list
+	 * @Method 설명 : 입력한 문제번호에 해당하는 작성자의 게시글들을 반환한다.
+	 * @변경이력 :
+	 */
+	@ApiOperation(value = "입력한 문제번호에 해당하는 게시글을 반환한다", response = List.class)
+	@GetMapping(value = "/selectArticleByProblemNo/{problemNo}")
+	public List<AnswerModifyBoardDto> selectArticleByProblemNo(@PathVariable int problemNo) {
+		logger.info("selectAtricleByTitle - 호출" + new Date());
+		List<AnswerModifyBoardDto> list = answerModifyBoardService.selectArticleByProblemNo(problemNo);
+		return list;
+	}
+
+	/**
+	 * @param answerModifyBoardDto articleNo, title, contents의 정보를 가지고 있다.
+	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	 * @Method 설명 : 게시글 수정
+	 * @변경이력 :
+	 */
 	@ApiOperation(value = "답안수정 게시판의 게시글을 수정한다", response = String.class)
-	@PostMapping(value="/updateArticle")
-	public ResponseEntity<String> updateArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto){
+	@PostMapping(value = "/updateArticle")
+	public ResponseEntity<String> updateArticle(@RequestBody AnswerModifyBoardDto answerModifyBoardDto) {
 		logger.info("updateArticle - 호출" + new Date());
-		if(answerModifyBoardService.updateArticle(answerModifyBoardDto)) {
+		if (answerModifyBoardService.updateArticle(answerModifyBoardDto)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		}else {
+		} else {
 			// TODO: responseEntity의 의미
 			return new ResponseEntity<String>(FAIL, HttpStatus.NOT_MODIFIED);
 		}
-		
+
 	}
-	
+
 	/**
-	* @param articleNo 삭제할 게시글의 게시글번호
-	* @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	* @Method 설명 : 게시글 삭제
-	* @변경이력 :
-	*/
+	 * @param articleNo 삭제할 게시글의 게시글번호
+	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
+	 * @Method 설명 : 게시글 삭제
+	 * @변경이력 :
+	 */
 	@ApiOperation(value = "답안수정 게시판의 게시글을 삭제한다", response = String.class)
-	@PostMapping(value = "/deleteArticle/{articleNo}")
-	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo){
+	@DeleteMapping(value = "/deleteArticle/{articleNo}")
+	public ResponseEntity<String> deleteArticle(@PathVariable int articleNo) {
 		logger.info("deleteArticle - 호출" + new Date());
-		if(answerModifyBoardService.deleteArticle(articleNo)){
+		if (answerModifyBoardService.deleteArticle(articleNo)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<String>(FAIL, HttpStatus.NOT_MODIFIED);
 		}
 	}
-	
+
 }

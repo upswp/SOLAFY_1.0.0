@@ -13,7 +13,7 @@ function createGroup(param, success, fail){
 
 //그룹에 가입신청을 한다
 function createApplyGroupSignUp(param, success, fail){
-    Axios.get("group/createApplyGroupSignUp/" + param)
+    Axios.post("group/createApplyGroupSignUp", param)
     .then(success)
     .catch(fail)
 }
@@ -43,15 +43,37 @@ function selectCheckDuplicateName(param, success, fail){
     .then(success)
     .catch(fail)
 }
-function selectGroupMember(param, success, fail){}
+//그룹의 맴버를 모두 받아온다
+function selectGroupMember(param, success, fail) {
+    Axios.get("group/selectGroupMember/" + param)
+    .then(success)
+    .catch(fail)
+}
+
+//그룹정보 업데이트
+function updateGroup(param, success, fail) {
+    console.log(param);
+    Axios.put("group/updateGroup", param)
+    .then(success)
+    .catch(fail)
+}
+//맴버의 권한 수정
+function updatePermissionOfMember(param, success, fail) { }
 
 
-function updateGroup(param, success, fail){}
-function updatePermissionOfMember(param, success, fail){}
-function updateGroupApplyConfirm(param, success, fail){}
+//가입 신청을 수락했을 때
+function updateGroupApplyConfirm(param, success, fail) {
+    Axios.put("group/updateGroupApplyConfirm", param)
+    .then(success)
+    .catch(fail)
+
+}
+
+// TODO : 일반 회원이 그룹 초대를 확인함
 function updateGroupInvitationConfirm(param, success, fail){}
 
 
+//TODO : 그룹을 삭제
 function deleteGroup(param, success, fail){}
 
 //그룹가입 신청 취소

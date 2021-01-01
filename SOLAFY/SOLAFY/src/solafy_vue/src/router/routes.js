@@ -128,13 +128,19 @@ const routes = [
       {
         path: "/problemsetcreate/problemSetListByProblem",
         name: "ProblemSetCreateByProblem",
-        component: () => import("pages/problemSet/problemSetCreate/ProblemSetCreateByProblem.vue"),
+        component: () =>
+          import(
+            "pages/problemSet/problemSetCreate/ProblemSetCreateByProblem.vue"
+          ),
         beforeEnter: requireAuth()
       },
       {
         path: "/problemsetcreate/problemSetInfo",
         name: "ProblemSetCreateByProblemSetInfo",
-        component: () => import("pages/problemSet/problemSetCreate/ProblemSetCreateByProblemSetInfo.vue"),
+        component: () =>
+          import(
+            "pages/problemSet/problemSetCreate/ProblemSetCreateByProblemSetInfo.vue"
+          ),
         beforeEnter: requireAuth()
       },
       {
@@ -153,7 +159,7 @@ const routes = [
       // board
       {
         path: "/free",
-        name: "free",
+        // name: "free",
         component: () => import("pages/board/FreeBoard.vue"),
         children: [
           {
@@ -190,7 +196,33 @@ const routes = [
       {
         path: "/answermodify",
         component: () => import("pages/board/AnswerModifyBoard.vue"),
-        beforeEnter: requireAuth()
+        beforeEnter: requireAuth(),
+        children: [
+          {
+            path: "",
+            name: "answermodify-board-list",
+            component: () => import("components/board/BoardList.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "write",
+            name: "answermodify-board-write",
+            component: () => import("components/board/BoardWrite.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "detail/:articleNo",
+            name: "answermodify-board-detail",
+            component: () => import("components/board/BoardDetail.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "update",
+            name: "answermodify-board-update",
+            component: () => import("components/board/BoardUpdate.vue"),
+            beforeEnter: requireAuth()
+          }
+        ]
       },
       {
         path: "/practice",

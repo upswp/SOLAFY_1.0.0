@@ -35,14 +35,14 @@ public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 	}
 
 	@Override
-	public List<AnswerModifyBoardDto> selectArticles() {
-		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticles();
+	public List<AnswerModifyBoardDto> selectAllArticles() {
+		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectAllArticles();
 		return list;
 	}
 
 	@Override
 	public AnswerModifyBoardDto selectArticleByArticleNo(int articleNo) {
-		AnswerModifyBoardDto answerModifyBoardDto = answerModifyBoardMapper.selectArticleByNo(articleNo);
+		AnswerModifyBoardDto answerModifyBoardDto = answerModifyBoardMapper.selectArticleByArticleNo(articleNo);
 		return answerModifyBoardDto;
 	}
 
@@ -53,14 +53,14 @@ public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 	}
 
 	@Override
-	public List<AnswerModifyBoardDto> selectArticleByUid(String uid) {
-		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByUid(uid);
+	public List<AnswerModifyBoardDto> selectArticleByNickname(String nickname) {
+		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByNickname(nickname);
 		return list;
 	}
 	
 	@Override
-	public List<AnswerModifyBoardDto> selectArticleByUidSubmitter(String uid_submitter) {
-		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByUid(uid_submitter);
+	public List<AnswerModifyBoardDto> selectArticleByUidSubmitter(String nickname_submitter) {
+		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByNickname(nickname_submitter);
 		return list;
 	}
 	

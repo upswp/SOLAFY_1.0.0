@@ -24,6 +24,7 @@
 <script>
 // import { mapState } from "vuex";
 import Axios from "axios";
+import { mapState } from "vuex";
 export default {
   name: "replywrite",
   data() {
@@ -32,24 +33,31 @@ export default {
         uid: "DFEIJC23WOSKXCNSWQ",
         contents: "",
         articleNo: ""
-      }
+      },
+      articleNo: this.$route.params.articleNo
     };
   },
   //   computed: {
   //     ...mapState(["userInfo"])
   //   },
-  props: ["articleNo"],
+  // props: ["articleNo"],
   methods: {
     onSubmit() {
+      console.log("hereyouare");
       //   this.replyForm.userid = this.userInfo.userid;
       if (this.replyForm.contents === "") {
         return;
       }
+      console.log(this.replyForm.articleNo);
       this.replyForm.articleNo = this.articleNo;
-      Axios.post("freereply/createReply", this.replyForm)
+      console.log(this.replyForm.articleNo);
+      Axios.post(
+        `${this.$store.state.boardType}reply/createReply`,
+        this.replyForm
+      )
         .then(response => {
           this.replyForm.contents = null;
-          this.$emit("freeReplyChanged", response.data);
+          this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
     }

@@ -1,43 +1,48 @@
 package com.solafy.model;
 
 /**
- * FreeBoardDto
- * 자유게시판 DTO
- * @author BUMSEOK SEO
- * @since 2020-12-14
- */
+* @FileName : FreeBoardDto.java
+* @Project : SOLAFY
+* @Date : 2020. 12. 14
+* @작성자 : BUMSEOK SEO
 
+* @변경이력 :
+* 20201-01-01(BEOMSEOK SEO) : 컬럼 이용을 위한 재배치
+* @프로그램 설명 : 자유게시판 DTO
+*/
 public class FreeBoardDto {
 
 	private int articleNo;
+	private String nickname;
 	private String title;
+	private String regiTime;
 	private String contents;
 	private String uid;
 	private int likeCount;
 	private boolean isNotice;
-	private String regiTime;
 	private boolean isGroup;
 	private int groupNo;
 	private int boardNo;
-	private String nickname;
 	
 	public FreeBoardDto() {	}
 
-	public FreeBoardDto(int articleNo, String title, String contents, String uid, int likeCount, boolean isNotice,
-			String regiTime, boolean isGroup, int groupNo, int boardNo, String nickname) {
+
+	public FreeBoardDto(int articleNo, String nickname, String title, String regiTime, String contents, String uid,
+			int likeCount, boolean isNotice, boolean isGroup, int groupNo, int boardNo) {
 		super();
 		this.articleNo = articleNo;
+		this.nickname = nickname;
 		this.title = title;
+		this.regiTime = regiTime;
 		this.contents = contents;
 		this.uid = uid;
 		this.likeCount = likeCount;
 		this.isNotice = isNotice;
-		this.regiTime = regiTime;
 		this.isGroup = isGroup;
 		this.groupNo = groupNo;
 		this.boardNo = boardNo;
-		this.nickname = nickname;
 	}
+
 
 	public int getArticleNo() {
 		return articleNo;

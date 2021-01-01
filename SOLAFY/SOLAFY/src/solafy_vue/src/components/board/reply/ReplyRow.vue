@@ -56,11 +56,13 @@
 
 <script>
 import Axios from "axios";
+import { mapState } from "vuex";
 export default {
   name: "replyrow",
   props: ["reply"],
   data() {
     return {
+      boardType: this.$store.state.boardType,
       modiFlag: false
     };
   },
@@ -69,7 +71,7 @@ export default {
       this.modiFlag = !this.modiFlag;
     },
     updateReply: function() {
-      Axios.post(`freereply/updateReply`, this.reply)
+      Axios.post(`${this.boardType}reply/updateReply`, this.reply)
         .then(response => {
           this.modifyThis();
         })
@@ -80,15 +82,18 @@ export default {
     deleteThis: function() {
       console.log(this.reply.replyNo + "글삭제!!");
       if (confirm("정말로 삭제??")) {
-        Axios.post(`freereply/deleteReply`, this.reply)
+        Axios.post(`${this.boardType}reply/deleteReply`, this.reply)
           .then(response => {
-            this.$emit("freeReplyChanged", response.data);
+            this.$emit("replyChanged", response.data);
           })
           .catch(error => {
             console.log(error);
           });
       }
     }
+  },
+  computed: {
+    ...mapState["boardType"]
   }
 };
 </script>

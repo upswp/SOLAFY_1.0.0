@@ -28,14 +28,14 @@ public interface AnswerModifyBoardMapper {
 	 * 답안수정게시판 모든 게시글들을 반환
 	 * @return List<AnswerModifyBoardDto>
 	 */
-	public List<AnswerModifyBoardDto> selectArticles();
+	public List<AnswerModifyBoardDto> selectAllArticles();
 
 	/**
 	 * 입력한 게시를 번호에 해당하는 게시글 반환
 	 * @param ArticleNo
 	 * @return AnswerModifyBoardDto(해당 번호에 해당하는 게시글)
 	 */
-	public AnswerModifyBoardDto selectArticleByNo(int ArticleNo);
+	public AnswerModifyBoardDto selectArticleByArticleNo(int ArticleNo);
 
 	/**
 	 * 입력한 게시글 제목에 해당하는 게시글 반환
@@ -45,11 +45,11 @@ public interface AnswerModifyBoardMapper {
 	public List<AnswerModifyBoardDto> selectArticleByTitle(String title);
 
 	/**
-	 * 입력한 uid와 일치하는 작성자의 게시글 반환
-	 * @param uid
+	 * 입력한 닉네임와 일치하는 작성자의 게시글 반환
+	 * @param nickname
 	 * @return AnswerModifyBoardDto
 	 */
-	public List<AnswerModifyBoardDto> selectArticleByUid(String uid);
+	public List<AnswerModifyBoardDto> selectArticleByNickname(String nickname);
 
 	/**
 	 * 입력한 문제번호와 일치하는 작성자의 게시글 반환

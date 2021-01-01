@@ -28,7 +28,7 @@
 
       <template v-slot:body-cell-type="props">
         <q-td :props="props">
-           <div :props="props" v-if="props.row.type == 0">
+          <div :props="props" v-if="props.row.type == 0">
             <q-chip color="green" dense text-color="white" label="Public" />
           </div>
           <div :props="props" v-if="props.row.type == 1">
@@ -66,8 +66,8 @@
 <script>
 import routes from "src/router/routes";
 import { firebaseAuth } from "src/boot/firebase";
-import {selectAllGroup} from "src/api/Group/group.js"
-import { notify } from 'src/api/common';
+import { selectAllGroup } from "src/api/Group/group.js";
+import { notify } from "src/api/common";
 export default {
   data() {
     return {
@@ -112,21 +112,27 @@ export default {
   },
   methods: {
     clickRow(evt, row) {
-      this.$router.push({
-        name: "GroupDetail",
-        params: {
-          groupNo: row.groupNo,
-          grade: row.grade
-        }
-      });
+      //타입이 private일 때, 가입이 되어 있는가?
+      if (row.type == 0 || (row.grade > 0 && row.grade < 4)) {
+        this.$router.push({
+          name: "GroupDetail",
+          params: {
+            groupNo: row.groupNo,
+            grade: row.grade
+          }
+        });
+      } else {
+        //type이 private일 경우
+        notify("red-6", "white", "warning", "Private 그룹은 확인 불가!");
+      }
     }
   },
   mounted() {
     selectAllGroup(
-      (Response)=>{
+      Response => {
         this.data = Response.data;
       },
-      (error)=>{
+      error => {
         notify("red-6", "white", "warning", "message");
       }
     );

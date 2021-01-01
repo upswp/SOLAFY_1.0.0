@@ -38,15 +38,16 @@
               </template>
               <!-- 중복 체크 시작 -->
               <template v-slot:after>
-                <q-btn 
-                  :text-color="DupCheck ? 'green':'red'" 
-                  flat 
+                <q-btn
+                  :text-color="DupCheck ? 'green' : 'red'"
+                  flat
                   @click="titleDuplicate"
-                  :icon="DupCheck ? 'check':'warning'"
-                  >
+                  :icon="DupCheck ? 'check' : 'warning'"
+                  :disable="DupCheck"
+                >
                 </q-btn>
               </template>
-              <!-- 중복 체크 끝-->   
+              <!-- 중복 체크 끝-->
             </q-input>
           </div>
           <!-- 그룹명 끝 -->
@@ -87,7 +88,7 @@
               color="orange"
             />
           </div>
-           <!-- 그룹 타입 끝 -->
+          <!-- 그룹 타입 끝 -->
         </q-step>
 
         <q-step
@@ -141,8 +142,8 @@
 
 <script>
 import { firebaseAuth } from "src/boot/firebase";
-import { createGroup, selectCheckDuplicateName } from 'src/api/Group/group.js';
-import { notify } from 'src/api/common.js';
+import { createGroup, selectCheckDuplicateName } from "src/api/Group/group.js";
+import { notify } from "src/api/common.js";
 export default {
   data() {
     return {
@@ -151,7 +152,7 @@ export default {
         title: "",
         type: "0"
       },
-      titleCheck : '',
+      titleCheck: "",
       dense: false,
       inputModel: "",
       step: 1
@@ -160,19 +161,21 @@ export default {
   methods: {
     onSubmit() {
       if (this.check) {
-        // ! 현재 step 값으로 다음 step으로 넘어갈지 경정 
+        // ! 현재 step 값으로 다음 step으로 넘어갈지 경정
         if (this.step < 3) this.$refs.stepper.next();
         else {
           // ! checkgroup(param, success, fail)
-         createGroup(this.groupData, 
-         (Response) => {
-              notify("green", "white", "cloud", "그룹 생성 완료");
+          createGroup(
+            this.groupData,
+            Response => {
+              notify("green", "white", "done_outline", "그룹 생성 완료");
               this.$router.go(-1);
-         },
-         (error) => {
-           notify("red-6", "white", "warning", "그룹 생성 실패");
+            },
+            error => {
+              notify("red-6", "white", "warning", "그룹 생성 실패");
               this.$router.go(-1);
-         });
+            }
+          );
         }
       } else {
         notify("red-6", "white", "warning", "그룹명 중복 체크 필요");
@@ -181,19 +184,19 @@ export default {
 
     titleDuplicate() {
       // ! selectCheckDuplicateName(param, success, fail)
-      selectCheckDuplicateName(this.groupData.title,
-      (Response)=> {
-        if(Response.data == "success"){
-          this.titleCheck = this.groupData.title;
-          notify("green", "white", "cloud", "사용하셔도 좋습니다");
+      selectCheckDuplicateName(
+        this.groupData.title,
+        Response => {
+          if (Response.data == "success") {
+            this.titleCheck = this.groupData.title;
+            notify("green", "white", "done_outline", "사용하셔도 좋습니다");
+          } else if (Response.data == "fail") {
+            notify("red-6", "white", "warning", "그룹명이 중복되었습니다");
+          }
+        },
+        error => {
+          notify("red-6", "white", "warning", "다시 시도해 주세요");
         }
-        else if(Response.data == "fail"){
-          notify("red-6", "white", "warning", "그룹명이 중복되었습니다");
-        }
-      },
-      (error) =>{
-        notify("red-6", "white", "warning", "다시 시도해 주세요");
-      }
       );
     },
 
@@ -269,13 +272,12 @@ export default {
         .split("\n")[0];
     },
     // ! title이 변경되었을 때
-    DupCheck : function(){
-      if(this.groupData.title=='' || this.groupData.title != this.titleCheck)
+    DupCheck: function() {
+      if (this.groupData.title == "" || this.groupData.title != this.titleCheck)
         return false;
-      else
-        return true;
+      else return true;
     }
-  },
+  }
 };
 </script>
 

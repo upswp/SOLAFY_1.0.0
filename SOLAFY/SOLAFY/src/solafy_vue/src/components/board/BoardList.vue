@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
     <q-markup-table v-if="showList">
       <thead>
         <tr>
@@ -14,12 +14,12 @@
               @keyup.enter="selectArticle"
             >
               <template v-slot:before>
-                <q-btn color="secondary" label="글쓰기" @click="showWrite" />
+                <q-btn color="secondary" label="글쓰기" @click="gotoWrite" />
                 <q-select
                   style="margin-left:300px; width:120px"
                   filled
                   v-model="selection"
-                  :options="options"
+                  :options="boardSearchKeywords"
                   label="검색조건"
                 />
               </template>
@@ -36,7 +36,11 @@
           </td>
         </tr>
         <tr>
-          <th v-for="(column, index) in columns" class="text-left" :key="index">
+          <th
+            v-for="(column, index) in boardColumns"
+            class="text-left"
+            :key="index"
+          >
             {{ column.label }}
           </th>
         </tr>
@@ -45,7 +49,7 @@
         <tr
           v-for="notice in notices"
           :key="notice.articleNo"
-          @click="showDetail(notice.articleNo)"
+          @click="gotoDetail(notice.articleNo)"
         >
           <td class="text-left">{{ notice.articleNo }}</td>
           <td class="text-left">{{ notice.nickname }}</td>
@@ -58,18 +62,23 @@
           <td class="text-left">{{ notice.regiTime }}</td>
           <td class="text-left">{{ notice.likeCount }}</td>
         </tr>
+
+        <!-- TODO: 컬럼의 순서와 DTO의 순서가 맞아야한다!, v-for를 이용하여 출력하기때문에 -->
         <tr
           v-for="article in articles"
           :key="article.articleNo"
-          @click="showDetail(article.articleNo)"
+          @click="gotoDetail(article.articleNo)"
         >
-          <td class="text-left">{{ article.articleNo }}</td>
+          <td v-for="(name, value, index) in article" :key="index">
+            {{ name }}
+          </td>
+          <!-- <td class="text-left">{{ article.articleNo }}</td>
           <td class="text-left">{{ article.nickname }}</td>
           <td class="text-left">
             {{ article.title }}
           </td>
           <td class="text-left">{{ article.regiTime }}</td>
-          <td class="text-left">{{ article.likeCount }}</td>
+          <td class="text-left">{{ article.likeCount }}</td> -->
         </tr>
       </tbody>
     </q-markup-table>
@@ -94,22 +103,36 @@ export default {
       errored: null,
       loading: null,
       keyword: null,
-      columns: [],
-      options: [],
+      // columns: [],
+      // options: [],
       showList: true
     };
   },
-  props: ["boardType"],
+  // props: ["boardType"],
   methods: {
     selectAllArticles: function() {
       Axios.get(`/${this.boardType}/selectAllArticles`)
         .then(response => {
           this.articles = response.data;
+          for (var i = 0; i < this.articles.length; i++) {
+            for (var propName in this.articles[i]) {
+              if (
+                this.articles[i][propName] === null ||
+                this.articles[i][propName] === undefined ||
+                this.articles[i][propName] === false ||
+                (propName !== "likeCount" && this.articles[i][propName] === 0)
+              ) {
+                delete this.articles[i][propName];
+              }
+            }
+          }
         })
         .catch(() => {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
+      console.log("after yesyouare");
+      console.log(this.articles[0]);
     },
     selectAllNotices: function() {
       Axios.get(`/${this.boardType}/selectAllNotices`)
@@ -122,10 +145,23 @@ export default {
         .finally(() => (this.loading = false));
     },
     selectArticle: function() {
+      console.log(this.keyword);
       if (this.selection === "제목") {
         Axios.get(`/${this.boardType}/selectArticleByTitle/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -135,6 +171,18 @@ export default {
         Axios.get(`/${this.boardType}/selectArticleByNickname/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -145,6 +193,18 @@ export default {
         Axios.get(`/${this.boardType}/selectArticleByProblemNo/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -152,49 +212,42 @@ export default {
           .finally(() => (this.loading = false));
       }
     },
-    showWrite: function() {
+    gotoWrite: function() {
       console.log("going to move to writing page");
+      console.log(this.articleNo);
+      this.$router.push({
+        name: `${this.boardType}-board-write`
+      });
     },
 
-    showDetail: function(articleNo) {
+    gotoDetail: function(articleNo) {
+      console.log(articleNo);
       this.$router.push({
-        name: "board-detail",
+        name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
       });
       //this.showList = false;
-
-      Axios.get(`/${this.boardType}/selectArticleByArticleNo/${articleNo}`)
-        .then(response => {
-          this.article = response.data;
-          this.getReplyRow(articleNo);
-        })
-        .catch(() => {
-          this.errored = true;
-        })
-        .finally(() => (this.loading = false));
     }, // 목록으로 돌아갈때는 입력(바인딩)했던 내용 초기화 후
     // showFlag를 list로 바꿈
-    goToFreeBoard: function() {
+    goToBoard: function() {
       this.resetForm();
       this.showFlag = "list";
     },
     // 입력 form 초기화는 title, contents, isNotice에 적용된다
     resetForm: function() {
       this.article.title = null;
-      this.article.contents = null;
+      // this.article.contents = null;
       this.article.isNotice = false;
     }
   },
   computed: {
-    ...mapState(["boardColumns", "boardSearchKeywords"])
+    ...mapState(["boardColumns", "boardSearchKeywords", "boardType"])
   },
   created() {
-    console.log(this.$root);
-    this.options = this.boardSearchKeywords;
-    this.columns = this.boardColumns;
-    console.log(this.boardType);
+    // this.options = this.boardSearchKeywords;
+    // this.columns = this.boardColumns;
     this.selectAllArticles();
-    this.selectAllNotices();
+    if (this.boardType === "free") this.selectAllNotices();
   }
 };
 </script>
