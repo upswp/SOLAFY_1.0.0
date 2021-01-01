@@ -33,7 +33,10 @@
         </q-item-section>
       </q-item>
       <q-separator />
-
+      <board-problem-info
+        :problemNo="article.problemNo"
+        v-if="this.boardType === `answermodify`"
+      />
       <!-- 내용을 보여준다 -->
       <q-card-section>
         <q-card-section class="col-4">{{ article.contents }} </q-card-section>
@@ -95,6 +98,7 @@
 // 자유게시판 댓글 컴포넌트 가져오기
 import ReplyWrite from "components/board/reply/ReplyWrite.vue";
 import ReplyRow from "components/board/reply/ReplyRow.vue";
+import BoardProblemInfo from "components/board/materials/BoardProblemInfo.vue";
 import Axios from "axios";
 import { mapState } from "vuex";
 export default {
@@ -110,6 +114,7 @@ export default {
   },
   // 컴포넌트 선언
   components: {
+    BoardProblemInfo,
     ReplyWrite,
     ReplyRow
   },
