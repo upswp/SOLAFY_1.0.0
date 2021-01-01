@@ -196,7 +196,33 @@ const routes = [
       {
         path: "/answermodify",
         component: () => import("pages/board/AnswerModifyBoard.vue"),
-        beforeEnter: requireAuth()
+        beforeEnter: requireAuth(),
+        children: [
+          {
+            path: "",
+            name: "answermodify-board-list",
+            component: () => import("components/board/BoardList.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "write",
+            name: "answermodify-board-write",
+            component: () => import("components/board/BoardWrite.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "detail/:articleNo",
+            name: "answermodify-board-detail",
+            component: () => import("components/board/BoardDetail.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "update",
+            name: "answermodify-board-update",
+            component: () => import("components/board/BoardUpdate.vue"),
+            beforeEnter: requireAuth()
+          }
+        ]
       },
       {
         path: "/practice",
