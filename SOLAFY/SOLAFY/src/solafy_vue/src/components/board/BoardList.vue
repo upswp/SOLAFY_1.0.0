@@ -261,7 +261,6 @@ export default {
 
     // 게시글 상세보기 시작
     gotoDetail: function(articleNo) {
-      console.log(articleNo);
       this.$router.push({
         name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
