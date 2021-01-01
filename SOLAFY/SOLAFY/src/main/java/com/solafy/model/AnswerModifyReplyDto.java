@@ -6,6 +6,8 @@ package com.solafy.model;
  * @author BUMSEOK SEO
  * @since 2020-12-14
  *
+ * @변경이력
+ * 2021-01-02 [이주희] nickname 추가
  */
 
 public class AnswerModifyReplyDto {
@@ -13,17 +15,20 @@ public class AnswerModifyReplyDto {
 	private int articleNo;
 	private String contents;
 	private String uid;
+	private String nickname;
 	private String regiTime;
 
 	public AnswerModifyReplyDto() {
 	}
 
-	public AnswerModifyReplyDto(int replyNo, int articleNo, String contents, String uid, String regiTime) {
+	public AnswerModifyReplyDto(int replyNo, int articleNo, String contents, String uid, String nickname,
+			String regiTime) {
 		super();
 		this.replyNo = replyNo;
 		this.articleNo = articleNo;
 		this.contents = contents;
 		this.uid = uid;
+		this.nickname = nickname;
 		this.regiTime = regiTime;
 	}
 
@@ -67,10 +72,18 @@ public class AnswerModifyReplyDto {
 		this.regiTime = regiTime;
 	}
 
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	@Override
 	public String toString() {
-		return "ReplyByAnswerModifyDto [replyNo=" + replyNo + ", articleNo=" + articleNo + ", contents=" + contents
-				+ ", uid=" + uid + ", regiTime=" + regiTime + "]";
+		return "AnswerModifyReplyDto [replyNo=" + replyNo + ", articleNo=" + articleNo + ", contents=" + contents
+				+ ", uid=" + uid + ", nickname=" + nickname + ", regiTime=" + regiTime + "]";
 	}
 
 }
