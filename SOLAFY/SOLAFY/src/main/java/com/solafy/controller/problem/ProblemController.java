@@ -1,5 +1,6 @@
 package com.solafy.controller.problem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,4 +219,24 @@ public class ProblemController {
 		}
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
+	
+	/**
+	 * @author KihyeonYun
+	 * @param mapList
+	 * @return
+	 * @throws Exception
+	 * @Method 설명 : 문제를 리스트로 받아와서 등록한다.
+	 */
+	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값이 false(0)인 상태인 문제집과 문제를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@DeleteMapping(value = "/createProblemList")
+	public ResponseEntity<String> createProblemList(@RequestBody ArrayList<HashMap<String,Object>> mapList) throws Exception{
+		logger.debug("createProblemList -- 호출");
+		System.out.println(mapList.toString());
+		if(problemService.createProblemList(mapList)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+		}
+	}
+	
 }

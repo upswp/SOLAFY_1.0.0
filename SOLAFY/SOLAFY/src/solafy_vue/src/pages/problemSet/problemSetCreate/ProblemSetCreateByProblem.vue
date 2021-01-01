@@ -157,6 +157,10 @@
             label="해설"
             v-model="item.problemAnswer.solution"
           />
+          <div class="row justify-center content-center">
+            <q-btn flat icon="keyboard_arrow_left"></q-btn>
+            <q-btn flat icon="keyboard_arrow_right"></q-btn>
+          </div>
         </q-card>
       </div>
       <div class="row self-center hashtag">
@@ -257,6 +261,9 @@ export default {
         hashTag: [],
         problemSetNo: 0
       },
+      // ! 문제 리스트
+      problemList: [],
+
       nickname: "",
       largeList: [],
       selectLarge: null,
@@ -399,12 +406,15 @@ export default {
         String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
-      this.createProblem();
+      //문제 리스트에 문제를 저장한다.
+      this.problemList.push(this.item);
+
+      // this.createProblem();
     },
     // 문제 등록
     createProblem() {
       axios
-        .post("problem/create", this.item)
+        .post("problem/createProblemList", this.problemList)
         .then(response => {
           this.updateFlag();
         })
@@ -473,6 +483,12 @@ export default {
     },
     // input값 초기화
     clearInput() {
+      // ! 모든 값 초기화로 변경
+      this.item.problem.categoryNo = "";
+      this.item.problem.contents = "";
+      this.item.problem.multipleChoice = "";
+      this.item.problem.type = 0;
+
       this.item.problemAnswer.answer = "";
       this.item.problemAnswer.keyword = "";
       this.choiceList = [];

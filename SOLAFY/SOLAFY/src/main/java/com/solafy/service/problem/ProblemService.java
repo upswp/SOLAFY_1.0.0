@@ -1,6 +1,7 @@
 package com.solafy.service.problem;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,4 +119,14 @@ public interface ProblemService {
 	* @변경이력 :
 	*/
 	public boolean deleteProblem(int problemNo) throws Exception;
+
+	/** 
+	* @author KiHyeonYun 
+	* @param mapList
+	* @return
+	* @throws Exception
+	* @Method 설명 : 문제 삭제
+	* @변경이력 : createProblem을 list형태로 등록가능하게 바꾼 메서드(임시임)
+	*/
+	boolean createProblemList(ArrayList<HashMap<String, Object>> mapList) throws Exception;
 }

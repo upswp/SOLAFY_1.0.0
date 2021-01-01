@@ -1,5 +1,6 @@
 package com.solafy.service.problem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -162,6 +163,54 @@ public class ProblemServiceImpl implements ProblemService {
 
 		return result;
 	}
+	
+	@Override
+	public boolean createProblemList(ArrayList<HashMap<String, Object>> mapList) throws Exception {
+		
+		boolean result = false;
+		for (HashMap<String, Object> map : mapList) {
+			ObjectMapper mapper = new ObjectMapper();
+			ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
+			});
+			ProblemAnswerDto problemAnswerDto = mapper.convertValue(map.get("problemAnswer"),
+					new TypeReference<ProblemAnswerDto>() {
+					});
+			List<String> hashTagList = mapper.convertValue(map.get("hashTag"), new TypeReference<List<String>>() {
+			});
+			int problemSetNo = mapper.convertValue(map.get("problemSetNo"), new TypeReference<Integer>() {
+			});
+	
+			// 문제 등록
+			result = (problemMapper.createProblem(problemDto) > 0);
+			// System.out.println("problemNo : "+problemDto.getProblemNo());
+	
+			// 문제 번호를 받아서 정답에 넣어줘야하는데 어떻게 받아올 것인가? --> answer : problem.xml참고
+			problemDto.setProblemNo(problemDto.getProblemNo());
+			problemAnswerDto.setProblemNo(problemDto.getProblemNo());
+			// 문제 답 등록
+			result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
+	
+			// 해시태그 매핑
+			for (String hashTag : hashTagList) {
+				HashTagDto hashTagDto;
+				// hashTag 테이블에 존재하지 않으면 hashTag 테이블에 등록
+				if ((hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag)) == null) {
+					result &= (hashTagMapper.createHashTag(hashTag) > 0);
+					hashTagDto = hashTagMapper.selectHashTagNoByHashTag(hashTag);
+				}
+				// 문제와 해시태그를 mapping 테이블을 통해 연결
+				result &= (problemMapper.createHashTagMapping(problemDto.getProblemNo(), hashTagDto.getHashTagNo()) > 0);
+			}
+			if (problemSetNo != 0) {
+				result &= (problemMapper.createProblemSetMapping(problemSetNo, problemDto.getProblemNo()) > 0);
+			}
+			//result가 false이면 return
+			if(!result)
+				return result;
+		}
+		return result;
+	}
+	
 	
 	@Override
 	public boolean updateProblemFlag(String uid) throws Exception{
