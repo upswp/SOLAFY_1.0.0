@@ -112,7 +112,8 @@ export default {
   },
   methods: {
     clickRow(evt, row) {
-      if (row.type == 0) {
+      //타입이 private일 때, 가입이 되어 있는가?
+      if (row.type == 0 || (row.grade > 0 && row.grade < 4)) {
         this.$router.push({
           name: "GroupDetail",
           params: {

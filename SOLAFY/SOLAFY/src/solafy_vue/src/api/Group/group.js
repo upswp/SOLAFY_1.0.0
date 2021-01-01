@@ -51,6 +51,7 @@ function selectGroupMember(param, success, fail) {
 
 //그룹정보 업데이트
 function updateGroup(param, success, fail) {
+    console.log(param);
     Axios.put("group/updateGroup", param)
     .then(success)
     .catch(fail)

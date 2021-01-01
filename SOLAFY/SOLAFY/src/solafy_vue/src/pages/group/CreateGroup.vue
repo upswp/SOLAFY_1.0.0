@@ -43,6 +43,7 @@
                   flat
                   @click="titleDuplicate"
                   :icon="DupCheck ? 'check' : 'warning'"
+                  :disable="DupCheck"
                 >
                 </q-btn>
               </template>

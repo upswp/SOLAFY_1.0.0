@@ -23,7 +23,9 @@
           icon="supervised_user_circle"
           label="그룹원"
         />
+
         <q-tab
+          v-if="myInfo.grade < 2"
           class="text-red"
           name="modify"
           icon="verified_user"
@@ -141,6 +143,7 @@
                           flat
                           @click="titleDuplicate"
                           :icon="DupCheck ? 'check' : 'warning'"
+                          :disable="DupCheck"
                         >
                         </q-btn>
                       </template>
@@ -532,8 +535,10 @@ import {
   selectGroupByNo,
   updateGroup,
   updateGroupApplyConfirm,
-  deleteGroupMember
+  deleteGroupMember,
+  selectGroupMember
 } from "src/api/Group/group.js";
+import { firebaseAuth } from "src/boot/firebase";
 
 const defaultItem = {
   uid: "",
@@ -583,10 +588,8 @@ export default {
   components: { FreeBoard },
   data() {
     return {
-      inFs: false,
-
       confirm: false,
-      titleCheck: false, //그룹명 중복체크 icon표시 control
+      titleCheck: null, //그룹명 중복체크 icon표시 control
       show_dialog: false,
       editedIndex: -1,
       editedItem: defaultItem,
@@ -594,27 +597,10 @@ export default {
       currencyColumns: currencyColumns,
       groupMembers: [],
 
+      // TODO : 페이징 관련 변수들
       page: 1,
       totalRecord: 0,
       pageCount: 1,
-
-      tab: "notice",
-      innertab: "group",
-      filter: "",
-      path: "",
-      // TODO : createGroup와 동일하니까 이거 묶어서 component로 만들기
-      groupData: {
-        uid: "",
-        groupNo: "",
-        grade: "",
-        statusMessage: "",
-        regiMessage: "",
-        nickName: ""
-      },
-      check: false,
-      checkColor: "red",
-      groupType: "",
-      // 여기까지
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -622,6 +608,18 @@ export default {
         rowsPerPage: 10
         // rowsNumber: xx if getting data from a server
       },
+      //tab관련 변수들
+      tab: "notice",
+      innertab: "group",
+      filter: "",
+      path: "",
+
+      // TODO : createGroup와 동일하니까 이거 묶어서 component로 만들기
+      groupData: {},
+      groupType: "",
+      myInfo: {},
+      // 여기까지
+
       columns: [
         {
           name: "nickName",
@@ -671,7 +669,11 @@ export default {
       );
     },
     onSubmit() {
-      if (this.check) {
+      if (this.titleCheck) {
+        //그룹타입 확인
+        if (this.groupData.type != this.groupType) {
+          this.groupData.type = Number(this.groupType);
+        }
         updateGroup(
           this.groupData,
           Response => {
@@ -706,7 +708,7 @@ export default {
       // this.groupMembers.splice(this.editedIndex, 1, this.editedItem);
       // TODO : backend에서 return 해주는 값 변경해야 할 수도 있음
       updateGroupApplyConfirm(
-        this.editItem,
+        this.editedItem,
         Response => {
           this.getGroupMember();
         },
@@ -720,15 +722,10 @@ export default {
         this.$route.params.groupNo,
         Response => {
           this.groupMembers = Response.data;
-          notify(
-            "green",
-            "white",
-            "done_outline",
-            `${this.editedItem.nickName}정보 업데이트 완료`
-          );
+          this.getMyInfo(); //그룹에서 나의 정보를 찾아서 저장해둠
         },
         error => {
-          notify("red-6", "white", "warning", "정보 수정 실패");
+          notify("red-6", "white", "warning", "그룹원 데이터 읽기 실패");
         }
       );
     },
@@ -739,6 +736,7 @@ export default {
           this.groupData = Response.data;
           if (this.groupData.type == 1) this.groupType = "1";
           else this.groupType = "0";
+          this.titleCheck = this.groupData.title;
         },
         error => {
           notify("red-6", "white", "warning", "조회 실패");
@@ -765,6 +763,15 @@ export default {
           notify("red-6", "white", "warning", "탈퇴 실패");
         }
       );
+    },
+    //선택한 그룹에 대한 나의 정보를 찾는다.
+    //TODO : 이진트리로 검색하면 더 빠를거 같습니다(수정 가능)
+    getMyInfo() {
+      this.groupMembers.forEach(element => {
+        if (element.uid == firebaseAuth.currentUser.uid) {
+          this.myInfo = element;
+        }
+      });
     }
   },
 
