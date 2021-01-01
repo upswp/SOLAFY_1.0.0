@@ -76,6 +76,8 @@
               </template>
             </q-table>
             <!-- itemlist - 그룹원 보기 끝-->
+
+            <!-- TODO : 페이징 수정필요 -->
             <h1 :v-text="path"></h1>
             <div class="q-pa-lg flex flex-center">
               <q-pagination
@@ -87,6 +89,7 @@
             </div>
           </div>
         </q-tab-panel>
+        <!-- 그룹 수정 tab 시작 -->
         <q-tab-panel name="modify">
           <div class="text-h6">그룹 수정</div>
           <q-card>
@@ -107,9 +110,10 @@
             <q-separator />
 
             <q-tab-panels v-model="innertab" animated>
+              <!-- 그룹수정 내부 그룹정보 수정 -->
               <q-tab-panel name="group">
                 <q-form class="q-gutter-md" @submit="onSubmit">
-                  <div style="max-width: 440px;">
+                  <div style="max-width: 420px;">
                     <q-input
                       filled
                       bottom-slots
@@ -133,11 +137,12 @@
                       <!-- 중복 체크 -->
                       <template v-slot:after>
                         <q-btn
-                          :text-color="checkColor"
+                          :text-color="DupCheck ? 'green' : 'red'"
                           flat
                           @click="titleDuplicate"
-                          ><strong>Check</strong></q-btn
+                          :icon="DupCheck ? 'check' : 'warning'"
                         >
+                        </q-btn>
                       </template>
                     </q-input>
                   </div>
@@ -178,15 +183,14 @@
                   <q-btn flat color="primary" label="취소" class="q-ml-sm" />
                 </q-form>
               </q-tab-panel>
+              <!-- 그룹수정 내부 그룹정보 수정 끝 -->
 
               <q-tab-panel name="board">
                 게시판 수정
               </q-tab-panel>
-
+              <!-- 그룹수정 내부 그룹원 수정-->
               <q-tab-panel name="groupMember">
                 <div>
-                  <!-- itemlist - 그룹원 보기 시작-->
-
                   <q-table
                     flat
                     bordered
@@ -356,7 +360,9 @@
                       </div>
                     </template>
                   </q-table>
+                  <!-- itemlist - 그룹원 보기 끝-->
 
+                  <!-- 그룹원 정보를 수정할 수 있는 다이얼로그 -->
                   <q-dialog v-model="show_dialog">
                     <q-card style="width: 600px; max-width: 60vw">
                       <q-card-section>
@@ -461,8 +467,9 @@
                       </q-card-section>
                     </q-card>
                   </q-dialog>
-                  <!-- itemlist - 그룹원 보기 끝-->
+                  <!-- 그룹원 정보를 수정할 수 있는 다이얼로그 끝-->
 
+                  <!-- 그룹원 수정 강제 탈퇴 다이얼로그 -->
                   <q-dialog v-model="confirm" persistent>
                     <q-card>
                       <q-card-section class="row items-center">
@@ -494,7 +501,7 @@
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
-
+                  <!-- 그룹원 수정 강제 탈퇴 다이얼로그 끝 -->
                   <h1 :v-text="path"></h1>
                   <div class="q-pa-lg flex flex-center">
                     <q-pagination
@@ -506,6 +513,7 @@
                   </div>
                 </div>
               </q-tab-panel>
+              <!-- 그룹수정 내부 그룹원 수정 끝-->
             </q-tab-panels>
           </q-card>
         </q-tab-panel>
@@ -518,6 +526,15 @@
 <script>
 import axios from "axios";
 import FreeBoard from "../board/FreeBoard.vue";
+import { notify } from "src/api/common.js";
+import {
+  selectCheckDuplicateName,
+  selectGroupByNo,
+  updateGroup,
+  updateGroupApplyConfirm,
+  deleteGroupMember
+} from "src/api/Group/group.js";
+
 const defaultItem = {
   uid: "",
   groupNo: "",
@@ -569,8 +586,7 @@ export default {
       inFs: false,
 
       confirm: false,
-
-      noti: () => {},
+      titleCheck: false, //그룹명 중복체크 icon표시 control
       show_dialog: false,
       editedIndex: -1,
       editedItem: defaultItem,
@@ -636,48 +652,37 @@ export default {
   },
   methods: {
     clickRow() {},
-    // 듀플리케이트 부터 onSubmit까지 다 컴포넌트로 묶기
+    // TODO :  듀플리케이트 부터 onSubmit까지 다 컴포넌트로 묶기
     titleDuplicate() {
-      axios
-        .get("group/checkDuplicateName/" + this.groupData.title)
-        .then(Response => {
+      // ! selectCheckDuplicateName(param, success, fail)
+      selectCheckDuplicateName(
+        this.groupData.title,
+        Response => {
           if (Response.data == "success") {
-            this.check = true;
-            this.checkColor = "green";
-          } else {
-            this.check = false;
-            this.checkColor = "red";
+            this.titleCheck = this.groupData.title;
+            notify("green", "white", "done_outline", "사용하셔도 좋습니다");
+          } else if (Response.data == "fail") {
+            notify("red-6", "white", "warning", "그룹명이 중복되었습니다");
           }
-        })
-        .catch(error => {});
+        },
+        error => {
+          notify("red-6", "white", "warning", "다시 시도해 주세요");
+        }
+      );
     },
     onSubmit() {
       if (this.check) {
-        axios
-          .put("group/updateGroup", this.groupData)
-          .then(Response => {
-            this.$q.notify({
-              color: "green",
-              textColor: "white",
-              icon: "cloud",
-              message: "그룹 수정 완료"
-            });
-          })
-          .catch(error => {
-            this.$q.notify({
-              color: "red-6",
-              textColor: "white",
-              icon: "warning",
-              message: "그룹 수정 실패"
-            });
-          });
+        updateGroup(
+          this.groupData,
+          Response => {
+            notify("green", "white", "done_outline", "그룹 수정 완료");
+          },
+          error => {
+            notify("red-6", "white", "warning", "그룹 수정 실패");
+          }
+        );
       } else {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "그룹명 중복 체크 필요"
-        });
+        notify("red-6", "white", "warning", "그룹명 중복 검사를 진행해주세요");
       }
     },
     permission() {},
@@ -699,49 +704,46 @@ export default {
     },
     updateRow() {
       // this.groupMembers.splice(this.editedIndex, 1, this.editedItem);
-      axios
-        .put("group/updateGroupApplyConfirm", this.editedItem)
-        .then(Response => {
+      // TODO : backend에서 return 해주는 값 변경해야 할 수도 있음
+      updateGroupApplyConfirm(
+        this.editItem,
+        Response => {
           this.getGroupMember();
-        })
-        .catch(error => {});
-      this.$q.notify({
-        type: "positive",
-        message: `Item '${this.editedItem.nickName}' updated.`,
-        timeout: 500
-      });
+        },
+        error => {
+          notify("red-6", "white", "warning", "정보 수정 실패");
+        }
+      );
     },
     getGroupMember() {
-      axios
-        .get("group/selectGroupMember/" + this.$route.params.groupNo)
-        .then(Response => {
+      selectGroupMember(
+        this.$route.params.groupNo,
+        Response => {
           this.groupMembers = Response.data;
-        })
-        .catch(error => {
-          this.$q.notify({
-            color: "red-6",
-            textColor: "white",
-            icon: "warning",
-            message: "조회 실패"
-          });
-        });
+          notify(
+            "green",
+            "white",
+            "done_outline",
+            `${this.editedItem.nickName}정보 업데이트 완료`
+          );
+        },
+        error => {
+          notify("red-6", "white", "warning", "정보 수정 실패");
+        }
+      );
     },
     getGroupInfo() {
-      axios
-        .get("group/selectGroupByNo/" + this.$route.params.groupNo)
-        .then(Response => {
+      selectGroupByNo(
+        this.$route.params.groupNo,
+        Response => {
           this.groupData = Response.data;
           if (this.groupData.type == 1) this.groupType = "1";
           else this.groupType = "0";
-        })
-        .catch(error => {
-          this.$q.notify({
-            color: "red-6",
-            textColor: "white",
-            icon: "warning",
-            message: "조회 실패"
-          });
-        });
+        },
+        error => {
+          notify("red-6", "white", "warning", "조회 실패");
+        }
+      );
     },
     confirmDelete(item) {
       this.editedIndex = this.groupMembers.findIndex(
@@ -751,17 +753,18 @@ export default {
       this.confirm = true;
     },
     deleteMember() {
-      axios
-        .delete("group/deleteGroupMember", {
-          data: {
-            uid: this.editedItem.uid,
-            groupNo: this.editedItem.groupNo
-          }
-        })
-        .then(Response => {
+      deleteGroupMember(
+        {
+          uid: this.editedItem.uid,
+          groupNo: this.editedItem.groupNo
+        },
+        Response => {
           this.getGroupMember();
-        })
-        .catch(error => {});
+        },
+        error => {
+          notify("red-6", "white", "warning", "탈퇴 실패");
+        }
+      );
     }
   },
 
@@ -774,6 +777,12 @@ export default {
   computed: {
     pagesNumber() {
       return Math.ceil(this.groupMembers.length / this.pagination.rowsPerPage);
+    },
+    // TODO : createGroup과 함께 컴포넌트화 시킬 수 있음
+    DupCheck: function() {
+      if (this.groupData.title == "" || this.groupData.title != this.titleCheck)
+        return false;
+      else return true;
     }
   }
 };
