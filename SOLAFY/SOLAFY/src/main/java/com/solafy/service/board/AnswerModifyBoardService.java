@@ -28,7 +28,7 @@ public interface AnswerModifyBoardService {
 	 * 자유게시판의 모든 게시글들을 반환
 	 * @return List<FreeBoardDto>
 	 */
-	public List<AnswerModifyBoardDto> selectArticles();
+	public List<AnswerModifyBoardDto> selectAllArticles();
 	
 
 	/**
@@ -42,17 +42,18 @@ public interface AnswerModifyBoardService {
 	public AnswerModifyBoardDto selectArticleByArticleNo(int articleNo);
 
 	/**
-	* @Method Name : selectAnswerModifyByUid
+	* @Method Name : selectAnswerModifyByNickName
 	* @작성일 : 2020. 12. 19
 	* @작성자 : BUMSEOK SEO
 	* @return
-	* @Method 설명 : Uid로 답안수정 게시글 검색
+	* @Method 설명 : 닉네임으로 답안수정 게시글 검색
 	* @변경이력 :
+	* 2020-01-01(BEOMSEOK SEO) - uid검색에서 닉네임 검색으로 변경
 	*/
-	public List<AnswerModifyBoardDto> selectArticleByUid(String uid);
+	public List<AnswerModifyBoardDto> selectArticleByNickname(String nickname);
 	
 	/**
-	 * @Method Name : selectAnswerModifyByUid
+	 * @Method Name : selectAnswerModifyByTitle
 	 * @작성일 : 2020. 12. 19
 	 * @작성자 : BUMSEOK SEO
 	 * @return
@@ -79,7 +80,7 @@ public interface AnswerModifyBoardService {
 	* @Method 설명 : 문제 번호로 답안수정 게시글 검색
 	* @변경이력 :
 	*/
-	public List<AnswerModifyBoardDto> selectArticleByProblemNo(int  problemNo);
+	public List<AnswerModifyBoardDto> selectArticleByProblemNo(int problemNo);
 	
 	/**
 	 * @Method Name : updateAnswerModify

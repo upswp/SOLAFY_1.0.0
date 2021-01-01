@@ -24,8 +24,8 @@
 	-->
 	<select id="selectReplies" parameterType="int" resultType="AnswerModifyReplyDto">
 		select replyNo, contents, nickname, regiTime
-		from answermodifyboard amb join userinfo ui 
-        on amb.uid = ui.uid
+		from answermodifyreply amr join userinfo ui 
+        on amr.uid = ui.uid
 		where articleNo = #{articleNo}
 		order by regiTime desc
 	</select>
