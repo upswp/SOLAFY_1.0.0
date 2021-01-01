@@ -1,6 +1,9 @@
 <template>
+  <!-- 댓글 입력 칸 시작 -->
   <div class="q-pa-md" style="max-width: 600px">
-    <strong>로그인 닉네임 정보(sql문 수정필요)</strong>
+    <!-- TODO: 로그인한 사람의 정보에서 가져온다 -->
+    <strong>로그인한 사람 닉네임 정보(가져옵니다)</strong>
+    <!-- 입력하는 족족 replyForm의 내용에 갱신된다 -->
     <q-input
       type="textarea"
       v-model="replyForm.contents"
@@ -11,6 +14,7 @@
       outlined
     >
       <template v-slot:prepend>
+        <!-- TODO: 로그인한 사람의 정보에서 가져온다 -->
         <q-avatar>
           <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
         </q-avatar>
@@ -30,33 +34,26 @@ export default {
   data() {
     return {
       replyForm: {
+        // 로그인한 사람의 uid를 가져온다.
         uid: "DFEIJC23WOSKXCNSWQ",
         contents: "",
-        articleNo: ""
-      },
-      articleNo: this.$route.params.articleNo
+        // 게시글 번호는
+        // 현재 머무르는 게시글의 번
+        articleNo: this.$route.params.articleNo
+      }
     };
   },
-  //   computed: {
-  //     ...mapState(["userInfo"])
-  //   },
-  // props: ["articleNo"],
   methods: {
     onSubmit() {
-      console.log("hereyouare");
-      //   this.replyForm.userid = this.userInfo.userid;
+      // 내용이 비어있으면 아무일도 일어나지 않았다
       if (this.replyForm.contents === "") {
         return;
       }
-      console.log(this.replyForm.articleNo);
-      this.replyForm.articleNo = this.articleNo;
-      console.log(this.replyForm.articleNo);
-      Axios.post(
-        `${this.$store.state.boardType}reply/createReply`,
-        this.replyForm
-      )
+
+      // 내용이 들어있었다면 댓글 등록 진행
+      Axios.post(`${this.$store.state.boardType}reply/createReply`)
         .then(response => {
-          this.replyForm.contents = null;
+          // 댓글이 등록되면 부모컴포넌트에 갱신 요청
           this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
