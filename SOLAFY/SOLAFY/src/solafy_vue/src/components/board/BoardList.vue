@@ -62,18 +62,23 @@
           <td class="text-left">{{ notice.regiTime }}</td>
           <td class="text-left">{{ notice.likeCount }}</td>
         </tr>
+
+        <!-- TODO: 컬럼의 순서와 DTO의 순서가 맞아야한다!, v-for를 이용하여 출력하기때문에 -->
         <tr
           v-for="article in articles"
           :key="article.articleNo"
           @click="gotoDetail(article.articleNo)"
         >
-          <td class="text-left">{{ article.articleNo }}</td>
+          <td v-for="(name, value, index) in article" :key="index">
+            {{ name }}
+          </td>
+          <!-- <td class="text-left">{{ article.articleNo }}</td>
           <td class="text-left">{{ article.nickname }}</td>
           <td class="text-left">
             {{ article.title }}
           </td>
           <td class="text-left">{{ article.regiTime }}</td>
-          <td class="text-left">{{ article.likeCount }}</td>
+          <td class="text-left">{{ article.likeCount }}</td> -->
         </tr>
       </tbody>
     </q-markup-table>
@@ -109,11 +114,25 @@ export default {
       Axios.get(`/${this.boardType}/selectAllArticles`)
         .then(response => {
           this.articles = response.data;
+          for (var i = 0; i < this.articles.length; i++) {
+            for (var propName in this.articles[i]) {
+              if (
+                this.articles[i][propName] === null ||
+                this.articles[i][propName] === undefined ||
+                this.articles[i][propName] === false ||
+                (propName !== "likeCount" && this.articles[i][propName] === 0)
+              ) {
+                delete this.articles[i][propName];
+              }
+            }
+          }
         })
         .catch(() => {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
+      console.log("after yesyouare");
+      console.log(this.articles[0]);
     },
     selectAllNotices: function() {
       Axios.get(`/${this.boardType}/selectAllNotices`)
@@ -126,10 +145,23 @@ export default {
         .finally(() => (this.loading = false));
     },
     selectArticle: function() {
+      console.log(this.keyword);
       if (this.selection === "제목") {
         Axios.get(`/${this.boardType}/selectArticleByTitle/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -139,6 +171,18 @@ export default {
         Axios.get(`/${this.boardType}/selectArticleByNickname/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -149,6 +193,18 @@ export default {
         Axios.get(`/${this.boardType}/selectArticleByProblemNo/${this.keyword}`)
           .then(response => {
             this.articles = response.data;
+            for (var i = 0; i < this.articles.length; i++) {
+              for (var propName in this.articles[i]) {
+                if (
+                  this.articles[i][propName] === null ||
+                  this.articles[i][propName] === undefined ||
+                  this.articles[i][propName] === false ||
+                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                ) {
+                  delete this.articles[i][propName];
+                }
+              }
+            }
           })
           .catch(() => {
             this.errored = true;
@@ -180,7 +236,7 @@ export default {
     // 입력 form 초기화는 title, contents, isNotice에 적용된다
     resetForm: function() {
       this.article.title = null;
-      this.article.contents = null;
+      // this.article.contents = null;
       this.article.isNotice = false;
     }
   },
@@ -191,7 +247,7 @@ export default {
     // this.options = this.boardSearchKeywords;
     // this.columns = this.boardColumns;
     this.selectAllArticles();
-    this.selectAllNotices();
+    if (this.boardType === "free") this.selectAllNotices();
   }
 };
 </script>
