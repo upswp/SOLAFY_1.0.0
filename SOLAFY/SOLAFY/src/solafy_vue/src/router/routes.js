@@ -195,9 +195,35 @@ const routes = [
         ]
       },
       {
-        path: "/qna",
-        component: () => import("pages/board/FreeBoard.vue"),
-        beforeEnter: requireAuth()
+        path: "/question",
+        component: () => import("pages/board/QuestionBoard.vue"),
+        beforeEnter: requireAuth(),
+        children: [
+          {
+            path: "",
+            name: "question-board-list",
+            component: () => import("components/board/BoardList.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "write",
+            name: "question-board-write",
+            component: () => import("components/board/BoardWrite.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "detail/:articleNo",
+            name: "question-board-detail",
+            component: () => import("components/board/BoardDetail.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "update",
+            name: "question-board-update",
+            component: () => import("components/board/BoardUpdate.vue"),
+            beforeEnter: requireAuth()
+          }
+        ]
       },
       {
         path: "/answermodify",
