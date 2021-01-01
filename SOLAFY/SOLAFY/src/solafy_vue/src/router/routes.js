@@ -132,7 +132,7 @@ const routes = [
         beforeEnter: requireAuth()
       },
       {
-        path: "/problemsetcreate/problemSetListByProblem",
+        path: "/problemsetcreate/problemSetListByProblem/:problemSetNo",
         name: "ProblemSetCreateByProblem",
         component: () =>
           import(
