@@ -144,7 +144,9 @@ export default {
                 this.articles[i][propName] === null ||
                 this.articles[i][propName] === undefined ||
                 this.articles[i][propName] === false ||
-                (propName !== "likeCount" && this.articles[i][propName] === 0)
+                (propName !== "likeCount" &&
+                  this.articles[i][propName] === 0) ||
+                propName === "uid"
               ) {
                 delete this.articles[i][propName];
               }
@@ -189,7 +191,9 @@ export default {
                   this.articles[i][propName] === null ||
                   this.articles[i][propName] === undefined ||
                   this.articles[i][propName] === false ||
-                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                  (propName !== "likeCount" &&
+                    this.articles[i][propName] === 0) ||
+                  propName === "uid"
                 ) {
                   delete this.articles[i][propName];
                 }
@@ -213,7 +217,9 @@ export default {
                   this.articles[i][propName] === null ||
                   this.articles[i][propName] === undefined ||
                   this.articles[i][propName] === false ||
-                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                  (propName !== "likeCount" &&
+                    this.articles[i][propName] === 0) ||
+                  propName === "uid"
                 ) {
                   delete this.articles[i][propName];
                 }
@@ -231,11 +237,14 @@ export default {
             this.articles = response.data;
             for (var i = 0; i < this.articles.length; i++) {
               for (var propName in this.articles[i]) {
+                console.log(propName);
                 if (
                   this.articles[i][propName] === null ||
                   this.articles[i][propName] === undefined ||
                   this.articles[i][propName] === false ||
-                  (propName !== "likeCount" && this.articles[i][propName] === 0)
+                  (propName !== "likeCount" &&
+                    this.articles[i][propName] === 0) ||
+                  propName === "uid"
                 ) {
                   delete this.articles[i][propName];
                 }

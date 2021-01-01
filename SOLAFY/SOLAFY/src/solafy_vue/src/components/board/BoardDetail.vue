@@ -101,6 +101,8 @@
 import ReplyWrite from "components/board/reply/ReplyWrite.vue";
 import ReplyRow from "components/board/reply/ReplyRow.vue";
 import BoardProblemInfo from "components/board/materials/BoardProblemInfo.vue";
+
+import { SessionStorage } from "quasar";
 import Axios from "axios";
 import { mapState } from "vuex";
 export default {
