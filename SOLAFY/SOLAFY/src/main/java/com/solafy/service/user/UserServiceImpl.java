@@ -55,6 +55,12 @@ public class UserServiceImpl implements UserService {
 		userMapper.updateUser(uDto);
 		return true;
 	}
+	
+	@Override
+	public boolean updateUserAdmin(String uid) throws Exception {
+		userMapper.updateUserAdmin(uid);
+		return false;
+	}
 
 	@Override
 	public boolean deleteUser(String uid) throws Exception {

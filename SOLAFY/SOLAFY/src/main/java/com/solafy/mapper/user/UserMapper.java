@@ -84,6 +84,17 @@ public interface UserMapper {
 	 * @변경이력
 	 */
 	public int updateUser(UserDto uDto) throws SQLException;
+	
+	/**
+	 * 사용자 등급 수정 - 사용자 등급을 일반회원으로 수정
+	 * 
+	 * @param uid - String
+	 * @return int - 수정된 행의 개수 반환
+	 * @throws SQLException
+	 *
+	 * @변경이력
+	 */
+	public int updateUserAdmin(String uid) throws SQLException;
 
 	/**
 	 * 사용자 삭제

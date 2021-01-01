@@ -10,14 +10,15 @@
 	
 	<!-- 사용자 등록 -->
 	<insert id="createUser" parameterType="UserDto">
-		INSERT INTO userinfo ( uid,    nickname,    statusMessage    )
-		VALUES				 ( #{uid}, #{nickname}, #{statusMessage} )
+		INSERT INTO userinfo ( uid,    nickname,    statusMessage,	  admin )
+		VALUES				 ( #{uid}, #{nickname}, #{statusMessage}, 2     )
 	</insert>
 	
 	<!-- 모든 사용자 반환 -->
 	<select id="selectAllUsers" resultType="UserDto">
 		SELECT uid, nickname, statusMessage, admin
 		FROM   userinfo
+		WHERE  admin != 2
 	</select>
 	
 	<!-- uid로 검색한 결과 반환 -->
@@ -39,13 +40,21 @@
 		SELECT uid, nickname, statusMessage, admin
 		FROM   userinfo
 		WHERE  admin = 2
-	</select>	
+	</select>
 	
 	<!-- 사용자 정보 수정 -->
 	<update id="updateUser" parameterType="UserDto">
 		UPDATE userinfo
 		SET    nickname 	 = #{nickname},
 			   statusMessage = #{statusMessage}
+		WHERE  uid = #{uid}
+	</update>
+	
+		
+	<!-- 사용자 등급 수정 -->
+	<update id="updateUserAdmin" parameterType="String">
+		UPDATE userinfo
+		SET    admin = 1
 		WHERE  uid = #{uid}
 	</update>
 	

@@ -68,9 +68,10 @@ public class UserController {
 	 * @return
 	 * @throws Exception
 	 *
-	 * @변경이력
+	 * @변경이력 
+	 * 21-01-01 메소드 설명 수정
 	 */
-	@ApiOperation(value = "모든 사용자 목록을 반환한다.", response = List.class)
+	@ApiOperation(value = "(가입 승인이 안 난 사용자를 제외한) 모든 사용자 목록을 반환한다.", response = List.class)
 	@GetMapping(value = "/selectall")
 	public ResponseEntity<List<UserDto>> selectAllUsers() throws Exception {
 		logger.debug("selectAllUsers");
@@ -153,6 +154,25 @@ public class UserController {
 	public ResponseEntity<String> updateUser(@RequestBody UserDto uDto) throws Exception {
 		logger.debug("updateUser");
 		if (userService.updateUser(uDto))
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		else
+			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+	
+	/**
+	 * 
+	 * @param uid
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 * 21-01-01 메소드 추가
+	 */
+	@ApiOperation(value = "사용자의 등급을 일반회원으로 수정하고 결과를 반환한다.", response = String.class)
+	@PutMapping(value = "/updateadmin/{uid}")
+	public ResponseEntity<String> updateUserAdmin(@PathVariable String uid) throws Exception {
+		logger.debug("updateUserAdmin");
+		if (userService.updateUserAdmin(uid))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);

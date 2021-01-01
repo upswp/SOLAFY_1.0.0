@@ -80,6 +80,17 @@ public interface UserService {
 	 * @변경이력
 	 */
 	public boolean updateUser(UserDto uDto) throws Exception;
+	
+	/**
+	 * 사용자 등급 수정 - 사용자의 등급을 일반회원으로 수정
+	 * 
+	 * @param uid - String
+	 * @return boolean - 수정 성공 시 true 반환
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 */
+	public boolean updateUserAdmin(String uid) throws Exception;
 
 	/**
 	 * 사용자 삭제
