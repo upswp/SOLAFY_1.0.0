@@ -168,7 +168,6 @@ export default {
 
     // 댓글 목록
     getReplyRow: function() {
-      console.log(this.articleNo);
       // vuex에 저장된 게시판 형식(boardType)을 이용하여,
       // 해당 게시판의 해당 게시글의 댓글들을 불러온다
       Axios.get(`${this.boardType}reply/selectReplies/${this.articleNo}`)
@@ -206,7 +205,6 @@ export default {
 
   // 시작할때 해당 글 정보를 읽어들여와서 저장한다.
   mounted() {
-    console.log(this.articleNo);
     Axios.get(`/${this.boardType}/selectArticleByArticleNo/${this.articleNo}`)
       .then(response => {
         // 반환된 게시글 정보 저장

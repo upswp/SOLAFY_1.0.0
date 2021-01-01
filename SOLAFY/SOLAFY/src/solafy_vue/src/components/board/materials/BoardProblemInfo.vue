@@ -27,7 +27,7 @@ import Axios from "axios";
 
 export default {
   name: "boardprobleminfo",
-  props: ["problemNo"],
+  props: { problemNo: String },
   data() {
     return {
       problemInfo: [],
@@ -39,27 +39,30 @@ export default {
     };
   },
   method: {},
-  mounted() {
-    // 문제 정보를 불러온다
-    this.problemGetNo = this.problemNo;
-    Axios.get(`problem/` + this.problemGetNo)
-      .then(response => {
-        // 문제 정보 저장
-        this.problemInfo = response.data["problem"];
-        this.multipleChoice = this.problemInfo.multipleChoice.split(",");
+  watch: {
+    problemNo: function() {
+      // 문제 정보를 불러온다
+      console.log("ㅎㅎ" + this.problemNo);
+      this.problemGetNo = this.problemNo;
+      Axios.get(`problem/` + this.problemGetNo)
+        .then(response => {
+          // 문제 정보 저장
+          this.problemInfo = response.data["problem"];
+          this.multipleChoice = this.problemInfo.multipleChoice.split(",");
 
-        // 문제 정보를 불러온다
-        Axios.get(`problem/answer/` + this.problemGetNo)
-          .then(response => {
-            // 문제 정보 저장
-            this.answerInfo = response.data;
-            console.log(this.answerInfo);
-          })
-          .catch(() => (this.error = true))
-          .finally(() => (this.loading = false));
-      })
-      .catch(() => (this.error = true))
-      .finally(() => (this.loading = false));
+          // 문제 정보를 불러온다
+          Axios.get(`problem/answer/` + this.problemGetNo)
+            .then(response => {
+              // 문제 정보 저장
+              this.answerInfo = response.data;
+              console.log(this.answerInfo);
+            })
+            .catch(() => (this.error = true))
+            .finally(() => (this.loading = false));
+        })
+        .catch(() => (this.error = true))
+        .finally(() => (this.loading = false));
+    }
   }
 };
 </script>
