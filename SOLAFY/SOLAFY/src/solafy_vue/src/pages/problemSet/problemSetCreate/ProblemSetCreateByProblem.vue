@@ -192,7 +192,17 @@
       </div>
       <hr />
       <div class="row">
-        <q-btn color="primary" label="문제 등록" @click="InsertProblem" />
+        <div class="col">
+          <q-btn color="warning" label="문제 추가" @click="InsertProblem(1)" />
+        </div>
+        <div class="col">
+          <q-btn
+            color="primary"
+            label="문제 등록"
+            @click="createProblem"
+            style="float:right"
+          />
+        </div>
       </div>
     </div>
     <!-- 오른쪽 col 3칸 -->
@@ -283,7 +293,7 @@ export default {
           solution: null
         },
         hashTag: [],
-        problemSetNo: 0
+        problemSetNo: this.$route.params.problemSetNo
       },
       // ! 문제 리스트
       problemList: [],
@@ -405,7 +415,7 @@ export default {
       this.choiceList.push({ choice: "", check: false });
     },
     // 문제 등록 처리
-    InsertProblem() {
+    InsertProblem(flag) {
       // 객관식인 경우
       if (this.problemList[this.pIndex].problem.type == 0) {
         // 선지 저장
@@ -433,8 +443,11 @@ export default {
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
       //문제 리스트에 문제를 저장한다.
-      this.problemList.push(this._.cloneDeep(this.item));
+      if (flag == 1) {
+        this.problemList.push(this._.cloneDeep(this.item));
+      }
       this.pIndex++;
+      this.options.content = " ";
       this.tab = "객관식";
       this.tab_pre = "객관식";
       // this.selectLarge = null;
@@ -444,12 +457,10 @@ export default {
       // this.selectSmall = null;
       this.hashTagText = "";
       this.choiceList = [];
-      this.options.content = "";
-      console.log(QuasarTiptap);
-      // this.createProblem();
     },
     // 문제 등록
     createProblem() {
+      this.InsertProblem(0);
       axios
         .post("problem/createProblemList", this.problemList)
         .then(response => {
@@ -464,21 +475,17 @@ export default {
     updateFlag() {
       axios
         .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
-        .then(response => {})
+        .then(response => {
+          notify("positive", "white", "done", "문제 등록 성공");
+            this.$router.push({
+              name: "ProblemSet"
+            });
+        })
         .catch(error => {
           console.log(error);
           this.result = false;
+          notify("red", "white", "error", "문제 등록 실패");
         })
-        .finally(() => {
-          if (this.result) {
-            notify("positive", "white", "done", "문제 등록 성공");
-            this.$router.push({
-              name: "Problem"
-            });
-          } else {
-            notify("red", "white", "error", "문제 등록 실패");
-          }
-        });
     },
     // 탭 클릭 시 type 설정
     setType(name) {
@@ -528,6 +535,7 @@ export default {
     getProblem(index) {
       this.pIndex = index;
       this.choiceList = [];
+      this.options.content = this.problemList[this.pIndex].problem.contents;
       //TODO : 카테고뤼 저장하는 로직 구현 부탁드림 -견2-
       // this.selectLarge = this.problemList[this.pIndex].problem
       if (this.problemList[this.pIndex].problem.multipleChoice != null) {

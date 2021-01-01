@@ -227,8 +227,8 @@ public class ProblemController {
 	 * @throws Exception
 	 * @Method 설명 : 문제를 리스트로 받아와서 등록한다.
 	 */
-	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값이 false(0)인 상태인 문제집과 문제를 삭제한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
-	@DeleteMapping(value = "/createProblemList")
+	@ApiOperation(value = "문제를 리스트로 받아와서 등록한다. 그리고 DB 삭제 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@PostMapping(value = "/createProblemList")
 	public ResponseEntity<String> createProblemList(@RequestBody ArrayList<HashMap<String,Object>> mapList) throws Exception{
 		logger.debug("createProblemList -- 호출");
 		System.out.println(mapList.toString());
