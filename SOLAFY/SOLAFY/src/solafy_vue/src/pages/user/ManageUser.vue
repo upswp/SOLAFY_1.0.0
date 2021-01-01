@@ -41,6 +41,16 @@
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
                 <q-btn
+                  rounded
+                  dense
+                  color="teal"
+                  icon="photo"
+                  @click="clickPicture(props.row)"
+                />
+                &nbsp;&nbsp;
+                <q-btn
+                  rounded
+                  dense
                   color="teal"
                   icon="check"
                   @click="clickRegiConfirm(props.row)"
@@ -70,6 +80,40 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="imgdialog">
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">
+            <strong>{{ imgdialognickname }}</strong> 님의 프로필 사진
+          </span>
+          <img id="ntimg" src="" />
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="확인" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="confirmdialog" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="people" color="primary" text-color="white" />
+          <span class="q-ml-sm">가입을 승인하시겠습니까?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="취소" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="확인"
+            color="primary"
+            @click="clickRealRegiConfirm"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -82,12 +126,15 @@ import { notify } from "src/api/common.js";
 export default {
   data() {
     return {
-      tab: "regi",
+      tab: "member",
       users: [],
       selected: [],
       regis: [],
       withdrawaldialog: false,
-      picturedialog: false,
+      imgdialog: false,
+      imgdialognickname: false,
+      confirmdialog: false,
+      regiconfirmUid: "",
       columns: [
         {
           required: true,
@@ -153,33 +200,51 @@ export default {
         this.deleteUser_FB(user);
       }
       this.withdrawaldialog = false;
-    }
-  },
-  deleteImg_FB(user) {
-    var nametagRef = firebaseSt.ref().child("nametagimg/" + user.uid);
-    var profileRef = firebaseSt.ref().child("profileimg/" + user.uid);
-    nametagRef.delete();
-    profileRef.delete();
-  },
-  // DB의 회원 정보 삭제
-  deleteUser_DB(user) {
-    axios.delete("/user/delete/" + user.uid);
-  },
-  // FB의 인증 정보 삭제
-  deleteUser_FB(user) {
-    firebaseAuth.currentUser
-      .delete()
-      .then(function() {})
-      .catch(function(error) {
-        console.log(error);
+    },
+    deleteImg_FB(user) {
+      var nametagRef = firebaseSt.ref().child("nametagimg/" + user.uid);
+      var profileRef = firebaseSt.ref().child("profileimg/" + user.uid);
+      nametagRef.delete();
+      profileRef.delete();
+    },
+    // DB의 회원 정보 삭제
+    deleteUser_DB(user) {
+      axios.delete("/user/delete/" + user.uid);
+    },
+    // FB의 인증 정보 삭제
+    deleteUser_FB(user) {
+      firebaseAuth.currentUser
+        .delete()
+        .then(function() {})
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    clickPicture(user) {
+      var storageRef = firebaseSt.ref();
+      storageRef
+        .child("profileimg/" + user.uid)
+        .getDownloadURL()
+        .then(function(url) {
+          console.log(url);
+          var img = document.getElementById("ntimg");
+          img.src = url;
+        })
+        .catch(function(error) {});
+      this.imgdialognickname = user.nickname;
+      this.imgdialog = true;
+    },
+    clickRegiConfirm(user) {
+      this.confirmdialog = true;
+      this.regiconfirmUid = user.uid;
+    },
+    clickRealRegiConfirm() {
+      axios.put("/user/updateadmin/" + this.regiconfirmUid).then(response => {
+        notify("green", "white", "cloud_done", "회원 가입 승인 성공");
       });
-  },
-  clickPicture() {
-    console.log("hi");
-    this.picturedialog = true;
-  },
-  clickRegiConfirm(item) {
-    console.log("dd");
+      this.confirmdialog = false;
+      window.location.reload();
+    }
   }
 };
 </script>

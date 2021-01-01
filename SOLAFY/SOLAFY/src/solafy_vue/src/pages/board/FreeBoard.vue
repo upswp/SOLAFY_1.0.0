@@ -1,6 +1,7 @@
 <template>
   <div class="doc-container">
     <h3>FreeBoard</h3>
+    <!-- 여기에 페이지들이 표시됩니다! -->
     <router-view></router-view>
   </div>
 </template>
@@ -14,29 +15,11 @@ import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      article: {
-        nickname: null,
-        title: null,
-        regiTime: null,
-        contents: null,
-        likeCount: 0,
-        uid: "DFEIJC23WOSKXCNSWQ",
-        notice: false,
-        isGroup: false,
-        groupNo: 1,
-        boardBNo: 0
-      },
-      options: ["제목", "작성자"],
+      // 게시판 타입
       boardType: "free",
-      // 댓글, 게시글, 공지글의 정보를 담는 변수
-      replies: [],
-      articles: [],
-      notices: [],
-
-      errored: false,
-      keyword: null,
-
-      showFlag: "list",
+      // 게시판 list에서 사용될 검색옵션
+      options: ["제목", "작성자"],
+      // 게시판 list에서 사용될 컬럼
       columns: [
         {
           name: "articleNo",
@@ -83,26 +66,34 @@ export default {
           format: val => `${val}`,
           sortable: true
         }
-      ]
+      ],
+      errored: false
     };
   },
   methods: {
-    ...mapMutations(["SETBOARDCOLUMNS", "SETBOARDSEARCHKEYWORDS"]),
-    goToWrite() {
-      this.$router.push();
-    },
-    goToDetail() {
-      this.$router.push();
-    },
-    goToUpdate() {
-      this.$router.push();
-    }
+    // vuex에 저장되어있는 변수(state)를 바꿔주기 위한 메서드!(setter같은 기분)
+    ...mapMutations(["SETBOARDCOLUMNS", "SETBOARDSEARCHKEYWORDS"])
   },
   created() {
+    /**
+     * 처음에 FreeBoard의 기본 값들을 vuex의 states에 세팅합니다
+     *
+     * 순서대로 검색옵션 - 테이블컬럼정보 - 게시판타입(이후 url에 적용되므로 잘 보고 해야해요!)
+     */
     this.$store.commit("SETBOARDSEARCHKEYWORDS", this.options);
     this.$store.commit("SETBOARDCOLUMNS", this.columns);
     this.$store.commit("SETBOARDTYPE", this.boardType);
-    console.log(this.options, this.columns, this.boardType);
+
+    // 한번 출력된거 확인해보세요!
+    console.log(
+      "현재 게시판 정보",
+      "\n",
+      this.options,
+      "\n",
+      this.columns,
+      "\n",
+      this.boardType
+    );
   }
 };
 </script>
