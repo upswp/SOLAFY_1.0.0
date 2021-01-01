@@ -1,11 +1,23 @@
 import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
+import {SessionStorage} from "quasar"
+import { notify } from "src/api/common.js";
 
-// 로그인 완료 + 이메일 인증 완료
+
+// 로그인 완료 + 이메일 인증 완료 + 관리자 승인 완료
 // ex) 문제, 게시판, 그룹 등등 모든 조건이 모두 필요한 경우
 const requireAuth = () => (to, from, next) => {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(function (user) {
     // 로그인 (O) 이메일 인증(O) : 라우팅 된 페이지로 이동
     if (user && user.emailVerified) {
+      // 관리자 승인 (X)이면 페이지 이동 안함
+      if (SessionStorage.has("loginUser")) {
+        //console.log("세션 o");
+        if (SessionStorage.getItem("loginUser").admin == 2) {
+          //console.log("admin 2");
+          notify("green", "white", "warning", "가입 승인을 검토 중입니다. ");
+          return;
+        }
+      }
       return next();
       // 로그인 (O) 이메일 인증(X) : 이메일 인증 경고 페이지로 이동
     } else if (user) {
@@ -195,9 +207,35 @@ const routes = [
         ]
       },
       {
-        path: "/qna",
-        component: () => import("pages/board/FreeBoard.vue"),
-        beforeEnter: requireAuth()
+        path: "/question",
+        component: () => import("pages/board/QuestionBoard.vue"),
+        beforeEnter: requireAuth(),
+        children: [
+          {
+            path: "",
+            name: "question-board-list",
+            component: () => import("components/board/BoardList.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "write",
+            name: "question-board-write",
+            component: () => import("components/board/BoardWrite.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "detail/:articleNo",
+            name: "question-board-detail",
+            component: () => import("components/board/BoardDetail.vue"),
+            beforeEnter: requireAuth()
+          },
+          {
+            path: "update",
+            name: "question-board-update",
+            component: () => import("components/board/BoardUpdate.vue"),
+            beforeEnter: requireAuth()
+          }
+        ]
       },
       {
         path: "/answermodify",

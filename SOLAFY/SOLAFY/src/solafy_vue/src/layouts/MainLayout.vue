@@ -136,10 +136,10 @@ const linksData = [
     link: "/answermodify"
   },
   {
-    title: "Q&A Board",
+    title: "Question Board",
     caption: "범석&기현",
-    icon: "announcement",
-    link: "/qna"
+    icon: "api",
+    link: "/question"
   },
   {
     title: "Group",

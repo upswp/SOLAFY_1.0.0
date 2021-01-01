@@ -55,11 +55,11 @@ public interface ProblemSetService {
 	/**
 	 * 
 	* @param problemSet
-	* @return boolean, 정상적으로 등록 시 true 반환
+	* @return int, 등록한 problemSet의 No반환
 	* @Method 설명 : 문제집 등록 및 문제 mapping
-	* @변경이력 : 
+	* @변경이력 : 2021.01.02 - createProblemSet의 반환형을 boolean(성공여부)에서 int(problemSetNo)로 변경
 	 */
-	public boolean createProblemSet(ProblemSetDto problemSet) throws Exception;
+	public int createProblemSet(ProblemSetDto problemSet) throws Exception;
 
 	/**
 	 * 

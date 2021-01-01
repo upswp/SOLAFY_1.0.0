@@ -44,7 +44,8 @@
 	
 	
 	<!-- 문제집 생성 -->
-	<insert id="createProblemSet" parameterType="problemSetDto">
+	<!-- useGeneratedKeys="true" keyProperty="값을 받아올컬럼명"을 써주면 insert문 실행 후 ProblemSetDto의 해당 컬럼에 값을 넣어준다 -->
+	<insert id="createProblemSet" parameterType="problemSetDto" useGeneratedKeys="true" keyProperty="problemSetNo">
 		INSERT INTO problemset (uid, title, regiTime,flag)
 		VALUES(#{uid}, #{title}, now(),0)
 	</insert>

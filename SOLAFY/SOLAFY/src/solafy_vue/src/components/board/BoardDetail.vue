@@ -33,7 +33,12 @@
         </q-item-section>
       </q-item>
       <q-separator />
-
+      <board-problem-info
+        :problemNo="article.problemNo"
+        v-if="
+          this.boardType === `answermodify` || this.boardType === `question`
+        "
+      />
       <!-- 내용을 보여준다 -->
       <q-card-section>
         <q-card-section class="col-4">{{ article.contents }} </q-card-section>
@@ -95,6 +100,9 @@
 // 자유게시판 댓글 컴포넌트 가져오기
 import ReplyWrite from "components/board/reply/ReplyWrite.vue";
 import ReplyRow from "components/board/reply/ReplyRow.vue";
+import BoardProblemInfo from "components/board/materials/BoardProblemInfo.vue";
+
+import { SessionStorage } from "quasar";
 import Axios from "axios";
 import { mapState } from "vuex";
 export default {
@@ -110,6 +118,7 @@ export default {
   },
   // 컴포넌트 선언
   components: {
+    BoardProblemInfo,
     ReplyWrite,
     ReplyRow
   },
@@ -163,7 +172,6 @@ export default {
 
     // 댓글 목록
     getReplyRow: function() {
-      console.log(this.articleNo);
       // vuex에 저장된 게시판 형식(boardType)을 이용하여,
       // 해당 게시판의 해당 게시글의 댓글들을 불러온다
       Axios.get(`${this.boardType}reply/selectReplies/${this.articleNo}`)
@@ -201,7 +209,6 @@ export default {
 
   // 시작할때 해당 글 정보를 읽어들여와서 저장한다.
   mounted() {
-    console.log(this.articleNo);
     Axios.get(`/${this.boardType}/selectArticleByArticleNo/${this.articleNo}`)
       .then(response => {
         // 반환된 게시글 정보 저장

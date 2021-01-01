@@ -107,20 +107,16 @@ public class ProblemSetController {
 	/**
 	 * 
 	* @param problemSet 새롭게 만들고자 하는 문제집 번호
-	* @return boolean, 정상적으로 등록 시 SUCCESS 반환
+	* @return int, problemSetNo
 	* @throws Exception
 	* @Method 설명 : 새롭게 생성하고자 하는 문제집 등록
-	* @변경이력 :
+	* @변경이력 : 2021.01.02 - createProblemSet의 반환형을 String(성공여부)에서 int(problemSetNo)로 변경
 	 */
 	@ApiOperation(value = "새로운 문제집 정보를 입력한다. 그리고 DB 입력 성공 여부에 따라 'success' 또는 'fail' 반환한다." , response = String.class)
 	@PostMapping(value = "/createProblemSet")
-	public ResponseEntity<String> createProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
+	public ResponseEntity<Integer> createProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
 		logger.debug("createProblemSet -- 호출");
-		if (problemsetService.createProblemSet(problemSet)) {
-			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
-		}
+		return new ResponseEntity<Integer>(problemsetService.createProblemSet(problemSet), HttpStatus.OK);
 	}
 	
 	/**

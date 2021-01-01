@@ -79,11 +79,12 @@ export default {
       axios
         .post("problem/problemset/createProblemSet", this.ProblemSet)
         .then(response => {
-          if (response.data == "success") {
-            this.$router.push({ name: "ProblemSetCreateByProblem" });
-          } else {
-            notify("red", "white", "error", "문제집 임시저장 실패");
-          }
+          this.$router.push({
+            name: "ProblemSetCreateByProblem",
+            params: {
+              problemSetNo: response.data
+            }
+          });
         })
         .catch(error => {
           notify("red", "white", "error", "문제집 임시저장 실패");
