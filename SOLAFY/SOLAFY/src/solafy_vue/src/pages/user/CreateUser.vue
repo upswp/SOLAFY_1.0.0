@@ -233,7 +233,7 @@ export default {
       // firebase에 회원가입 요청
       firebaseAuth
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then(Response => {
+        .then(response => {
           let uid = firebaseAuth.currentUser.uid;
           // 회원 데이터 등록
           this.createUser_DB(uid);
@@ -249,6 +249,8 @@ export default {
             "cloud_done",
             "회원 가입 성공, 이메일 인증을 진행해주세요!"
           );
+          //this.getLoginUserInfo(response.user.uid);
+          this.$emit("updateLoginUser");
           this.$router.push("/");
         })
         .catch(error => {
@@ -293,6 +295,16 @@ export default {
     // 사진 등록에 실패했을 경우 알림
     onRejected() {
       notify("red", "white", "warning", "사진 등록 실패");
+    },
+    getLoginUserInfo(uid) {
+      axios
+        .get("/user/selectbyuid/" + uid)
+        .then(response => {
+          SessionStorage.set("loginUser", response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

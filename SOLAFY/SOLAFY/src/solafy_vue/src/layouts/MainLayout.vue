@@ -16,7 +16,7 @@
         </q-toolbar-title>
 
         <div class="cursor-pointer non-selectable">
-          <span v-if="loginUser != null">{{ loginUser.email }}</span>
+          <span>{{ nickname }}</span>
           <q-btn flat dense round icon="account_circle" aria-label="Menu">
             <q-menu>
               <q-list dense style="min-width: 100px">
@@ -87,14 +87,16 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view @updateLoginUser="checkUser" />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import axios from "axios";
 import EssentialLink from "components/EssentialLink.vue";
 import { firebaseAuth } from "boot/firebase";
+import { SessionStorage } from "quasar";
 
 const linksData = [
   {
@@ -163,28 +165,12 @@ export default {
       admin: "",
       mem: "",
       non: "",
-      loginUser: null
+      nickname: ""
     };
   },
   mounted: function() {
-    this.loginUser = firebaseAuth.currentUser;
-    if (firebaseAuth.currentUser != null) {
-      this.non = "none";
-      this.mem = "";
-    } else {
-      this.mem = "none";
-      this.non = "";
-    }
-  },
-  updated: function() {
-    this.loginUser = firebaseAuth.currentUser;
-    if (firebaseAuth.currentUser != null) {
-      this.non = "none";
-      this.mem = "";
-    } else {
-      this.mem = "none";
-      this.non = "";
-    }
+    // console.log("mounted");
+    this.checkUser();
   },
   methods: {
     goMain() {
@@ -201,12 +187,50 @@ export default {
     },
     logout() {
       firebaseAuth.signOut();
-      this.loginUser = null;
+      SessionStorage.clear();
+      this.nickname = "";
       if (this.$router.currentRoute.path == "/main") this.$router.push("/");
       else this.$router.push("/main");
     },
     goUserManage() {
       this.$router.push("/manageuser");
+    },
+    checkUser() {
+      firebaseAuth.onAuthStateChanged(user => {
+        if (user) {
+          this.mem = "";
+          this.non = "none";
+          if (!SessionStorage.has("loginUser")) {
+            // console.log("FB ok, SS x");
+            this.getLoginUserInfo(user.uid);
+          } else {
+            // console.log("FB ok, SS ok");
+            this.nickname = SessionStorage.getItem("loginUser").nickname;
+            if (SessionStorage.getItem("loginUser").admin == 0) this.admin = "";
+            else this.admin = "none";
+          }
+        } else {
+          // console.log("FB x");
+          this.mem = "none";
+          this.non = "";
+          this.admin = "none";
+        }
+      });
+    },
+    getLoginUserInfo(uid) {
+      // console.log("axios");
+      axios
+        .get("/user/selectbyuid/" + uid)
+        .then(response => {
+          SessionStorage.set("loginUser", response.data);
+          this.nickname = response.data.nickname;
+          // console.log(response.data);
+          if (response.data.admin == 0) this.admin = "";
+          else this.admin = "none";
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

@@ -2,43 +2,49 @@
   <div class="q-pa-md">
     <!-- logo -->
     <div class="fit row justify-center content-center">
-      <img style="width : 350px; height : 350px;"
-      src="~src/assets/mainLogo.png"
+      <img
+        style="width : 350px; height : 350px;"
+        src="~src/assets/mainLogo.png"
       />
     </div>
     <!-- 로그인 입력 폼 -->
     <div class="fit row justify-center content-center">
-    <q-form @submit="onSubmit" @reset="onReset" class="col-5 self-center" style="max-width : 300px">
-      <q-input
-        dense
-        type="email"
-        v-model="formData.email"
-        label="email *"
-        lazy-rules
-        :rules="[val => (val && val.length > 0) || '이메일을 입력해주세요']"
-      />
+      <q-form
+        @submit="onSubmit"
+        @reset="onReset"
+        class="col-5 self-center"
+        style="max-width : 300px"
+      >
+        <q-input
+          dense
+          type="email"
+          v-model="formData.email"
+          label="email *"
+          lazy-rules
+          :rules="[val => (val && val.length > 0) || '이메일을 입력해주세요']"
+        />
 
-      <q-input
-        dense
-        type="password"
-        v-model="formData.password"
-        label="password *"
-        lazy-rules
-        :rules="[
-          val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
-        ]"
-      />
-      <q-toggle
-        false-value="false"
-        true-value="true"
-        v-model="idsave"
-        label="이메일 저장"
-      />
-      <div class="fit row justify-center content-center">
-        <q-btn label="login" type="submit" color="positive" />
-        <q-btn label="reset" type="reset" color="negative" flat />
-      </div>
-    </q-form>
+        <q-input
+          dense
+          type="password"
+          v-model="formData.password"
+          label="password *"
+          lazy-rules
+          :rules="[
+            val => (val !== null && val !== '') || '비밀번호를 입력해주세요'
+          ]"
+        />
+        <q-toggle
+          false-value="false"
+          true-value="true"
+          v-model="idsave"
+          label="이메일 저장"
+        />
+        <div class="fit row justify-center content-center">
+          <q-btn label="login" type="submit" color="positive" />
+          <q-btn label="reset" type="reset" color="negative" flat />
+        </div>
+      </q-form>
     </div>
     <!-- 버튼 -->
     <div class="fit row justify-center content-center">
@@ -70,9 +76,11 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import { mapActions } from "vuex";
 import { notify } from "src/api/common.js";
 import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
+import { SessionStorage } from "quasar";
 
 export default {
   name: "PageIndex",
@@ -103,14 +111,19 @@ export default {
         .setPersistence(firebase.auth.Auth.Persistence.SESSION)
         .then(() => {
           // 로그인
-          return firebaseAuth.signInWithEmailAndPassword(
-            this.formData.email,
-            this.formData.password
-          );
+          return firebaseAuth
+            .signInWithEmailAndPassword(
+              this.formData.email,
+              this.formData.password
+            )
+            .then(response => {
+              //this.getLoginUserInfo(response.user.uid);
+              console.log("emit");
+              this.$emit("updateLoginUser");
+            });
         })
         .then(() => {
           notify("green", "white", "cloud_done", "로그인 성공");
-
           this.$router.push("main");
         })
         .catch(error => {
@@ -153,6 +166,16 @@ export default {
         })
         .catch(() => {
           notify("red-6", "white", "warning", "메일 전송에 실패했습니다");
+        });
+    },
+    getLoginUserInfo(uid) {
+      axios
+        .get("/user/selectbyuid/" + uid)
+        .then(response => {
+          SessionStorage.set("loginUser", response.data);
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
   }
