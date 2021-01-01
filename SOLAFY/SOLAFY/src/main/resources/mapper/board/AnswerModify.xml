@@ -32,12 +32,12 @@
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,ui.nickname, problemNo, uns.nickname,title, contents, regiTime)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,ui.nickname, problemNo, uis.nickname,title, contents, regiTime)
 	-->
-	<select id="selectArticleByNo" parameterType="int" resultType="AnswerModifyBoardDto">
-		select articleNo, ui.nickname, problemNo, uns.nickname, title, contents, regiTime 
+	<select id="selectArticleByArticleNo" parameterType="int" resultType="AnswerModifyBoardDto">
+		select articleNo, ui.nickname, problemNo, uis.nickname, title, contents, regiTime 
 		from answermodifyboard amb join userinfo ui join userinfo uis
-		on amb.uid = ui.uid and amb.uid_submitter = uns.uid
+		on amb.uid = ui.uid and amb.uid_submitter = uis.uid
         where articleNo = #{articleNo};
 	</select>
 
@@ -49,7 +49,7 @@
 		select articleNo, nickname, problemNo, title, regiTime 
 		from answermodifyboard amb join userinfo ui
         on amb.uid = ui.uid
-		where title LIKE '%#{title}%'
+		where title LIKE CONCAT('%', #{title}, '%')
 	</select>
 	
 	<!--
@@ -60,14 +60,14 @@
 		select articleNo, nickname, problemNo, title, regiTime 
 		from answermodifyboard amb join userinfo ui
         on amb.uid = ui.uid
-		where nickname = '#{nickname}';
+		where nickname = #{nickname};
 	</select>
 	
 	<!--
 		인자값으로 가져온 문제번호에 맞는 게시글을 반환.
 		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
 	-->
-	<select id="selectArticleByProblemNo" parameterType="String" resultType="AnswerModifyBoardDto">
+	<select id="selectArticleByProblemNo" parameterType="int" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
 		from answermodifyboard amb join userinfo ui 
         on amb.uid = ui.uid
