@@ -159,7 +159,7 @@ const routes = [
       // board
       {
         path: "/free",
-        name: "free",
+        // name: "free",
         component: () => import("pages/board/FreeBoard.vue"),
         children: [
           {
@@ -181,7 +181,7 @@ const routes = [
             beforeEnter: requireAuth()
           },
           {
-            path: "update/:articleNo",
+            path: "update",
             name: "free-board-update",
             component: () => import("components/board/BoardUpdate.vue"),
             beforeEnter: requireAuth()
