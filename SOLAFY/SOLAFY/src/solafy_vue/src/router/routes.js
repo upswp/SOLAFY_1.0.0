@@ -96,6 +96,12 @@ const routes = [
         beforeEnter: requireAuth()
       },
       {
+        path: "/ProblemUpdate/:problemNo",
+        name: "ProblemUpdate",
+        component: () => import("pages/problem/ProblemUpdate.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
         path: "/problemresult/:problemNo/:result",
         name: "ProblemResult",
         component: () => import("pages/problem/ProblemResult.vue"),
