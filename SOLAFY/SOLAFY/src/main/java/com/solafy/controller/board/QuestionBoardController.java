@@ -154,7 +154,7 @@ public class QuestionBoardController {
 	 * @변경이력
 	 */
 	@ApiOperation(value = "질문 글을 수정하고 결과를 반환한다.", response = String.class)
-	@PutMapping(value = "/updateArticle")
+	@PostMapping(value = "/updateArticle")
 	public ResponseEntity<String> updateArticle(@RequestBody QuestionBoardDto qDto) throws Exception {
 		logger.debug("updateArticle");
 		if (questionService.updateQuestion(qDto))

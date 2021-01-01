@@ -70,7 +70,7 @@ export default {
           required: true,
           label: "제목",
           align: "left",
-          field: row => [row.title, row.isNotice],
+          field: row => row.titl1e,
           format: val => `${val}`,
           sortable: true
         },
