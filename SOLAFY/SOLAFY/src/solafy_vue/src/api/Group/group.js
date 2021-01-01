@@ -13,7 +13,7 @@ function createGroup(param, success, fail){
 
 //그룹에 가입신청을 한다
 function createApplyGroupSignUp(param, success, fail){
-    Axios.get("group/createApplyGroupSignUp/" + param)
+    Axios.post("group/createApplyGroupSignUp", param)
     .then(success)
     .catch(fail)
 }
@@ -43,6 +43,7 @@ function selectCheckDuplicateName(param, success, fail){
     .then(success)
     .catch(fail)
 }
+//그룹의 맴버를 모두 받아온다
 function selectGroupMember(param, success, fail) {
     Axios.get("group/selectGroupMember/" + param)
     .then(success)
