@@ -57,6 +57,15 @@ export default {
           sortable: true
         },
         {
+          name: "problemNo",
+          required: true,
+          label: "문제번호",
+          align: "left",
+          field: row => row.problemNo,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
           name: "title",
           required: true,
           label: "제목",
@@ -71,15 +80,6 @@ export default {
           label: "작성시간",
           align: "left",
           field: row => row.regiTime,
-          format: val => `${val}`,
-          sortable: true
-        },
-        {
-          name: "likeCount",
-          required: true,
-          label: "좋아요수",
-          align: "left",
-          field: row => row.likeCount,
           format: val => `${val}`,
           sortable: true
         }
