@@ -14,10 +14,12 @@
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
     "firebase": "^8.2.1",
+    "lodash": "^4.17.20",
     "quasar": "^1.0.0",
     "quasar-tiptap": "^1.7.0",
     "tiptap": "^1.30.0",
-    "tiptap-extensions": "^1.33.2"
+    "tiptap-extensions": "^1.33.2",
+    "vue-lodash": "^2.1.2"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",

@@ -10,7 +10,10 @@
             <tr>
               <td class="header">문제 제목</td>
               <td class="content">
-                <q-input v-model="item.problem.title" borderless />
+                <q-input
+                  v-model="problemList[pIndex].problem.title"
+                  borderless
+                />
               </td>
             </tr>
             <tr>
@@ -200,20 +203,29 @@
             <div class="scroll relative-position fit hide-scrollbar">
               <div class="absolute full-width">
                 <!----><!---->
-                <div class="doc-toc q-my-lg text-grey-8 q-list">
-                  <div
-                    tabindex="0"
-                    class="q-item q-item-type row no-wrap q-item--clickable q-link cursor-pointer q-focusable q-hoverable q-item--dense q-item--active"
+                <q-list padding class="rounded-borders text-primary">
+                  <q-item
+                    v-for="(p, index) in problemList"
+                    :key="index"
+                    clickable
+                    v-ripple
+                    :active="pIndex === index"
+                    @click="getProblem(index)"
+                    active-class="my-problem-pIndex"
                   >
-                    <div tabindex="-1" class="q-focus-helper"></div>
-                    <!---->
-                    <div
-                      class="q-item__section column q-item__section--main justify-center"
-                    >
-                      Introduction
-                    </div>
-                  </div>
-                </div>
+                    <q-item-section avatar>
+                      <q-icon name="inbox" />
+                    </q-item-section>
+
+                    <q-item-section
+                      v-text="
+                        p.problem.title == null
+                          ? 'title을 입력하세요.'
+                          : p.problem.title
+                      "
+                    ></q-item-section>
+                  </q-item>
+                </q-list>
               </div>
               <!---->
             </div>
@@ -246,23 +258,25 @@ export default {
     return {
       item: {
         problem: {
-          categoryNo: "",
-          contents: "",
-          multipleChoice: "",
-          title: "",
+          categoryNo: null,
+          contents: null,
+          multipleChoice: null,
+          title: null,
           type: 0,
-          uid: ""
+          uid: null
         },
         problemAnswer: {
-          answer: "",
-          keyword: "",
-          solution: ""
+          answer: null,
+          keyword: null,
+          solution: null
         },
         hashTag: [],
         problemSetNo: 0
       },
       // ! 문제 리스트
       problemList: [],
+      // ! 선택된 문제 표시하기 위해 필요
+      pIndex: 0,
 
       nickname: "",
       largeList: [],
@@ -367,7 +381,7 @@ export default {
     },
     // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
     removeHashTag(index) {
-      this.item.hashTag.splice(index, 1);
+      this.problemitem.hashTag.splice(index, 1);
     },
     // 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
     insertHashTag() {
@@ -407,8 +421,8 @@ export default {
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
       //문제 리스트에 문제를 저장한다.
-      this.problemList.push(this.item);
-
+      this.problemList.push(this._.cloneDeep(this.item));
+      console.log(this.problemList);
       // this.createProblem();
     },
     // 문제 등록
@@ -493,6 +507,10 @@ export default {
       this.item.problemAnswer.keyword = "";
       this.choiceList = [];
     },
+    getProblem(index) {
+      this.pIndex = index;
+      console.log(this.pIndex);
+    },
     // User의 Nickname반환
     selectNickname() {
       axios
@@ -507,6 +525,8 @@ export default {
     }
   },
   created() {
+    this.problemList.push(this._.cloneDeep(this.item));
+    console.log(this.problemList);
     this.selectLargeList();
     this.selectNickname();
   }
@@ -532,4 +552,9 @@ export default {
 .panel {
   padding: 0;
 }
+</style>
+<style lang="sass">
+.my-problem-pIndex
+  color: white
+  background: #F2C037
 </style>
