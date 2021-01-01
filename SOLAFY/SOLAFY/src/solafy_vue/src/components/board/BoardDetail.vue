@@ -35,7 +35,9 @@
       <q-separator />
       <board-problem-info
         :problemNo="article.problemNo"
-        v-if="this.boardType === `answermodify`"
+        v-if="
+          this.boardType === `answermodify` || this.boardType === `question`
+        "
       />
       <!-- 내용을 보여준다 -->
       <q-card-section>

@@ -27,7 +27,7 @@ import Axios from "axios";
 
 export default {
   name: "boardprobleminfo",
-  props: { problemNo: String },
+  props: ["problemNo"],
   data() {
     return {
       problemInfo: [],
@@ -42,8 +42,7 @@ export default {
   watch: {
     problemNo: function() {
       // 문제 정보를 불러온다
-      console.log("ㅎㅎ" + this.problemNo);
-      this.problemGetNo = this.problemNo;
+      this.problemGetNo = "" + this.problemNo;
       Axios.get(`problem/` + this.problemGetNo)
         .then(response => {
           // 문제 정보 저장
