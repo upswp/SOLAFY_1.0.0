@@ -45,12 +45,8 @@
 	
 	<!-- 문제집 생성 -->
 	<insert id="createProblemSet" parameterType="problemSetDto">
-		INSERT INTO problemset (
-								problemSetNo, uid, title, regiTime,flag
-								)
-		VALUES(
-				#{problemSetNo}, #{uid}, #{title}, now(),0
-			  )
+		INSERT INTO problemset (uid, title, regiTime,flag)
+		VALUES(#{uid}, #{title}, now(),0)
 	</insert>
 	
 	<!-- 문제집 업데이트 -->
