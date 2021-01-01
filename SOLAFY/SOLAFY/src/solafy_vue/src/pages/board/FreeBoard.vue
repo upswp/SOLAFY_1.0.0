@@ -11,55 +11,20 @@ import Axios from "axios";
 // 컴포넌트에서 vuex사용
 import { mapMutations } from "vuex";
 
-// import BoardList from "../../components/board/BoardList.vue";
-// import BoardDetail from "../../components/board/BoardDetail.vue";
-// import BoardWrite from "../../components/board/BoardWrite.vue";
-// import BoardUpdate from "../../components/board/BoardUpdate.vue";
-/*
-backup components
-    글 목록보기 시작
-    <div v-if="showFlag == 'list'">
-      <board-list boardType="free"></board-list>
-    </div>
-    <!-- 글 목록보기 끝 -->
-
-    <!-- 글 등록하기 시작 (showFlag가 write일 경우) -->
-    <div v-if="showFlag == 'write'">
-      <board-write boardType="free"></board-write>
-    </div>
-    <!-- 글 등록하기 끝 -->
-
-    <!-- 글 상세보기 시작 (showFlag가 detail일 경우) -->
-    <div v-else-if="showFlag == 'detail'">
-      <board-detail boardType="free"></board-detail>
-    </div>
-    <!-- 글 상세 보기 끝 -->
-
-    <!-- 글 수정하기 시작 (showFlag가 update일 경우) -->
-    <div v-else-if="showFlag == 'update'">
-      <board-update></board-update>
-    </div>
-*/
 export default {
-  components: {
-    // BoardList,
-    // BoardDetail,
-    // BoardWrite,
-    // BoardUpdate
-  },
   data() {
     return {
       article: {
+        nickname: null,
         title: null,
-        contents: null,
-        uid: "DFEIJC23WOSKXCNSWQ",
-        likeCount: 0,
-        notice: false,
         regiTime: null,
+        contents: null,
+        likeCount: 0,
+        uid: "DFEIJC23WOSKXCNSWQ",
+        notice: false,
         isGroup: false,
         groupNo: 1,
-        boardBNo: 0,
-        nickname: null
+        boardBNo: 0
       },
       options: ["제목", "작성자"],
       boardType: "free",
