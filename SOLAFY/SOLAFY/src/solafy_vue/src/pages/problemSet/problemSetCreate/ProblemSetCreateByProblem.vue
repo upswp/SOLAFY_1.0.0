@@ -108,6 +108,8 @@
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 v-model="choi.choice"
+                @keyup.enter="addInput"
+                autofocus
               >
                 <template v-slot:before>
                   <q-checkbox v-model="choi.check" />
@@ -132,7 +134,7 @@
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 label="정답"
-                v-model="item.problemAnswer.answer"
+                v-model="problemList[pIndex].problemAnswer.answer"
               />
             </q-tab-panel>
 
@@ -142,14 +144,14 @@
                 autogrow
                 style="margin-top:10px;margin-bottom:10px"
                 label="정답"
-                v-model="item.problemAnswer.answer"
+                v-model="problemList[pIndex].problemAnswer.answer"
               />
               <q-input
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 label="정답 키워드"
                 hint="','로 구분"
-                v-model="item.problemAnswer.keyword"
+                v-model="problemList[pIndex].problemAnswer.keyword"
               />
             </q-tab-panel>
           </q-tab-panels>
@@ -158,17 +160,18 @@
             autogrow
             style="margin-top:10px;margin-bottom:10px"
             label="해설"
-            v-model="item.problemAnswer.solution"
+            v-model="problemList[pIndex].problemAnswer.solution"
           />
           <div class="row justify-center content-center">
             <q-btn flat icon="keyboard_arrow_left"></q-btn>
+            <q-btn flat disable>{{ pIndex + 1 }}</q-btn>
             <q-btn flat icon="keyboard_arrow_right"></q-btn>
           </div>
         </q-card>
       </div>
       <div class="row self-center hashtag">
         <q-chip
-          v-for="(hashTag, index) in item.hashTag"
+          v-for="(hashTag, index) in problemList[pIndex].hashTag"
           :key="index"
           removable
           @remove="removeHashTag(index)"
@@ -214,7 +217,15 @@
                     active-class="my-problem-pIndex"
                   >
                     <q-item-section avatar>
-                      <q-icon name="inbox" />
+                      <q-icon
+                        :name="
+                          p.problem.type == 0
+                            ? 'check_circle'
+                            : p.problem.type == 1
+                            ? 'title'
+                            : 'text_fields'
+                        "
+                      />
                     </q-item-section>
 
                     <q-item-section
@@ -246,6 +257,7 @@
   </div>
 </template>
 <script>
+//TODO : 예외처리 하나도 안해놨음(누군지 말 안함)
 import axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
 import { notify } from "src/api/common.js";
@@ -381,11 +393,11 @@ export default {
     },
     // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
     removeHashTag(index) {
-      this.problemitem.hashTag.splice(index, 1);
+      this.problemList[this.pIndex].hashTag.splice(index, 1);
     },
     // 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
     insertHashTag() {
-      this.item.hashTag.push(this.hashTagText);
+      this.problemList[this.pIndex].hashTag.push(this.hashTagText);
       this.hashTagText = "";
     },
     // 클릭 시 Input을 하나 추가한다.
@@ -395,9 +407,9 @@ export default {
     // 문제 등록 처리
     InsertProblem() {
       // 객관식인 경우
-      if (this.item.problem.type == 0) {
+      if (this.problemList[this.pIndex].problem.type == 0) {
         // 선지 저장
-        this.item.problem.multipleChoice = this.choiceList
+        this.problemList[this.pIndex].problem.multipleChoice = this.choiceList
           .map(el => {
             return el.choice;
           })
@@ -409,20 +421,31 @@ export default {
             tmp.push(i + 1);
           }
         }
-        this.item.problemAnswer.answer = tmp.toString();
+        this.problemList[this.pIndex].problemAnswer.answer = tmp.toString();
       }
       // 내용 저장
-      this.item.problem.contents = this.html;
+      this.problemList[this.pIndex].problem.contents = this.html;
       // uid 저장
-      this.item.problem.uid = firebaseAuth.currentUser.uid;
+      this.problemList[this.pIndex].problem.uid = firebaseAuth.currentUser.uid;
       // 카테고리번호저장
-      this.item.problem.categoryNo =
+      this.problemList[this.pIndex].problem.categoryNo =
         String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
       //문제 리스트에 문제를 저장한다.
       this.problemList.push(this._.cloneDeep(this.item));
-      console.log(this.problemList);
+      this.pIndex++;
+      this.tab = "객관식";
+      this.tab_pre = "객관식";
+      // this.selectLarge = null;
+      // this.mediumList = [];
+      // this.selectMedium = null;
+      // this.smallList = [];
+      // this.selectSmall = null;
+      this.hashTagText = "";
+      this.choiceList = [];
+      this.options.content = "";
+      console.log(QuasarTiptap);
       // this.createProblem();
     },
     // 문제 등록
@@ -488,28 +511,39 @@ export default {
         ]
       });
       if (name == "객관식") {
-        this.item.problem.type = 0;
+        this.problemList[this.pIndex].problem.type = 0;
       } else if (name == "주관식") {
-        this.item.problem.type = 1;
+        this.problemList[this.pIndex].problem.type = 1;
+        console.log(this.problemList[this.pIndex].problem.type);
       } else {
-        this.item.problem.type = 2;
+        this.problemList[this.pIndex].problem.type = 2;
       }
     },
     // input값 초기화
     clearInput() {
-      // ! 모든 값 초기화로 변경
-      this.item.problem.categoryNo = "";
-      this.item.problem.contents = "";
-      this.item.problem.multipleChoice = "";
-      this.item.problem.type = 0;
-
-      this.item.problemAnswer.answer = "";
-      this.item.problemAnswer.keyword = "";
+      this.problemList[this.pIndex].problemAnswer.answer = "";
+      this.problemList[this.pIndex].problemAnswer.keyword = "";
       this.choiceList = [];
     },
     getProblem(index) {
+      this.options.content = "";
       this.pIndex = index;
-      console.log(this.pIndex);
+      this.choiceList = [];
+      //TODO : 카테고뤼 저장하는 로직 구현 부탁드림 -견2-
+      // this.selectLarge = this.problemList[this.pIndex].problem
+      if (this.problemList[this.pIndex].problem.multipleChoice != null) {
+        this.problemList[this.pIndex].problem.multipleChoice
+          .split(",")
+          .forEach((element, index) => {
+            this.choiceList.push({
+              choice: element,
+              check: this.problemList[this.pIndex].problemAnswer.answer
+                .split(",")
+                .includes(index + 1 + "")
+            });
+          });
+        console.log(this.choiceList);
+      }
     },
     // User의 Nickname반환
     selectNickname() {

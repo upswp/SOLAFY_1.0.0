@@ -166,7 +166,7 @@ public class ProblemServiceImpl implements ProblemService {
 	@Override
 	public boolean createProblemList(ArrayList<HashMap<String, Object>> mapList) throws Exception {
 		
-		boolean result = false;
+		boolean result = true;
 		for (HashMap<String, Object> map : mapList) {
 			ObjectMapper mapper = new ObjectMapper();
 			ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
