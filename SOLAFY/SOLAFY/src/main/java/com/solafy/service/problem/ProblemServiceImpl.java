@@ -141,7 +141,6 @@ public class ProblemServiceImpl implements ProblemService {
 		// System.out.println("problemNo : "+problemDto.getProblemNo());
 
 		// 문제 번호를 받아서 정답에 넣어줘야하는데 어떻게 받아올 것인가? --> answer : problem.xml참고
-		problemDto.setProblemNo(problemDto.getProblemNo());
 		problemAnswerDto.setProblemNo(problemDto.getProblemNo());
 		// 문제 답 등록
 		result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
@@ -185,7 +184,6 @@ public class ProblemServiceImpl implements ProblemService {
 			// System.out.println("problemNo : "+problemDto.getProblemNo());
 	
 			// 문제 번호를 받아서 정답에 넣어줘야하는데 어떻게 받아올 것인가? --> answer : problem.xml참고
-			problemDto.setProblemNo(problemDto.getProblemNo());
 			problemAnswerDto.setProblemNo(problemDto.getProblemNo());
 			// 문제 답 등록
 			result &= (problemAnswerMapper.createProblemAnswer(problemAnswerDto) > 0);
