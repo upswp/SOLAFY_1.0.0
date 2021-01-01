@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,7 +68,7 @@ public class AnswerModifyReplyController {
 	*/
 	@ApiOperation(value = "모든 댓글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectReplies/{articleNo}")
-	public List<AnswerModifyReplyDto> selectReplies(int articleNo){
+	public List<AnswerModifyReplyDto> selectReplies(@PathVariable int articleNo){
 		logger.info("selectReplies - 호출" + new Date());
 		List<AnswerModifyReplyDto> list = answerModifyReplyService.selectReplies(articleNo);
 		return list;
