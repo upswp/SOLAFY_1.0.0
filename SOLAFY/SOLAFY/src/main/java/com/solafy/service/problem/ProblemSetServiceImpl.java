@@ -73,9 +73,9 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	 *4. 문제만들기를 완료하면 [문제집 생성하기]버튼 클릭 (유저) updateFlag실행 (시스템)
 	 * */
 	@Override
-	public boolean createProblemSet(ProblemSetDto problemSet) throws Exception {
-		
-		return problemSetMapper.createProblemSet(problemSet) == 1;
+	public int createProblemSet(ProblemSetDto problemSet) throws Exception {
+		problemSetMapper.createProblemSet(problemSet);
+		return  problemSet.getProblemSetNo();
 	}
 
 	@Override
