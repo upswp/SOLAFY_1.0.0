@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
     <q-markup-table v-if="showList">
       <thead>
         <tr>
@@ -14,12 +14,12 @@
               @keyup.enter="selectArticle"
             >
               <template v-slot:before>
-                <q-btn color="secondary" label="글쓰기" @click="showWrite" />
+                <q-btn color="secondary" label="글쓰기" @click="gotoWrite" />
                 <q-select
                   style="margin-left:300px; width:120px"
                   filled
                   v-model="selection"
-                  :options="options"
+                  :options="boardSearchKeywords"
                   label="검색조건"
                 />
               </template>
@@ -36,7 +36,11 @@
           </td>
         </tr>
         <tr>
-          <th v-for="(column, index) in columns" class="text-left" :key="index">
+          <th
+            v-for="(column, index) in boardColumns"
+            class="text-left"
+            :key="index"
+          >
             {{ column.label }}
           </th>
         </tr>
@@ -45,7 +49,7 @@
         <tr
           v-for="notice in notices"
           :key="notice.articleNo"
-          @click="showDetail(notice.articleNo)"
+          @click="gotoDetail(notice.articleNo)"
         >
           <td class="text-left">{{ notice.articleNo }}</td>
           <td class="text-left">{{ notice.nickname }}</td>
@@ -61,7 +65,7 @@
         <tr
           v-for="article in articles"
           :key="article.articleNo"
-          @click="showDetail(article.articleNo)"
+          @click="gotoDetail(article.articleNo)"
         >
           <td class="text-left">{{ article.articleNo }}</td>
           <td class="text-left">{{ article.nickname }}</td>
@@ -94,12 +98,12 @@ export default {
       errored: null,
       loading: null,
       keyword: null,
-      columns: [],
-      options: [],
+      // columns: [],
+      // options: [],
       showList: true
     };
   },
-  props: ["boardType"],
+  // props: ["boardType"],
   methods: {
     selectAllArticles: function() {
       Axios.get(`/${this.boardType}/selectAllArticles`)
@@ -152,29 +156,24 @@ export default {
           .finally(() => (this.loading = false));
       }
     },
-    showWrite: function() {
+    gotoWrite: function() {
       console.log("going to move to writing page");
+      console.log(this.articleNo);
+      this.$router.push({
+        name: `${this.boardType}-board-write`
+      });
     },
 
-    showDetail: function(articleNo) {
+    gotoDetail: function(articleNo) {
+      console.log(articleNo);
       this.$router.push({
-        name: "board-detail",
+        name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
       });
       //this.showList = false;
-
-      Axios.get(`/${this.boardType}/selectArticleByArticleNo/${articleNo}`)
-        .then(response => {
-          this.article = response.data;
-          this.getReplyRow(articleNo);
-        })
-        .catch(() => {
-          this.errored = true;
-        })
-        .finally(() => (this.loading = false));
     }, // 목록으로 돌아갈때는 입력(바인딩)했던 내용 초기화 후
     // showFlag를 list로 바꿈
-    goToFreeBoard: function() {
+    goToBoard: function() {
       this.resetForm();
       this.showFlag = "list";
     },
@@ -186,13 +185,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(["boardColumns", "boardSearchKeywords"])
+    ...mapState(["boardColumns", "boardSearchKeywords", "boardType"])
   },
   created() {
-    console.log(this.$root);
-    this.options = this.boardSearchKeywords;
-    this.columns = this.boardColumns;
-    console.log(this.boardType);
+    // this.options = this.boardSearchKeywords;
+    // this.columns = this.boardColumns;
     this.selectAllArticles();
     this.selectAllNotices();
   }

@@ -43,79 +43,111 @@
       <q-separator />
       <q-card-actions align="right">
         <q-btn color="primary" label="글 수정하기" @click="updateArticle" />
-        <q-btn color="red" label="취소" @click="goToFreeBoard" />
+        <q-btn color="red" label="취소" @click="goToDetail" />
       </q-card-actions>
     </q-card>
   </q-page>
   <!-- 글 수정하기 끝 -->
 </template>
 <script>
+import Axios from "axios";
+import { mapState } from "vuex";
 export default {
-  updateArticle: function() {
-    var successFlag = true;
-    if (this.article.title === null || this.article.title == "") {
-      this.$q.notify({
-        timeout: 1,
-        progress: true,
-        position: "center",
-        message: "*제목* 비어있으면 안돼요!",
-        color: "orange"
-      });
-      successFlag = false;
-    }
-    if (this.article.contents == null || this.article.contents == "") {
-      this.$q.notify({
-        timeout: 1,
-        progress: true,
-        position: "center",
-        message: "*내용* 비어있으면 안돼요!",
-        color: "oragne"
-      });
-      successFlag = false;
-    }
-    if (successFlag) {
-      console.log("you are here");
-      var flag = false;
-      this.$q
-        .dialog({
-          title: "Confirm",
-          message: "정말 수정하시겠습니까?",
-          cancel: true,
-          persistent: true
-        })
-        .onOk(() => {
-          Axios.post(`/free/updateArticle`, this.article)
-            .then(response => {
-              if (response.data === "success") {
-                this.showFlag = "detail";
-                this.showList();
-                this.$q.notify({
-                  progress: true,
-                  message: "게시물 수정 성공",
-                  color: "green"
-                });
-              } else {
-                this.$q.notify({
-                  progress: true,
-                  message: "게시물 수정 실패",
-                  color: "red"
-                });
-              }
-            })
-            .catch(() => {
-              this.errored = true;
-            })
-            .finally(() => (this.loading = false));
-        })
-        .onCancel(() => {
-          return;
-        })
-        .onDismiss(() => {
-          return;
+  data() {
+    return {
+      article: [],
+      articleNo: this.$route.params.articleNo
+    };
+  },
+  methods: {
+    updateArticle: function() {
+      var successFlag = true;
+      if (this.article.title === null || this.article.title == "") {
+        this.$q.notify({
+          timeout: 1,
+          progress: true,
+          position: "center",
+          message: "*제목* 비어있으면 안돼요!",
+          color: "orange"
         });
-    } else {
-      return;
+        successFlag = false;
+      }
+      if (this.article.contents == null || this.article.contents == "") {
+        this.$q.notify({
+          timeout: 1,
+          progress: true,
+          position: "center",
+          message: "*내용* 비어있으면 안돼요!",
+          color: "oragne"
+        });
+        successFlag = false;
+      }
+      if (successFlag) {
+        var flag = false;
+        this.$q
+          .dialog({
+            title: "Confirm",
+            message: "정말 수정하시겠습니까?",
+            cancel: true,
+            persistent: true
+          })
+          .onOk(() => {
+            Axios.post(
+              `/${this.$store.state.boardType}/updateArticle`,
+              this.article
+            )
+              .then(response => {
+                if (response.data === "success") {
+                  this.showFlag = "detail";
+                  this.$q.notify({
+                    progress: true,
+                    message: "게시물 수정 성공",
+                    color: "green"
+                  });
+                  this.goToDetail();
+                } else {
+                  this.$q.notify({
+                    progress: true,
+                    message: "게시물 수정 실패",
+                    color: "red"
+                  });
+                }
+              })
+              .catch(() => {
+                this.errored = true;
+              })
+              .finally(() => (this.loading = false));
+          })
+          .onCancel(() => {
+            return;
+          })
+          .onDismiss(() => {
+            return;
+          });
+      } else {
+        return;
+      }
+    },
+    goToDetail: function() {
+      this.$router.push({
+        name: "free-board-detail",
+        params: { articleNo: this.articleNo }
+      });
     }
+  },
+  created() {
+    Axios.get(
+      `/${this.$store.state.boardType}/selectArticleByArticleNo/${this.articleNo}`
+    )
+      .then(response => {
+        this.article = response.data;
+        this.getReplyRow(this.articleNo);
+      })
+      .catch(() => {
+        this.errored = true;
+      })
+
+      .finally(() => (this.loading = false));
   }
 };
 </script>

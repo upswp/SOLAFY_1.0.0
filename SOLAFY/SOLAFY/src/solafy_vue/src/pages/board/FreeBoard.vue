@@ -1,7 +1,7 @@
 <template>
   <div class="doc-container">
     <h3>FreeBoard</h3>
-    <router-view :boardType="boardType"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -61,7 +61,6 @@ export default {
         boardBNo: 0,
         nickname: null
       },
-      likeBtn: 0,
       options: ["제목", "작성자"],
       boardType: "free",
       // 댓글, 게시글, 공지글의 정보를 담는 변수
@@ -137,6 +136,8 @@ export default {
   created() {
     this.$store.commit("SETBOARDSEARCHKEYWORDS", this.options);
     this.$store.commit("SETBOARDCOLUMNS", this.columns);
+    this.$store.commit("SETBOARDTYPE", this.boardType);
+    console.log(this.options, this.columns, this.boardType);
   }
 };
 </script>

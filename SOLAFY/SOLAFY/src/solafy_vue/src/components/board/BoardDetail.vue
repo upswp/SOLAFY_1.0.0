@@ -51,15 +51,15 @@
       </q-card-section>
       <q-separator />
       <q-card-actions align="right">
-        <q-btn color="primary" label="글 수정" @click="showFlag = 'update'" />
+        <q-btn color="primary" label="글 수정" @click="goToUpdate" />
         <q-btn color="red" label="글 삭제" @click="deleteArticle" />
-        <q-btn color="green" label="글 목록보기" @click="goToFreeBoard" />
+        <q-btn color="green" label="글 목록보기" @click="goToBoard" />
       </q-card-actions>
       <q-separator />
       <q-card-section align="left">
         <reply-write
-          :articleNo="this.article.articleNo"
-          @freeReplyChanged="showChangedReply(article.articleNo)"
+          :articleNo="this.articleNo"
+          @replyChanged="showChangedReply()"
         ></reply-write>
       </q-card-section>
       <q-separator />
@@ -68,7 +68,7 @@
           v-for="(reply, index) in replies"
           :reply="reply"
           :key="index"
-          @freeReplyChanged="showChangedReply(reply.articleNo)"
+          @replyChanged="showChangedReply()"
         ></reply-row>
       </q-card-section>
     </q-card>
@@ -76,9 +76,21 @@
 </template>
 <script>
 // 자유게시판 댓글 컴포넌트 가져오기
-import ReplyWrite from "./reply/replyWrite.vue";
-import ReplyRow from "./reply/replyRow.vue";
+import ReplyWrite from "components/board/reply/ReplyWrite.vue";
+import ReplyRow from "components/board/reply/ReplyRow.vue";
+import Axios from "axios";
+import { mapState } from "vuex";
 export default {
+  data() {
+    return {
+      likeBtn: 0,
+      article: [],
+      replies: [],
+      boardType: this.$store.state.boardType,
+      type: "",
+      articleNo: this.$route.params.articleNo
+    };
+  },
   components: {
     ReplyWrite,
     ReplyRow
@@ -93,11 +105,11 @@ export default {
           persistent: true
         })
         .onOk(() => {
-          Axios.delete(`/free/deleteArticle/${this.article.articleNo}`)
+          Axios.delete(`/${this.boardType}/deleteArticle/${this.articleNo}`)
             .then(response => {
               if (response.data == "success") {
                 this.showFlag = "list";
-                this.showList();
+                this.goToBoard();
                 this.resetForm();
                 this.$q.notify({
                   progress: true,
@@ -126,8 +138,9 @@ export default {
           return;
         });
     }, // 댓글 목록
-    getReplyRow: function(articleNo) {
-      Axios.get(`freereply/selectReplies/${articleNo}`)
+    getReplyRow: function() {
+      console.log(this.articleNo);
+      Axios.get(`${this.boardType}reply/selectReplies//${this.articleNo}`)
         .then(response => {
           this.replies = response.data;
         })
@@ -136,11 +149,39 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
-    showChangedReply(articleNo) {
+    showChangedReply: function() {
       // this.replies = reply;
-      console.log("현재 게시물 번호", articleNo);
-      this.getReplyRow(articleNo);
+      console.log("현재 게시물 번호", this.articleNo);
+      this.getReplyRow(this.articleNo);
+    },
+    goToBoard: function() {
+      this.$router.push({
+        name: `${this.boardType}-board-list`
+      });
+    },
+    goToUpdate: function() {
+      this.$router.push({
+        name: "free-board-update",
+        params: { articleNo: this.articleNo }
+      });
     }
-  }
+  },
+  mounted() {
+    console.log(this.articleNo);
+    Axios.get(`/${this.boardType}/selectArticleByArticleNo/${this.articleNo}`)
+      .then(response => {
+        this.article = response.data;
+        this.getReplyRow(this.articleNo);
+      })
+      .catch(() => {
+        this.errored = true;
+      })
+
+      .finally(() => (this.loading = false));
+  },
+  // computed: {
+  //   ...mapState["boardType"]
+  // },
+  create() {}
 };
 </script>
