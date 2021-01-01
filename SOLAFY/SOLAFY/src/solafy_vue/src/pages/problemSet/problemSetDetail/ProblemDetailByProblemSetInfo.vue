@@ -24,6 +24,7 @@
               row-key="name"
               hide-header
               hide-bottom
+              style="max-width :500px;"
             />
           </div>
         </div>
@@ -54,6 +55,7 @@
                 :columns="listColumns"
                 hide-pagination
                 :pagination.sync="pagination"
+                style="max-width :500px;"
               />
             </div>
             <div class="q-pa-lg flex flex-center">
@@ -264,9 +266,9 @@ export default {
 .q-btn {
   margin-left: 10px;
 }
-.q-table {
+/* .q-table {
   width: 500px;
-}
+} */
 #header-title {
   height: 100px;
 }

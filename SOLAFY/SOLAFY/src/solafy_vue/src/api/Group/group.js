@@ -84,7 +84,12 @@ function deleteGroupMember(param, success, fail){
 }
 //그룹 탈퇴
 function deleteGroupMemberself(param, success, fail){
-    Axios.delete("roup/deleteGroupMemberself", param)
+    Axios.delete("group/deleteGroupMemberself", {
+        data: {
+            uid: param.uid,
+            groupNo : param.groupNo
+        }
+    })
     .then(success)
     .catch(fail)
 }
