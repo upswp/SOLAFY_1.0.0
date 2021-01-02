@@ -72,9 +72,10 @@
 		WHERE m.problemSetNo = #{problemSetNo} and p.flag = 1
 	</select>
 
+	<!-- 문제집에 해당하는 문제 매핑 삭제 -->
 	<delete id="deleteProblemSetMapping" parameterType="int">
 		DELETE FROM problemsetmapping
-		WHERE		problemSetNo = #{problemSetNo}
+		WHERE problemSetNo = #{problemSetNo}
 	</delete>
 	
 	<!-- 문제집의 flag를 임시저장 상태에서 저장으로 변경 -->
