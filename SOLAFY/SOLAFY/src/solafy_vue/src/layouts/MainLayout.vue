@@ -118,16 +118,17 @@ const linksData = [
     link: "/problemset"
   },
   {
+    title: "Practice",
+    caption:
+      "주희가 하는 중... 해도 되는 거 맞겠지... 범석 오빠 자나..? 오빠는 하는 중 아니죠....?",
+    icon: "work",
+    link: "/practicelist"
+  },
+  {
     title: "Free Board",
     caption: "범석&기현",
     icon: "dashboard",
     link: "/free"
-  },
-  {
-    title: "Practice Board",
-    caption: "범석&기현",
-    icon: "api",
-    link: "/practice"
   },
   {
     title: "Answer Modify Board",
