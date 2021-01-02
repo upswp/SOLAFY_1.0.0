@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +49,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
+	@Transactional
 	public HashMap<String, Object> selectProblem(int problemNo) throws Exception {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -124,6 +126,7 @@ public class ProblemServiceImpl implements ProblemService {
 	// problemAnswerDto,
 	// @RequestBody List<String> hashTagList, @RequestBody int problemSetNo
 	@Override
+	@Transactional
 	public boolean createProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
@@ -164,6 +167,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 	
 	@Override
+	@Transactional
 	public boolean createProblemList(ArrayList<HashMap<String, Object>> mapList) throws Exception {
 		
 		boolean result = true;
@@ -216,6 +220,7 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 
 	@Override
+	@Transactional
 	public boolean updateProblem(HashMap<String, Object> map) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		ProblemDto problemDto = mapper.convertValue(map.get("problem"), new TypeReference<ProblemDto>() {
