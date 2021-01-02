@@ -38,7 +38,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 		// 모의고사와 문제들 매핑
 		Map<String, Integer> map = new HashMap<>();
-		map.put("articleNo", pDto.getPracticeNo());
+		map.put("practiceNo", pDto.getPracticeNo());
 		for (ProblemDto problem : pDto.getProblems()) {
 			map.put("problemNo", problem.getProblemNo());
 			practiceTestMapper.createPracticeTestMapping(map);
