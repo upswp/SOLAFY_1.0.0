@@ -7,12 +7,14 @@ import java.util.List;
  * @author Juhee Lee
  * @since 2020-12-14
  *
- * @변경이력 20-12-28 nickname 추가
+ * @변경이력 
+ * 20-12-28 nickname 추가
+ * 20-01-02 articleNo에서 practiceNo로 수정
  */
 
 public class PracticeTestBoardDto {
 
-	private int articleNo;
+	private int practiceNo;
 	private String uid;
 	private String title;
 	private String regiTime;
@@ -28,11 +30,11 @@ public class PracticeTestBoardDto {
 		super();
 	}
 
-	public PracticeTestBoardDto(int articleNo, String uid, String title, String regiTime, String startTime,
+	public PracticeTestBoardDto(int practiceNo, String uid, String title, String regiTime, String startTime,
 			String endTime, String limitTime, List<ProblemDto> problems, boolean isGroup, int groupNo,
 			String nickname) {
 		super();
-		this.articleNo = articleNo;
+		this.practiceNo = practiceNo;
 		this.uid = uid;
 		this.title = title;
 		this.regiTime = regiTime;
@@ -45,12 +47,12 @@ public class PracticeTestBoardDto {
 		this.nickname = nickname;
 	}
 
-	public int getArticleNo() {
-		return articleNo;
+	public int getPracticeNo() {
+		return practiceNo;
 	}
 
-	public void setArticleNo(int articleNo) {
-		this.articleNo = articleNo;
+	public void setPracticeNo(int practiceNo) {
+		this.practiceNo = practiceNo;
 	}
 
 	public String getUid() {
@@ -135,7 +137,7 @@ public class PracticeTestBoardDto {
 
 	@Override
 	public String toString() {
-		return "PracticeTestBoardDto [articleNo=" + articleNo + ", uid=" + uid + ", title=" + title + ", regiTime="
+		return "PracticeTestBoardDto [practiceNo=" + practiceNo + ", uid=" + uid + ", title=" + title + ", regiTime="
 				+ regiTime + ", startTime=" + startTime + ", endTime=" + endTime + ", limitTime=" + limitTime
 				+ ", problems=" + problems + ", isGroup=" + isGroup + ", groupNo=" + groupNo + ", nickname=" + nickname
 				+ "]";

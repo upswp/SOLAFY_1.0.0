@@ -12,6 +12,7 @@ import com.solafy.model.PracticeTestBoardDto;
  * @author 이주희
  *
  * @변경이력
+ * 20-01-02 articleNo에서 practiceNo로 수정
  */
 
 public interface PracticeTestBoardService {
@@ -44,8 +45,9 @@ public interface PracticeTestBoardService {
 	 * @throws Exception
 	 * 
 	 * @변경이력
+	 * 20-01-02 반환 값을 PracticeTestBoardDto에서 List<PracticeTestBoardDto>로 수정
 	 */
-	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws Exception;
+	public List<PracticeTestBoardDto> selectPracticeTestByPracticeNo(int practiceNo) throws Exception;
 
 	/**
 	 * 검색된 별명과 작성자 별명이 동일한 모의고사들 반환
@@ -90,6 +92,6 @@ public interface PracticeTestBoardService {
 	 * 
 	 * @변경이력
 	 */
-	public boolean deleltePracticeTest(int articleNo) throws Exception;
+	public boolean deleltePracticeTest(int practiceNo) throws Exception;
 
 }
