@@ -40,6 +40,18 @@
                 <q-icon name="search" @click="selectArticle" />
                 <!-- 검색어 입력칸 아이콘 끝 -->
               </template>
+
+              <!-- 검색 초기화 버튼 시작 -->
+              <template v-slot:after>
+                <q-btn
+                  outline
+                  color="black"
+                  label="reset"
+                  flat
+                  @click="selectAllArticles"
+                />
+              </template>
+              <!-- 검색 초기화 버튼 끝 -->
             </q-input>
             <!-- 검색옵션 끝 -->
           </td>
@@ -153,6 +165,8 @@ export default {
             }
           }
           //빈 Column지우기 끝
+
+          if (this.boardType === "free") this.selectAllNotices();
         })
         .catch(() => {
           this.errored = true;
@@ -293,7 +307,6 @@ export default {
 
   created() {
     this.selectAllArticles();
-    if (this.boardType === "free") this.selectAllNotices();
   }
 };
 </script>
