@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.solafy.model.PracticeTestBoardDto;
+import com.solafy.model.ProblemDto;
 
 /**
  * 
@@ -78,6 +79,18 @@ public interface PracticeTestBoardMapper {
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws SQLException;
 
+	/**
+	 * 모의고사에 있는 문제들의 정보를 반환한다.
+	 * 
+	 * @param practiceNo - int, 모의고사 번호
+	 * @return List<ProblemDto>
+	 * @throws SQLException
+	 * 
+	 * @변경이력
+	 * 21-01-03 [이주희] 메소드 추가
+	 */
+	public List<ProblemDto> selectProblemNosByPracticeNo(int practiceNo) throws SQLException;
+	
 	/**
 	 * 모의고사 정보 업데이트
 	 * 
