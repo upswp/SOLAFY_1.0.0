@@ -1,5 +1,6 @@
  package com.solafy.controller.problem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,9 +70,9 @@ public class ProblemSetController {
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 반환한다.")
 	@GetMapping(value = "/problemSetSelectByNo/{problemSetNo}")
-	public ResponseEntity<Map<String,Object>> selectProblemByNo(@PathVariable int problemSetNo) throws Exception{
-		logger.debug("selectProblemByNo -- 호출");
-		return new ResponseEntity<Map<String,Object>> (problemsetService.selectProblemByNo(problemSetNo), HttpStatus.OK);
+	public ResponseEntity<Map<String,Object>> selectProblemSetByNo(@PathVariable int problemSetNo) throws Exception{
+		logger.debug("selectProblemSetByNo -- 호출");
+		return new ResponseEntity<Map<String,Object>> (problemsetService.selectProblemSetByNo(problemSetNo), HttpStatus.OK);
 	}
 	
 	/**
@@ -84,9 +85,9 @@ public class ProblemSetController {
 	 */
 	@ApiOperation(value = "문제집 작성자에 해당하는 문제집 정보를 반환한다.",response = List.class)
 	@GetMapping(value = "/problemSetSelectByWriter/{nickname}")
-	public ResponseEntity<List<ProblemSetDto>> selectProblemByWriter(@PathVariable String nickname) throws Exception{
-		logger.debug("selectProblemByWriter -- 호출");
-		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByWriter(nickname), HttpStatus.OK);
+	public ResponseEntity<List<ProblemSetDto>> selectProblemSetByWriter(@PathVariable String nickname) throws Exception{
+		logger.debug("selectProblemSetByWriter -- 호출");
+		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemSetByWriter(nickname), HttpStatus.OK);
 	}
 	
 	/**
@@ -99,9 +100,9 @@ public class ProblemSetController {
 	 */
 	@ApiOperation(value = "문제집 제목 키워드에 해당하는 문제집 정보를 반환한다.",response = List.class)
 	@GetMapping(value = "/problemSetSelectByTitle/{title}")
-	public ResponseEntity<List<ProblemSetDto>> selectProblemByTitle(@PathVariable String title) throws Exception{
-		logger.debug("selectProblemByTitle -- 호출");
-		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemByTitle(title), HttpStatus.OK);
+	public ResponseEntity<List<ProblemSetDto>> selectProblemSetByTitle(@PathVariable String title) throws Exception{
+		logger.debug("selectProblemSetByTitle -- 호출");
+		return new ResponseEntity<List<ProblemSetDto>>(problemsetService.selectProblemSetByTitle(title), HttpStatus.OK);
 	}
 	
 	/**
@@ -128,10 +129,10 @@ public class ProblemSetController {
 	* @변경이력 :
 	 */
 	@ApiOperation(value = "문제집 번호에 해당하는 문제집 정보를 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
-	@PutMapping(value = "/updateProblemSet/{problemSetNo}")
-	public ResponseEntity<String> updateProblemSet(@RequestBody ProblemSetDto problemSet) throws Exception{
+	@PutMapping(value = "/updateProblemSet")
+	public ResponseEntity<String> updateProblemSet(@RequestBody HashMap<String, Object> map) throws Exception{
 		logger.debug("updateProblemSet -- 호출");
-		if (problemsetService.updateProblemSet(problemSet)) {
+		if (problemsetService.updateProblemSet(map)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<String>(FAIL,HttpStatus.NO_CONTENT);
@@ -160,10 +161,10 @@ public class ProblemSetController {
 	//TODO : <@PathVariable> 상태이면 주소창에 uid 노출이 되는지 확인하기.
 	
 	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값을 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
-	@PutMapping(value = "/updatePrblemSetFlag/{uid}")
-	public ResponseEntity<String> updatePrblemSetFlag(@PathVariable String uid) throws Exception{
+	@PutMapping(value = "/updateProblemSetFlag/{uid}")
+	public ResponseEntity<String> updateProblemSetFlag(@PathVariable String uid) throws Exception{
 		logger.debug("updatePrblemSetFlag -- 호출");
-		if (problemsetService.updatePrblemSetFlag(uid)) {
+		if (problemsetService.updateProblemSetFlag(uid)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<String>(FAIL,HttpStatus.NO_CONTENT);

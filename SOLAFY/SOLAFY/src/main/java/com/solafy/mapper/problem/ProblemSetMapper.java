@@ -37,7 +37,7 @@ public interface ProblemSetMapper {
 	 * @param problemSetNo - int, 문제집 번호
 	 * @return ProblemSetDto의 - 번호, 작성자, 제목, 등록시간 포함
 	 */
-	public ProblemSetDto selectProblemByNo(int problemSetNo) throws SQLException;
+	public ProblemSetDto selectProblemSetByNo(int problemSetNo) throws SQLException;
 	
 	/**
 	 * 
@@ -47,7 +47,7 @@ public interface ProblemSetMapper {
 	* @Method 설명 : 문제집 작성자에 해당하는 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public List<ProblemSetDto> selectProblemByWriter(String uid) throws SQLException;
+	public List<ProblemSetDto> selectProblemSetByWriter(String uid) throws SQLException;
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public interface ProblemSetMapper {
 	* @Method 설명 : 검색된 키워드가 제목에 포함된 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public List<ProblemSetDto> selectProblemByTitle(String title) throws SQLException;
+	public List<ProblemSetDto> selectProblemSetByTitle(String title) throws SQLException;
 
 	/**
 	 * 

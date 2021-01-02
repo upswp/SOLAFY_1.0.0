@@ -6,9 +6,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solafy.mapper.problem.ProblemMapper;
 import com.solafy.mapper.problem.ProblemSetMapper;
+import com.solafy.model.ProblemAnswerDto;
+import com.solafy.model.ProblemDto;
 import com.solafy.model.ProblemSetDto;
 
 /**
@@ -36,7 +41,8 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 	
 	@Override
-	public Map<String,Object> selectProblemByNo(int problemSetNo) throws Exception{
+	@Transactional
+	public Map<String,Object> selectProblemSetByNo(int problemSetNo) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String,Object>();
 		
@@ -44,19 +50,19 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 		map.put("problemList",problemSetMapper.selectProblemSetMapping(problemSetNo));
 		
 		//ProblemSetDto
-		map.put("problemSet", problemSetMapper.selectProblemByNo(problemSetNo));
+		map.put("problemSet", problemSetMapper.selectProblemSetByNo(problemSetNo));
 		
 		return map;
 	}
 
 	@Override
-	public List<ProblemSetDto> selectProblemByWriter(String uid) throws Exception{
-		return problemSetMapper.selectProblemByWriter(uid);
+	public List<ProblemSetDto> selectProblemSetByWriter(String uid) throws Exception{
+		return problemSetMapper.selectProblemSetByWriter(uid);
 	}
 
 	@Override
-	public List<ProblemSetDto> selectProblemByTitle(String title) throws Exception {
-		return problemSetMapper.selectProblemByTitle(title);
+	public List<ProblemSetDto> selectProblemSetByTitle(String title) throws Exception {
+		return problemSetMapper.selectProblemSetByTitle(title);
 	}
 	
 	//TODO : <문제집 등록 프로세스>
@@ -79,8 +85,24 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 
 	@Override
-	public boolean updateProblemSet(ProblemSetDto problemSet) throws Exception{
-		return problemSetMapper.updateProblemSet(problemSet) == 1;
+	@Transactional
+	public boolean updateProblemSet(HashMap<String, Object> map) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		ProblemSetDto problemSet = mapper.convertValue(map.get("problemSet"), new TypeReference<ProblemSetDto>() {
+		});
+		List<ProblemDto> problemList = mapper.convertValue(map.get("problemList"),new TypeReference<List<ProblemDto>>() {});
+		
+		// 문제집 내용 수정
+		boolean result = (problemSetMapper.updateProblemSet(problemSet)>0);
+		
+		// 문제와 문제집 매핑 해제
+		result &= (problemSetMapper.deleteProblemSetMapping(problemSet.getProblemSetNo())>0);
+		
+		// 문제와 문제집 매핑
+		for(ProblemDto problem:problemList) {
+			result &= (problemMapper.createProblemSetMapping(problemSet.getProblemSetNo(), problem.getProblemNo())>0);
+		}
+		return result;
 	}
 
 	//TODO : 삭제시 problemsetmapping 에서도 같이 삭제가 되는지 확인.
@@ -90,7 +112,8 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 
 	@Override
-	public boolean updatePrblemSetFlag(String uid) throws Exception {
+	@Transactional
+	public boolean updateProblemSetFlag(String uid) throws Exception {
 		boolean result = (problemSetMapper.updatePrblemSetFlag(uid)>0);
 		result &= (problemMapper.updateProblemFlag(uid)>0);
 		
@@ -98,6 +121,7 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 
 	@Override
+	@Transactional
 	public boolean deleteProblemSetFlag(String uid) throws Exception {
 		boolean result = (problemSetMapper.deleteProblemSetFlag(uid)>0);
 		result &= (problemMapper.deleteProblemFlag(uid)>0);

@@ -1,5 +1,6 @@
 package com.solafy.service.problem;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public interface ProblemSetService {
 	* @Method 설명 : 문제집 번호에 해당하는 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public Map<String,Object> selectProblemByNo(int problemSetNo) throws Exception;
+	public Map<String,Object> selectProblemSetByNo(int problemSetNo) throws Exception;
 	
 	/**
 	 * 
@@ -41,7 +42,7 @@ public interface ProblemSetService {
 	* @Method 설명 : 문제집 작성자에 해당하는 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public List<ProblemSetDto> selectProblemByWriter(String uid) throws Exception;
+	public List<ProblemSetDto> selectProblemSetByWriter(String uid) throws Exception;
 	
 	/**
 	 * 
@@ -50,7 +51,7 @@ public interface ProblemSetService {
 	* @Method 설명 : 문제집 키워드가 포함이된 문제집을 가져온다.
 	* @변경이력 :
 	 */
-	public List<ProblemSetDto> selectProblemByTitle(String title) throws Exception;
+	public List<ProblemSetDto> selectProblemSetByTitle(String title) throws Exception;
 	
 	/**
 	 * 
@@ -62,13 +63,13 @@ public interface ProblemSetService {
 	public int createProblemSet(ProblemSetDto problemSet) throws Exception;
 
 	/**
-	 * 
-	* @param problemSet
+	* @param map - ProblemSetDto:problemSetNo,nickname,title,regitime / List<ProblemDto>:problemNo,title
 	* @return boolean, 정상적으로 수정 시 true 반환
+	* @throws Exception
 	* @Method 설명 : 문제집 수정 및 문제 mapping 갱신
 	* @변경이력 :
-	 */
-	public boolean updateProblemSet(ProblemSetDto problemSet) throws Exception;
+	*/
+	public boolean updateProblemSet(HashMap<String, Object> map) throws Exception;
 
 	/**
 	 *  
@@ -87,7 +88,7 @@ public interface ProblemSetService {
 	* @Method 설명 :  문제집의 flag를 임시저장 상태에서 저장으로 변경
 	* @변경이력 :
 	 */
-	public boolean updatePrblemSetFlag (String uid) throws Exception;
+	public boolean updateProblemSetFlag (String uid) throws Exception;
 	
 	/**
 	 * 
