@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td class="header">문제 작성자</td>
-              <td class="content">{{ nickname }}</td>
+              <td class="content">{{ item.problem. }}</td>
             </tr>
           </tbody>
         </q-markup-table>
@@ -355,38 +355,27 @@ export default {
         String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
-      this.createProblem();
+      this.updateProblem();
     },
-    // 문제 등록
-    createProblem() {
+    // 문제 수정
+    updateProblem() {
+      axios.put("problem/update", this.item).then(response => {
+        if (response.data == "success") {
+          notify("positive", "white", "done", "문제 수정 성공");
+        } else {
+          notify("red", "white", "error", "문제 수정 실패");
+        }
+      });
+    },
+    // problemDetail data 가져오기
+    getProblemDetail() {
       axios
-        .post("problem/create", this.item)
+        .get("problem/" + this.$route.params.problemNo)
         .then(response => {
-          this.updateFlag();
+          this.item = response.data;
         })
         .catch(error => {
-          console.log(error);
-          this.result = false;
-        });
-    },
-    // 문제의 flag를 0에서 1로 변경
-    updateFlag() {
-      axios
-        .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
-        .then(response => {})
-        .catch(error => {
-          console.log(error);
-          this.result = false;
-        })
-        .finally(() => {
-          if (this.result) {
-            notify("positive", "white", "done", "문제 등록 성공");
-            this.$router.push({
-              name: "Problem"
-            });
-          } else {
-            notify("red", "white", "error", "문제 등록 실패");
-          }
+          notify("red", "white", "error", "문제 정보 가져오기 실패");
         });
     },
     // 탭 클릭 시 type 설정
@@ -432,23 +421,12 @@ export default {
       this.item.problemAnswer.answer = "";
       this.item.problemAnswer.keyword = "";
       this.choiceList = [];
-    },
-    // User의 Nickname반환
-    selectNickname() {
-      axios
-        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
-        .then(response => {
-          this.nickname = response.data.nickname;
-        })
-        .catch(error => {
-          notify("red", "white", "error", "닉네임 불러오기 실패");
-          this.$router.go(-1);
-        });
     }
   },
   created() {
     this.selectLargeList();
     this.selectNickname();
+    this.getProblemDetail();
   }
 };
 </script>
