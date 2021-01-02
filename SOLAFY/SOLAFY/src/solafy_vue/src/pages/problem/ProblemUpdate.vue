@@ -1,7 +1,10 @@
 <template>
   <div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6">
+    <div class="fixed-center col" v-if="loading">
+      <q-spinner-dots color="primary" size="6em" />
+    </div>
+    <div class="col-md-6" v-else>
       <div class="row">
         <q-markup-table separator="cell">
           <tbody>
@@ -18,27 +21,27 @@
                   <q-select
                     class="selectbox col"
                     filled
-                    v-model="selectLarge"
+                    v-model="item.categoryLarge"
                     :options="largeList"
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="대분류"
-                    @input="selectMediumList"
+                    @input="clickLargeList"
                   />
                   <q-select
                     class="selectbox col"
                     filled
-                    v-model="selectMedium"
+                    v-model="item.categoryMedium"
                     :options="mediumList"
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="중분류"
-                    @input="selectSmallList"
+                    @input="clickMediumList"
                   />
                   <q-select
                     class="selectbox col"
                     filled
-                    v-model="selectSmall"
+                    v-model="item.categorySmall"
                     :options="smallList"
                     option-value="categoryNo"
                     option-label="categoryName"
@@ -49,7 +52,7 @@
             </tr>
             <tr>
               <td class="header">문제 작성자</td>
-              <td class="content">{{ nickname }}</td>
+              <td class="content">{{ item.problem.nickname }}</td>
             </tr>
           </tbody>
         </q-markup-table>
@@ -103,6 +106,8 @@
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 v-model="choi.choice"
+                @keyup.enter="addInput"
+                autofocus
               >
                 <template v-slot:before>
                   <q-checkbox v-model="choi.check" />
@@ -179,8 +184,8 @@
         />
       </div>
       <hr />
-      <div class="row">
-        <q-btn color="primary" label="문제 등록" @click="InsertProblem" />
+      <div class="row" style="float:right">
+        <q-btn color="primary" label="문제 수정" @click="updateProblem" />
       </div>
     </div>
   </div>
@@ -191,40 +196,51 @@ import { firebaseAuth } from "src/boot/firebase";
 import { notify } from "src/api/common.js";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
+import ProblemDetailVue from "./ProblemDetail.vue";
 
 export default {
-  name: "ProblemCreate",
+  name: "ProblemUpdate",
   data() {
     return {
       item: {
         problem: {
+          problemNo: "",
           categoryNo: "",
           contents: "",
           multipleChoice: "",
           title: "",
           type: 0,
-          uid: ""
+          nickname: ""
         },
-        problemAnswer: {
-          answer: "",
-          keyword: "",
-          solution: ""
+        categoryLarge: {
+          categoryNo: 0,
+          categoryName: ""
+        },
+        categoryMedium: {
+          categoryNo: 0,
+          categoryName: ""
+        },
+        categorySmall: {
+          categoryNo: 0,
+          categoryName: ""
         },
         hashTag: [],
-        problemSetNo: 0
+        problemAnswer: {
+          problemNo: 0,
+          answer: "",
+          solution: "",
+          keyword: ""
+        }
       },
-      nickname: "",
       largeList: [],
-      selectLarge: null,
       mediumList: [],
-      selectMedium: null,
       smallList: [],
-      selectSmall: null,
       hashTagText: "",
       tab: "객관식",
       tab_pre: "객관식",
       choiceList: [],
       result: true,
+      loading: true,
       options: {
         content: "",
         editable: true,
@@ -295,7 +311,7 @@ export default {
     // 카테고리 중분류 선택
     selectMediumList() {
       axios
-        .get("category/medium/" + this.selectLarge.categoryNo)
+        .get("category/medium/" + this.item.categoryLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
         })
@@ -306,13 +322,23 @@ export default {
     // 카테고리 소분류 선택
     selectSmallList() {
       axios
-        .get("category/small/" + this.selectMedium.categoryNo)
+        .get("category/small/" + this.item.categoryMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
         })
         .catch(error => {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
+    },
+    clickLargeList(){
+      this.selectMediumList();
+      this.item.categoryMedium = null;
+      this.smallList = [];
+      this.item.categorySmall = null;
+    },
+    clickMediumList(){
+      this.selectSmallList();
+      this.item.categorySmall = null;
     },
     // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
     removeHashTag(index) {
@@ -327,8 +353,8 @@ export default {
     addInput() {
       this.choiceList.push({ choice: "", check: false });
     },
-    // 문제 등록 처리
-    InsertProblem() {
+    // 문제 수정 처리
+    updateProblem() {
       // 객관식인 경우
       if (this.item.problem.type == 0) {
         // 선지 저장
@@ -352,30 +378,79 @@ export default {
       this.item.problem.uid = firebaseAuth.currentUser.uid;
       // 카테고리번호저장
       this.item.problem.categoryNo =
-        String(this.selectLarge.categoryNo).padStart(2, "0") +
-        String(this.selectMedium.categoryNo).padStart(3, "0") +
-        String(this.selectSmall.categoryNo).padStart(5, "0");
-      this.updateProblem();
-    },
-    // 문제 수정
-    updateProblem() {
+        String(this.item.categoryLarge.categoryNo).padStart(2, "0") +
+        String(this.item.categoryMedium.categoryNo).padStart(3, "0") +
+        String(this.item.categorySmall.categoryNo).padStart(5, "0");
+      // 문제 수정
       axios.put("problem/update", this.item).then(response => {
         if (response.data == "success") {
           notify("positive", "white", "done", "문제 수정 성공");
+          this.$router.push({
+            name: "ProblemDetail",
+            params: {
+              problemNo: this.$route.params.problemNo
+            }
+          });
         } else {
           notify("red", "white", "error", "문제 수정 실패");
         }
       });
     },
-    // problemDetail data 가져오기
-    getProblemDetail() {
+    // 문제 정보 가져오기
+    selectProblemDetail() {
       axios
         .get("problem/" + this.$route.params.problemNo)
         .then(response => {
           this.item = response.data;
+          // item내의 hashtagDto List를 String List로 변경
+          var list = [];
+          response.data.hashTag.forEach(element => {
+            list.push(element.hashTag);
+          });
+          this.item.hashTag = list;
+          // 데이터 전처리
+          this.tab = this.tab_pre =
+            this.item.problem.type == 0
+              ? "객관식"
+              : this.item.problem.type == 1
+              ? "주관식"
+              : "서술형";
+          this.options.content = this.item.problem.contents;
+          // 카테고리 리스트 호출
+          this.selectMediumList();
+          this.selectSmallList();
+
+          // 답안 정보 호출
+          this.selectProblemAnswer();
         })
         .catch(error => {
           notify("red", "white", "error", "문제 정보 가져오기 실패");
+        });
+    },
+    // 답안 정보 가져오기
+    selectProblemAnswer() {
+      axios
+        .get("problem/answer/" + this.$route.params.problemNo)
+        .then(response => {
+          this.item.problemAnswer = response.data;
+          if (this.item.problem.type == 0) {
+            this.item.problem.multipleChoice
+              .split(",")
+              .forEach((element, index) => {
+                this.choiceList.push({
+                  choice: element,
+                  check: this.item.problemAnswer.answer
+                    .split(",")
+                    .includes(index + 1 + "")
+                });
+              });
+          }
+        })
+        .catch(error => {
+          notify("red", "white", "error", "문제 정보 가져오기 실패");
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     // 탭 클릭 시 type 설정
@@ -424,9 +499,8 @@ export default {
     }
   },
   created() {
+    this.selectProblemDetail();
     this.selectLargeList();
-    this.selectNickname();
-    this.getProblemDetail();
   }
 };
 </script>
