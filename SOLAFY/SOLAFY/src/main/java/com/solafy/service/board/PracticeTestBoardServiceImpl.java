@@ -38,7 +38,7 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 		// 모의고사와 문제들 매핑
 		Map<String, Integer> map = new HashMap<>();
-		map.put("articleNo", pDto.getArticleNo());
+		map.put("articleNo", pDto.getPracticeNo());
 		for (ProblemDto problem : pDto.getProblems()) {
 			map.put("problemNo", problem.getProblemNo());
 			practiceTestMapper.createPracticeTestMapping(map);
@@ -55,8 +55,8 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Transactional
 	@Override
-	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws Exception {
-		return practiceTestMapper.selectPracticeTestByArticleNo(articleNo);
+	public List<PracticeTestBoardDto> selectPracticeTestByPracticeNo(int practiceNo) throws Exception {
+		return practiceTestMapper.selectPracticeTestByPracticeNo(practiceNo);
 	}
 
 	@Transactional
@@ -81,11 +81,11 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 		practiceTestMapper.updatePracticeTest(pDto);
 
 		// 모의고사와 문제들 매핑 삭제
-		practiceTestMapper.deletePracticeTestMapping(pDto.getArticleNo());
+		practiceTestMapper.deletePracticeTestMapping(pDto.getPracticeNo());
 
 		// 모의고사와 문제들 매핑 등록
 		Map<String, Integer> map = new HashMap<>();
-		map.put("articleNo", pDto.getArticleNo());
+		map.put("practiceNo", pDto.getPracticeNo());
 		map.put("problemNo", pDto.getProblems().get(0).getProblemNo());
 		for (int i = 0; i < pDto.getProblems().size(); i++) {
 			map.replace("problemNo", pDto.getProblems().get(i).getProblemNo());
@@ -97,12 +97,12 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Transactional
 	@Override
-	public boolean deleltePracticeTest(int articleNo) throws Exception {
+	public boolean deleltePracticeTest(int practiceNo) throws Exception {
 		// 모의고사와 문제들 매핑 삭제
-		practiceTestMapper.deletePracticeTestMapping(articleNo);
+		practiceTestMapper.deletePracticeTestMapping(practiceNo);
 
 		// 모의고사 삭제
-		practiceTestMapper.deleltePracticeTest(articleNo);
+		practiceTestMapper.deleltePracticeTest(practiceNo);
 
 		return true;
 	}

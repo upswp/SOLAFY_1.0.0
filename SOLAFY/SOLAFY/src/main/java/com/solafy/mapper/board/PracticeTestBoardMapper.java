@@ -16,6 +16,7 @@ import com.solafy.model.PracticeTestBoardDto;
  * @author 이주희
  *
  * @변경이력
+ * 20-01-02 articleNo에서 practiceNo로 수정
  */
 
 @Mapper
@@ -50,8 +51,9 @@ public interface PracticeTestBoardMapper {
 	 * @throws SQLException
 	 * 
 	 * @변경이력
+	 * 20-01-02 반환 값을 PracticeTestBoardDto에서 List<PracticeTestBoardDto>로 수정
 	 */
-	public PracticeTestBoardDto selectPracticeTestByArticleNo(int articleNo) throws SQLException;
+	public List<PracticeTestBoardDto> selectPracticeTestByPracticeNo(int practiceNo) throws SQLException;
 
 	/**
 	 * 검색된 별명과 작성자 별명이 동일한 모의고사들 반환
@@ -96,7 +98,7 @@ public interface PracticeTestBoardMapper {
 	 * 
 	 * @변경이력
 	 */
-	public int deleltePracticeTest(int articleNo) throws SQLException;
+	public int deleltePracticeTest(int practiceNo) throws SQLException;
 
 	/**
 	 * 모의고사와 해당 모의고사에 포함되는 문제의 매핑 추가
@@ -118,6 +120,6 @@ public interface PracticeTestBoardMapper {
 	 * 
 	 * @변경이력
 	 */
-	public int deletePracticeTestMapping(int articleNo) throws SQLException;
+	public int deletePracticeTestMapping(int practiceNo) throws SQLException;
 
 }

@@ -11,29 +11,29 @@
 	<!-- 모의고사 등록 -->
 	<insert id="createPracticeTest" parameterType="PracticeTestBoardDto" useGeneratedKeys="true" keyProperty="articleNo">
 		INSERT INTO practicetestboard 
-		( articleNo,    uid,    title,    regiTime, startTime,    endTime,    limitTime,    isGroup )
+		( articleNo,     uid,    title,    regiTime, startTime,    endTime,    limitTime,    isGroup )
 		VALUES
-		( #{articleNo}, #{uid}, #{title}, now(),    #{startTime}, #{endTime}, #{limitTime}, 0       )
+		( #{practiceNo}, #{uid}, #{title}, now(),    #{startTime}, #{endTime}, #{limitTime}, 0       )
 	</insert>
 	
 	<!-- 모든 모의고사 반환 -->
 	<select id="selectAllPracticeTest" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		SELECT articleNo AS practiceNo, uid, title, regiTime, startTime, endTime, nickname
 		FROM   practicetestboard p JOIN userinfo u
 		USING  (uid)
 	</select>
 	
 	<!-- 모의고사 번호로 모의고사 상세 내용 반환 -->
-	<select id="selectPracticeTestByArticleNo" parameterType="int" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime, limitTime, nickname
+	<select id="selectPracticeTestByPracticeNo" parameterType="int" resultType="PracticeTestBoardDto">
+		SELECT articleNo AS practiceNo, uid, title, regiTime, startTime, endTime, limitTime, nickname
 		FROM   practicetestboard p JOIN userinfo u
 		USING  (uid)
-		WHERE  articleNo = #{articleNo}
+		WHERE  articleNo = #{practiceNo}
 	</select>
 	
 	<!-- 검색된 별명과 작성자 별명이 동일한 모의고사들 반환 -->
 	<select id="selectPracticeTestByWriter" parameterType="String" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		SELECT articleNo AS practiceNo, uid, title, regiTime, startTime, endTime, nickname
 		FROM   practicetestboard p JOIN userinfo u
 		USING  (uid)
 		WHERE  UPPER(nickname) LIKE UPPER(#{nickname})
@@ -41,7 +41,7 @@
 
 	<!-- 검색된 키워드가 제목에 포함된  모의고사들 반환 -->
 	<select id="selectPracticeTestByTitle" parameterType="String" resultType="PracticeTestBoardDto">
-		SELECT articleNo, uid, title, regiTime, startTime, endTime, nickname
+		SELECT articleNo AS practiceNo, uid, title, regiTime, startTime, endTime, nickname
 		FROM   practicetestboard p JOIN userinfo u
 		USING  (uid)
 		WHERE  UPPER(title) LIKE UPPER(#{title})
@@ -55,25 +55,25 @@
 			   startTime = #{startTime},
 			   endTime   = #{endTime},
 			   limitTime = #{limitTime}
-		WHERE  articleNo = #{articleNo}
+		WHERE  articleNo = #{practiceNo}
 	</update>
 	
 	<!-- 모의고사 정보 삭제 -->
 	<delete id="deleltePracticeTest" parameterType="int">
 		DELETE FROM practicetestboard
-		WHERE		articleNo = #{articleNo}
+		WHERE		articleNo = #{practiceNo}
 	</delete>
 	
 	<!-- 모의고사와 해당 모의고사에 포함되는 문제의 매핑 추가 -->
 	<insert id="createPracticeTestMapping" parameterType="map">
-		INSERT INTO practicetestmapping ( articleNo,    problemNo    )
-		VALUES							( #{articleNo}, #{problemNo} )
+		INSERT INTO practicetestmapping ( articleNo,     problemNo    )
+		VALUES							( #{practiceNo}, #{problemNo} )
 	</insert>
 	
 	<!-- 모의고사 번호로 해당 모의고사와 문제들의 매핑을 모두 삭제 -->
 	<delete id="deletePracticeTestMapping" parameterType="int">
 		DELETE FROM practicetestmapping
-		WHERE		articleNo = #{articleNo}
+		WHERE		articleNo = #{practiceNo}
 	</delete>
 
 </mapper>

@@ -29,7 +29,8 @@ import io.swagger.annotations.ApiOperation;
  * @Date 2020. 12. 18.
  * @Author 이주희
  * 
- * @변경이력 :
+ * @변경이력
+ * 20-01-02 articleNo에서 practiceNo로 수정
  */
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -84,13 +85,14 @@ public class PracticeTestBoardController {
 	 * @throws Exception
 	 *
 	 * @변경이력
+	 * 20-01-02 반환 값을 PracticeTestBoardDto에서 List<PracticeTestBoardDto>로 수정
 	 */
-	@ApiOperation(value = "모의고사 번호로 검색한 결과를 반환한다.", response = PracticeTestBoardDto.class)
-	@GetMapping(value = "/selectbyno/{articleNo}")
-	public ResponseEntity<PracticeTestBoardDto> selectPracticeTestByArticleNo(@PathVariable int articleNo)
+	@ApiOperation(value = "모의고사 번호로 검색한 결과를 목록으로 반환한다.", response = List.class)
+	@GetMapping(value = "/selectbyno/{practiceNo}")
+	public ResponseEntity<List<PracticeTestBoardDto>> selectPracticeTestByPracticeNo(@PathVariable int practiceNo)
 			throws Exception {
-		logger.debug("selectPracticeTestByArticleNo");
-		return new ResponseEntity<PracticeTestBoardDto>(practiceService.selectPracticeTestByArticleNo(articleNo),
+		logger.debug("selectPracticeTestByPracticeNo");
+		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByPracticeNo(practiceNo),
 				HttpStatus.OK);
 	}
 
@@ -156,10 +158,10 @@ public class PracticeTestBoardController {
 	 * @변경이력
 	 */
 	@ApiOperation(value = "모의고사를 삭제한다.", response = String.class)
-	@DeleteMapping(value = "/delete/{articleNo}")
-	public ResponseEntity<String> deleltePracticeTest(@PathVariable int articleNo) throws Exception {
+	@DeleteMapping(value = "/delete/{practiceNo}")
+	public ResponseEntity<String> deleltePracticeTest(@PathVariable int practiceNo) throws Exception {
 		logger.debug("updatePracticeTest");
-		if (practiceService.deleltePracticeTest(articleNo))
+		if (practiceService.deleltePracticeTest(practiceNo))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
