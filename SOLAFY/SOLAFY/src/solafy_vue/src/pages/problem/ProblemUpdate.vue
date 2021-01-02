@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <td class="header">문제 작성자</td>
-              <td class="content">{{ item.problem. }}</td>
+              <td class="content">{{ nickname }}</td>
             </tr>
           </tbody>
         </q-markup-table>
