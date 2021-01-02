@@ -298,6 +298,9 @@ export default {
         .get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
+          this.selectMedium=null;
+          this.smallList=[];
+          this.selectSmall=null;
         })
         .catch(error => {
           notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
@@ -309,6 +312,7 @@ export default {
         .get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
+          this.selectSmall=null;
         })
         .catch(error => {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
