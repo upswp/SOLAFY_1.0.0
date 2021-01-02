@@ -268,11 +268,34 @@ const routes = [
           }
         ]
       },
+      
+      // 모의고사
       {
-        path: "/practice",
-        component: () => import("pages/board/PracticeBoard.vue"),
+        path: "/practicelist",
+        component: () => import("pages/practice/PracticeList.vue"),
         beforeEnter: requireAuth()
       },
+      {
+        path: "/practicecreate",
+        component: () => import("pages/practice/PracticeCreate.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
+        path: "/practicedetail/:practiceNo",
+        component: () => import("pages/practice/PracticeDetail.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
+        path: "/practicelisresult/:practiceNo/:result",
+        component: () => import("pages/practice/PracticeResult.vue"),
+        beforeEnter: requireAuth()
+      },
+      {
+        path: "/practiceupdate/:practiceNo",
+        component: () => import("pages/practice/PracticeUpdate.vue"),
+        beforeEnter: requireAuth()
+      },
+
 
       // 그룹 Part
       {
