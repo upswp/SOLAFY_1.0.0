@@ -1,4 +1,4 @@
-<template> <div>PracticeBoard</div> </template>
+<template> <div>Practice Result</div> </template>
 
 <script>
 export default {};
