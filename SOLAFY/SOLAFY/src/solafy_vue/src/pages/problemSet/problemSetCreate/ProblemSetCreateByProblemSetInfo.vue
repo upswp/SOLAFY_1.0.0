@@ -75,7 +75,14 @@ export default {
     },
     // 문제집을 db에 임시 저장 후 출제 화면으로 이동
     goToCreateProblemList() {
+      // 예외처리
+      if (this.ProblemSet.title == "") {
+        notify("warning", "white", "warning", "문제집 제목을 입력해주세요");
+        return;
+      }
+      // uid를 객체에 저장
       this.ProblemSet.uid = firebaseAuth.currentUser.uid;
+      // 문제집 임시 등록
       axios
         .post("problem/problemset/createProblemSet", this.ProblemSet)
         .then(response => {

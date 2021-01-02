@@ -234,7 +234,6 @@ export default {
       });
     },
     // 문제 수정 버튼 클릭 시 db에 반영
-    // Todo : 문제 제목이 입력안됬거나 문제집에 문제가 하나도 없을 때 수정 불가하도록 변경
     UpdateProblemSet() {
       // 예외 처리
       if (this.item.problemSet.title == "") {
