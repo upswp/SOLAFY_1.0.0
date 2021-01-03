@@ -96,7 +96,9 @@ export default {
             content: response.data.regiTime
           }
         ];
+        console.log(this.info);
         this.problems = response.data.problems;
+        console.log(this.problems);
       })
       .catch(error => {});
   },
