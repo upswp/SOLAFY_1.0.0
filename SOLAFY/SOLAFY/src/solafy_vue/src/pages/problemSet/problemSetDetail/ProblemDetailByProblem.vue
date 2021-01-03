@@ -8,8 +8,8 @@
         <div class="row">
           <div class="col-8"></div>
           <div class="col-4">
-            <q-btn color="primary" label="문제수정요청" />
-            <q-btn color="primary" label="돌아가기" />
+            <q-btn color="primary" label="문제수정요청" id="btn" />
+            <q-btn color="primary" label="돌아가기" id="btn" />
           </div>
         </div>
       </div>
@@ -67,7 +67,12 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="답안제출" @click="goToResult" />
+            <q-btn
+              color="primary"
+              label="답안제출"
+              @click="goToResult"
+              id="btn"
+            />
           </div>
         </div>
       </div>
@@ -254,7 +259,7 @@ export default {
 };
 </script>
 <style>
-.q-btn {
+#btn {
   margin-left: 10px;
 }
 

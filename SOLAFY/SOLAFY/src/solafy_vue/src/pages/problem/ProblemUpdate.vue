@@ -185,8 +185,18 @@
       </div>
       <hr />
       <div class="row" style="float:right">
-        <q-btn color="primary" label="문제 수정" @click="updateProblem" />
-        <q-btn color="primary" label="수정 취소" @click="goProblemDetail" />
+        <q-btn
+          color="primary"
+          label="문제 수정"
+          @click="updateProblem"
+          id="btn"
+        />
+        <q-btn
+          color="primary"
+          label="수정 취소"
+          @click="goProblemDetail"
+          id="btn"
+        />
       </div>
     </div>
   </div>
@@ -515,6 +525,9 @@ export default {
 };
 </script>
 <style scoped>
+#btn {
+  margin-left: 10px;
+}
 .header {
   text-align: center;
   width: 100px;

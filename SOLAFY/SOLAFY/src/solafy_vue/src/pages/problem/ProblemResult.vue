@@ -18,6 +18,7 @@
           <div class="col-12 col-md-auto" id="contents">
             <div class="q-pa-md">
               <q-table
+                id="table"
                 title="추천 문제 List"
                 :data="recommendProblemList"
                 :columns="listColumns"
@@ -42,7 +43,12 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
+            <q-btn
+              id="btn"
+              color="primary"
+              label="돌아가기"
+              @click="GoProblemSetList"
+            />
           </div>
         </div>
       </div>
@@ -197,10 +203,10 @@ export default {
 };
 </script>
 <style>
-.q-btn {
+#btn {
   margin-left: 10px;
 }
-.q-table {
+#table {
   width: 500px;
 }
 #header-title {

@@ -9,7 +9,12 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn color="primary" label="돌아가기" @click="GoProblemSetList" />
+            <q-btn
+              id="btn"
+              color="primary"
+              label="돌아가기"
+              @click="GoProblemSetList"
+            />
           </div>
         </div>
       </div>
@@ -18,6 +23,7 @@
         <div class="row justify-center">
           <div class="col-12 col-md-auto" id="contents">
             <q-table
+              id="table"
               title="문제집 정보"
               :data="data"
               :columns="columns"
@@ -50,6 +56,7 @@
             </div> -->
             <div class="q-pa-md">
               <q-table
+                id="table"
                 title="문제 List"
                 :data="item.problemList"
                 :columns="listColumns"
@@ -76,16 +83,19 @@
           <div class="col-7"></div>
           <div class="col-5">
             <q-btn
+              id="btn"
               color="primary"
               label="문제집 삭제"
               @click="ProblemSetDelete"
             />
             <q-btn
+              id="btn"
               color="primary"
               label="문제집 수정"
               @click="GoProblemSetUpdate"
             />
             <q-btn
+              id="btn"
               color="primary"
               label="문제풀이 시작"
               @click="GoProblemSolving"
@@ -263,12 +273,12 @@ export default {
 };
 </script>
 <style>
-.q-btn {
+#btn {
   margin-left: 10px;
 }
-/* .q-table {
+#table {
   width: 500px;
-} */
+}
 #header-title {
   height: 100px;
 }
