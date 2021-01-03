@@ -9,7 +9,9 @@
         <q-item-section avatar>
           <q-avatar>
             <!-- TODO: 프로필사진 가져오기 -->
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+
+            <!-- <img src="https://cdn.quasar.dev/img/boy-avatar.png" /> -->
+            <img :src="profileUrl" />
           </q-avatar>
         </q-item-section>
 
@@ -26,6 +28,7 @@
           <!-- TODO: 닉네임은 자동으로 불러옴 -->
           <q-item-label caption>
             {{ article.uid }}
+            {{ article.nickname }}
             닉네임 : 파베에서 로그인 정보 가져오기
           </q-item-label>
         </q-item-section>
@@ -164,7 +167,9 @@ export default {
       article: {
         //추가 정보
         // TODO: 현재의 UID를 가져와야한다. 힘들면 nickname이라도
+        // uid: firebaseAuth.currentUser.uid,
         uid: SessionStorage.getItem("loginUser").uid,
+        nickname: SessionStorage.getItem("loginUser").nickname,
         problemNo: "",
         uid_submitter: "",
 
@@ -174,6 +179,7 @@ export default {
         isNotice: false,
         groupNo: 1
       },
+      profileUrl: "",
       // 게시판 형식 값을
       // store에서 가져와 data에 저장
       boardType: this.$store.state.boardType,
@@ -297,7 +303,8 @@ export default {
     search: function() {
       // TODO: 로그인 정보 불러오기 점검
       console.log(typeof this.article.uid, "hello");
-      console.log(SessionStorage.getItem("loginUser").uid);
+      console.log(firebaseAuth.currentUser.uid);
+      console.log(firebaseAuth.currentUser.nickname);
       this.loading = true;
       Axios.get(`/problem/search/${this.selection}/${this.keyword}`)
         .then(response => {
@@ -337,6 +344,18 @@ export default {
         .catch(error => console.log(error))
         .finally(() => (this.loading = false));
       this.isProblemSelected = true;
+    },
+    // User의 Nickname반환
+    selectNickname() {
+      axios
+        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
+        .then(response => {
+          this.nickname = response.data.nickname;
+        })
+        .catch(error => {
+          notify("red", "white", "error", "닉네임 불러오기 실패");
+          this.$router.go(-1);
+        });
     }
   },
   // 게시판에 따른 안내문구 설정
@@ -346,6 +365,10 @@ export default {
     } else if (this.boardType === "question") {
       this.message = "질문할 문제 검색";
     }
+    // this.profileUrl = firebaseSt.ref().child("profileimg/" + this.article.uid);
+    this.profileUrl = firebaseSt
+      .ref()
+      .child("profileimg/" + "NDoXV9efsFd4gRXiIpo5uv80tSZ2");
   }
 };
 </script>
