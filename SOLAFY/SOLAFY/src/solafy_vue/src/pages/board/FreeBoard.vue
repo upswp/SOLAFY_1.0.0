@@ -66,8 +66,7 @@ export default {
           format: val => `${val}`,
           sortable: true
         }
-      ],
-      errored: false
+      ]
     };
   },
   methods: {
@@ -76,24 +75,13 @@ export default {
   },
   created() {
     /**
-     * 처음에 FreeBoard의 기본 값들을 vuex의 states에 세팅합니다
+     * 처음에 FreeBoard의 기본 값들을 vuex의 states에 세팅
      *
-     * 순서대로 검색옵션 - 테이블컬럼정보 - 게시판타입(이후 url에 적용되므로 잘 보고 해야해요!)
+     * 순서대로 검색옵션 - 테이블컬럼정보 - 게시판타입(이후 mapping url에 적용)
      */
     this.$store.commit("SETBOARDSEARCHKEYWORDS", this.options);
     this.$store.commit("SETBOARDCOLUMNS", this.columns);
     this.$store.commit("SETBOARDTYPE", this.boardType);
-
-    // 한번 출력된거 확인해보세요!
-    console.log(
-      "현재 게시판 정보",
-      "\n",
-      this.options,
-      "\n",
-      this.columns,
-      "\n",
-      this.boardType
-    );
   }
 };
 </script>
