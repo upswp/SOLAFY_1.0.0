@@ -8,8 +8,8 @@
         <div class="row">
           <div class="col-8"></div>
           <div class="col-4">
-            <q-btn color="primary" label="문제수정요청" id="btn" />
-            <q-btn color="primary" label="돌아가기" id="btn" />
+            <q-btn color="primary" label="문제수정요청" />
+            <q-btn color="primary" label="돌아가기" />
           </div>
         </div>
       </div>
@@ -20,6 +20,11 @@
 
             <!-- 마크다운으로 문제 내용 출력 -->
             <div>
+              <quasar-tiptap
+                class="shadow-3"
+                v-bind="options"
+                style="margin-top:10px;margin-bottom:10px"
+              />
               <q-markdown no-linkify>
                 {{ itemProblem.problem.contents }}
               </q-markdown>
@@ -67,12 +72,7 @@
         <div class="row">
           <div class="col-10"></div>
           <div class="col-2">
-            <q-btn
-              color="primary"
-              label="답안제출"
-              @click="goToResult"
-              id="btn"
-            />
+            <q-btn color="primary" label="답안제출" @click="goToResult" />
           </div>
         </div>
       </div>
@@ -82,6 +82,8 @@
 <script>
 import Axios from "axios";
 import routes from "src/router/routes";
+import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
+import "quasar-tiptap/lib/index.css";
 
 export default {
   name: "problemSetListByProblem",
@@ -139,13 +141,46 @@ export default {
       answerChecklist: [],
       answerText: "",
       loading: true,
-      result: false
+      result: false,
+      options: {
+        content: "문제를 클릭해주세요",
+        editable: false,
+        showToolbar: false,
+        extensions: [...RecommendedExtensions]
+      }
     };
+  },
+  components: {
+    QuasarTiptap
   },
   created() {
     this.selectProblemSetByNo();
   },
   methods: {
+     selectFirstProblemByNo:function(){
+      Axios.get("problem/" + this.itemProblemSet.problemList[0].problemNo)
+        .then(Response => {
+          this.itemProblem = Response.data;
+          if (this.itemProblem.problem.multipleChoice != null) {
+            this.multipleChoice = this.itemProblem.problem.multipleChoice.split(
+              ","
+            );
+          }
+          this.options.content = this.itemProblem.problem.contents;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "negative",
+            textColor: "white",
+            icon: "error",
+            message: "조회 실패"
+          });
+          this.goToproblemList();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     selectProblemByNo: function(evt, row) {
       //   this.showLoading();
       Axios.get("problem/" + row.problemNo)
@@ -156,6 +191,7 @@ export default {
               ","
             );
           }
+          this.options.content = this.itemProblem.problem.contents;
         })
         .catch(error => {
           this.$q.notify({
@@ -179,6 +215,7 @@ export default {
         .then(Response => {
           console.log(Response.data);
           this.itemProblemSet = Response.data;
+          this.selectFirstProblemByNo();
         })
         .catch(error => {
           this.$q.notify({
