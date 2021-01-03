@@ -291,7 +291,8 @@ const routes = [
         beforeEnter: requireAuth()
       },
       {
-        path: "/practicelisresult/:practiceNo/:result",
+        path: "/practiceresult/:practiceNo/:result",
+        name: "PracticeResult",
         component: () => import("pages/practice/PracticeResult.vue"),
         beforeEnter: requireAuth()
       },
