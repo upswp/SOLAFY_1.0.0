@@ -20,7 +20,7 @@
               <q-table
                 id="table"
                 title="추천 문제 List"
-                :data="itemList.problemList"
+                :data="recommendProblemList"
                 :columns="listColumns"
                 hide-pagination
                 :pagination.sync="pagination"
@@ -112,19 +112,7 @@ export default {
           nickname: ""
         }
       },
-      itemList: {
-        problem: {
-          problemNo: 0,
-          multipleChoice: "",
-          title: "",
-          contents: "",
-          categoryNo: "",
-          type: 0,
-          regiTime: "",
-          nickname: ""
-        },
-        problemList: []
-      }
+      recommendProblemList: []
     };
   },
   methods: {
@@ -155,12 +143,12 @@ export default {
         });
     },
     //ProblemSet Contents - table 반환
-    selectProbleListmByNo: function() {
+    selectRecommendProblemListmByNo: function() {
       //   this.showLoading();
-      Axios.get("problem/recommend/" + this.$route.params.problemSetNo)
+      Axios.get("problem/recommend/" + this.$route.params.problemNo)
         .then(Response => {
           console.log(Response.data);
-          this.itemList = Response.data;
+          this.recommendProblemList = Response.data;
         })
         .catch(error => {
           this.$q.notify({
@@ -196,13 +184,13 @@ export default {
   },
   created() {
     this.selectProblemByNo();
-    this.selectProbleListmByNo();
+    this.selectRecommendProblemListmByNo();
     this.checkResult();
   },
   computed: {
     pagesNumber() {
       return Math.ceil(
-        this.itemList.problemList.length / this.pagination.rowsPerPage
+        this.recommendProblemList.length / this.pagination.rowsPerPage
       );
     }
   },

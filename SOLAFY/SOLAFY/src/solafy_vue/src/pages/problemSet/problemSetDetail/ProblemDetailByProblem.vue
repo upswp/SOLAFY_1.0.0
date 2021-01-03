@@ -141,13 +141,15 @@ export default {
       answerChecklist: [],
       answerText: "",
       loading: true,
-      result: false,
+
       options: {
         content: "문제를 클릭해주세요",
         editable: false,
         showToolbar: false,
         extensions: [...RecommendedExtensions]
-      }
+      },
+      result: false,
+      resultList: []
     };
   },
   components: {
@@ -157,7 +159,7 @@ export default {
     this.selectProblemSetByNo();
   },
   methods: {
-     selectFirstProblemByNo:function(){
+    selectFirstProblemByNo: function() {
       Axios.get("problem/" + this.itemProblemSet.problemList[0].problemNo)
         .then(Response => {
           this.itemProblem = Response.data;
@@ -173,16 +175,52 @@ export default {
             color: "negative",
             textColor: "white",
             icon: "error",
-            message: "조회 실패"
+            message: "첫번째 문제 조회 실패"
           });
-          this.goToproblemList();
         })
         .finally(() => {
           this.loading = false;
         });
     },
     selectProblemByNo: function(evt, row) {
-      //   this.showLoading();
+      var type = this.itemProblem.problem.type;
+      //객관식일때
+      if (type === 0) {
+        console.log("객관식 type 처리중입니다.");
+        // 답이 비어있지 않으면
+        if (this.answerChecklist != null) {
+          this.resultList[row + 1] = this.answerChecklist.toString;
+          console.log("answerChecklist::::" + this.answerChecklist);
+          console.log(
+            "this.resultList[row + 1]::::" + this.resultList[row + 1].toString
+          );
+          //답이 공란인 상태이면
+        } else {
+          this.confirm();
+          // 공란인 상태에서 다른 문제로 넘어가겠다.
+          if (this.confirm()) {
+            this.resultList[row + 1] = null;
+            this.answerChecklist = null;
+            //공란인 상태로 안넘어가고 현 페이지에 남아있겠다.
+          } else {
+            return;
+          }
+        }
+        //주관식, 서술형일때
+      } else {
+        console.log("주관식,서술형 type 처리중입니다.");
+        if (this.answerText != null) {
+          this.resultList[row + 1] = this.answerText;
+        } else {
+          if (this.confirm()) {
+            this.resultList[row + 1] = null;
+            this.answerText = null;
+          } else {
+            return;
+          }
+        }
+      }
+
       Axios.get("problem/" + row.problemNo)
         .then(Response => {
           this.itemProblem = Response.data;
@@ -200,13 +238,32 @@ export default {
             icon: "error",
             message: "조회 실패"
           });
-          this.goToproblemList();
+          console.log("errormsg" + error);
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    selectProblemSetByNo: function() {
+    confirm() {
+      console.log("Start confirm!!");
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "답안을 입력하시지 않았습니다. 이동하시겠습니까?",
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          return true;
+        })
+        .onCancel(() => {
+          return false;
+        })
+        .onDismiss(() => {
+          return false;
+        });
+    },
+    selectProblemSetByNo() {
       //   this.showLoading();
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
@@ -216,15 +273,17 @@ export default {
           console.log(Response.data);
           this.itemProblemSet = Response.data;
           this.selectFirstProblemByNo();
+          this.resultList.length = this.itemProblemSet.problemList.length;
+          // console.log(this.resultList.length + "length");
         })
         .catch(error => {
           this.$q.notify({
             color: "negative",
             textColor: "white",
             icon: "error",
-            message: "조회 실패"
+            message: "문제집 정보 조회 실패"
           });
-          this.goToproblemList();
+          console.log("errormsg" + error);
         })
         .finally(() => {
           this.loading = false;
