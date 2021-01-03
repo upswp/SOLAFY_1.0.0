@@ -14,7 +14,7 @@
           <!-- 게시글 번호를 불러온다(표시용) -->
           <q-item-label overline> #{{ article.articleNo }} </q-item-label>
           <q-item-label>
-            <!-- 제목 입력 시작 -->
+            <!-- 수정할 제목 입력 시작 -->
             <q-input
               v-model="article.title"
               label="제목"
@@ -22,9 +22,9 @@
               aria-placeholder="제목을 입력해주세요"
               dense
           /></q-item-label>
-          <!-- 제목 입력 끝 -->
+          <!-- 수정할 제목 입력 끝 -->
 
-          <!-- 변하지않는 닉네임 정보와 작성시간 -->
+          <!-- 닉네임 정보와 게시글 작성시간(표시용) -->
           <q-item-label caption>
             닉네임 : {{ article.nickname }} <br />
             작성시간 : {{ article.regiTime }}
@@ -34,7 +34,7 @@
       <q-separator />
       <q-card-section>
         <q-card-section class="col-4">
-          <!-- 내용 입력 시작 -->
+          <!-- 수정할 내용 입력 시작 -->
           <q-input
             v-model="article.contents"
             filled
@@ -42,15 +42,16 @@
             aria-placeholder="내용을 입력해주세요"
             autogrow
           />
-          <!-- 내용 입력 끝 -->
+          <!-- 수정할 내용 입력 끝 -->
         </q-card-section>
       </q-card-section>
 
-      <!-- TODO: 공지사항 여부는 사용하는 게시판 only! -->
+      <!-- 공지사항 여부 시작(자유게시판 한정) -->
       <q-card-section align="right"
         ><q-checkbox v-model="article.notice" label="공지사항 여부" />
       </q-card-section>
       <q-separator />
+      <!-- 공지사항 여부 끝 -->
 
       <!-- 수정/취소 버튼 시작 -->
       <q-card-actions align="right">
@@ -74,11 +75,12 @@ export default {
     };
   },
   methods: {
-    // 게시글 수정 시작
+    // 게시글 수정
     updateArticle: function() {
+      // 오류 상태 저장 플래그
       var successFlag = true;
 
-      // 제목 / 내용이 비어있는지 확인
+      // 제목 비어있는지 확인
       if (this.article.title === null || this.article.title == "") {
         this.$q.notify({
           timeout: 1,
@@ -89,6 +91,7 @@ export default {
         });
         successFlag = false;
       }
+      // 내용 비어있는지 확인
       if (this.article.contents == null || this.article.contents == "") {
         this.$q.notify({
           timeout: 1,
@@ -103,7 +106,7 @@ export default {
       // 제목/내용이 비어있지 않다면
       if (successFlag) {
         var flag = false;
-        // 재차 확인
+        // 수정 여부 재 확인
         this.$q
           .dialog({
             title: "Confirm",
@@ -139,7 +142,7 @@ export default {
               })
               .finally(() => (this.loading = false));
           })
-          // 재차확인에서 취소하거나 무시하면 수정화면으로 돌아간다
+          // 재차확인에서 취소하거나 무시하면 수정화면으로 복귀
           .onCancel(() => {
             return;
           })
@@ -164,7 +167,7 @@ export default {
   created() {
     // 해당 게시판에서,
     // 게시글 번호를 통해,
-    // 게시글 정보 가져오는 api
+    // 게시글 정보 가져옴
     Axios.get(
       `/${this.$store.state.boardType}/selectArticleByArticleNo/${this.articleNo}`
     )

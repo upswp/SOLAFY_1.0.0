@@ -13,7 +13,6 @@
           </q-avatar>
         </q-item-section>
 
-        <!-- 찐 입력페이지 시작 -->
         <q-item-section>
           <q-item-label>
             <!-- 제목 입력 부분 -->
@@ -26,20 +25,21 @@
           /></q-item-label>
           <!-- TODO: 닉네임은 자동으로 불러옴 -->
           <q-item-label caption>
-            아아아{{ article.uid }}
+            {{ article.uid }}
             닉네임 : 파베에서 로그인 정보 가져오기
           </q-item-label>
         </q-item-section>
       </q-item>
       <q-separator />
 
-      <!-- 게시글에서 다룰 문제 검색 부분 구현 시작 -->
+      <!-- 게시글에서 다룰 문제 검색 부분 구현 시작(답안수정게시판, 질문게시판 한정) -->
       <template
         v-if="
           this.boardType === `answermodify` || this.boardType === `question`
         "
       >
-        <q-card-section v-if="showProblemSearchFlag">
+        <!-- 문제를 선택하지 않았을 경우 -->
+        <q-card-section v-if="!isProblemSelected">
           <q-table
             :title="message"
             :data="problems"
@@ -48,6 +48,7 @@
             :loading="loading"
             @row-click="selectProblem"
           >
+            <!-- 검색 조건, 키워드에 따른 문제 검색 시작 -->
             <template v-slot:top-right>
               <q-input
                 bottom-slots
@@ -79,15 +80,23 @@
                 </template>
               </q-input>
             </template>
+            <!-- 검색 조건, 키워드에 따른 문제 검색 끝 -->
+
+            <!-- 데이터가 존재하지 않는다면 안내문구 출력 시작 -->
             <template v-slot:no-data>
               <div class="full-width row flex-center text-accent q-gutter-sm">
                 <q-icon size="2em" name="volume_off" />
-                <b style="font-size:15px"> 문제를 검색해주세요 </b>
+                <b style="font-size:15px">
+                  문제를 검색해주세요
+                </b>
               </div>
             </template>
+            <!-- 데이터가 존재하지 않는다면 안내문구 출력 끝 -->
           </q-table>
         </q-card-section>
-        <q-card-section v-else>
+        <!-- 문제가 선택 되었을 경우 -->
+        <q-card-section v-else-if="isProblemSelected">
+          <!-- 문제 정보 표시 시작 -->
           <q-separator />
           문제 작성자 : {{ problemInfo.nickname }}<br /><br />
           {{ problemInfo.problemNo }}번째 문제 내용<br />
@@ -106,11 +115,12 @@
               color="black"
               label="문제 다시 선택하기"
               flat
-              @click="showProblemSearchFlag = true"
+              @click="isProblemSelected = false"
             />
           </template>
           <!-- 검색 초기화 버튼 끝 -->
         </q-card-section>
+        <!-- 문제 정보 표시 끝 -->
       </template>
       <!-- 게시글에서 다룰 문제 검색 부분 구현 끝 -->
       <q-separator />
@@ -124,6 +134,7 @@
             label="내용을 입력해주세요"
             autogrow
           />
+          <!-- 내용 입력 부분 끝 -->
         </q-card-section>
       </q-card-section>
       <!-- TODO: 공지사항 사용하는 게시판 한정, 관리자 권한의 인원만 사용하도록 함 -->
@@ -167,7 +178,9 @@ export default {
       // store에서 가져와 data에 저장
       boardType: this.$store.state.boardType,
 
-      // 문제검색을 위한 데이터
+      loading: false,
+      message: "",
+      // 문제검색을 위한 데이터 시작
       selection: "제목",
       options: ["제목", "문제번호", "작성자"],
       keyword: "",
@@ -211,10 +224,9 @@ export default {
         }
       ],
       problems: [],
-      loading: false,
-      showProblemSearchFlag: true,
-      problemInfo: [],
-      message: ""
+      isProblemSelected: false,
+      problemInfo: []
+      //문제 검색을 위한 데이터 끝
     };
   },
   methods: {
@@ -283,7 +295,7 @@ export default {
     // 문제 검색을 위한 메서드 시작
     //문제 검색 및 검색 예외처리
     search: function() {
-      // console.log("helloworld");
+      // TODO: 로그인 정보 불러오기 점검
       console.log(typeof this.article.uid, "hello");
       console.log(SessionStorage.getItem("loginUser").uid);
       this.loading = true;
@@ -310,6 +322,7 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
+    // 문제를 선택했을때 메서드
     selectProblem: function(evt, row) {
       Axios.get(`problem/${row.problemNo}`)
         .then(response => {
@@ -320,13 +333,13 @@ export default {
           this.article.problemNo = this.problemInfo.problemNo;
           this.article.uid_submitter = this.problemInfo.uid;
           console.log(this.article.problemNo);
-          console.log(this.article.uid_submitter);
         })
         .catch(error => console.log(error))
         .finally(() => (this.loading = false));
-      this.showProblemSearchFlag = false;
+      this.isProblemSelected = true;
     }
   },
+  // 게시판에 따른 안내문구 설정
   mounted() {
     if (this.boardType === "answermodify") {
       this.message = "수정을 요청할 문제 검색";
