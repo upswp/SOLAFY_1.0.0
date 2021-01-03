@@ -186,6 +186,7 @@
       <hr />
       <div class="row" style="float:right">
         <q-btn color="primary" label="문제 수정" @click="updateProblem" />
+        <q-btn color="primary" label="수정 취소" @click="goProblemDetail" />
       </div>
     </div>
   </div>
@@ -330,13 +331,13 @@ export default {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
     },
-    clickLargeList(){
+    clickLargeList() {
       this.selectMediumList();
       this.item.categoryMedium = null;
       this.smallList = [];
       this.item.categorySmall = null;
     },
-    clickMediumList(){
+    clickMediumList() {
       this.selectSmallList();
       this.item.categorySmall = null;
     },
@@ -496,6 +497,15 @@ export default {
       this.item.problemAnswer.answer = "";
       this.item.problemAnswer.keyword = "";
       this.choiceList = [];
+    },
+    goProblemDetail() {
+      this.loading = true;
+      this.$router.push({
+        name: "ProblemDetail",
+        params: {
+          problemNo: this.$route.params.problemNo
+        }
+      });
     }
   },
   created() {
