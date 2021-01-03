@@ -48,7 +48,7 @@
                   color="black"
                   label="reset"
                   flat
-                  @click="selectAllArticles"
+                  @click="resetSearchKeyword"
                 />
               </template>
               <!-- 검색 초기화 버튼 끝 -->
@@ -76,6 +76,7 @@
           v-for="notice in notices"
           :key="notice.articleNo"
           @click="gotoDetail(notice.articleNo)"
+          style="background-color:#DDD"
         >
           <td class="text-left">{{ notice.articleNo }}</td>
           <td class="text-left">{{ notice.nickname }}</td>
@@ -288,6 +289,10 @@ export default {
         name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
       });
+    },
+    resetSearchKeyword: function() {
+      this.keyword = null;
+      this.selectAllArticles();
     }
   },
 
