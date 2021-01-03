@@ -9,15 +9,20 @@
       <div v-for="(choice, index) in multipleChoice" :key="index">
         {{ index + 1 }} : {{ choice }}
       </div>
-    </template>
-    <q-separator />
-    <template>
-      기존 답 :
-      <strong>{{ answerInfo.answer }}</strong>
       <q-separator />
+      <template>
+        기존 답 :
+        <strong>{{ answerInfo.answer }}</strong>
+        <q-separator />
 
-      <strong> {{ answerInfo.keyword }}</strong>
-      기존 해설 : <strong>{{ answerInfo.solution }}</strong>
+        <strong> {{ answerInfo.keyword }}</strong>
+        기존 해설 : <strong>{{ answerInfo.solution }}</strong>
+      </template>
+    </template>
+    <template v-else>
+      <div>
+        <i>*주관식과 서술형은 정답이 제공되지 않습니다.*</i>
+      </div>
     </template>
     <q-separator />
   </q-card-section>
