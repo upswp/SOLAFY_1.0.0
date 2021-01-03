@@ -1,6 +1,7 @@
 package com.solafy.controller.board;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +94,24 @@ public class PracticeTestBoardController {
 			throws Exception {
 		logger.debug("selectPracticeTestByPracticeNo");
 		return new ResponseEntity<List<PracticeTestBoardDto>>(practiceService.selectPracticeTestByPracticeNo(practiceNo),
+				HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	 * @param articleNo - int, 모의고사 번호
+	 * @return
+	 * @throws Exception
+	 *
+	 * @변경이력
+	 * 20-01-03 메소드 추가
+	 */
+	@ApiOperation(value = "모의고사 번호로 검색한 결과와 문제들의 상세 정보를 목록으로 반환한다.", response = List.class)
+	@GetMapping(value = "/selectpracticeproblems/{practiceNo}")
+	public ResponseEntity<PracticeTestBoardDto> selectPracticeTestandProblemsByPracticeNo(@PathVariable int practiceNo)
+			throws Exception {
+		logger.debug("selectPracticeTestByPracticeNo");
+		return new ResponseEntity<PracticeTestBoardDto>(practiceService.selectPracticeTestandProblemsByPracticeNo(practiceNo),
 				HttpStatus.OK);
 	}
 

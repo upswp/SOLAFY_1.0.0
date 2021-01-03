@@ -10,12 +10,11 @@
           </q-avatar>
         </q-item-section>
 
-        <!-- 형식에 맞게 게시글 번호를 뿌려줌 -->
+        <!-- 게시글 기본 정보(게시글 번호 제목, 닉네임, 작성시간) 출력
+            공지글인 경우에는 공지마크도 붙여준다 -->
         <q-item-section>
           <q-item-label overline> # {{ article.articleNo }} </q-item-label>
 
-          <!-- 제목, 닉네임, 작성시간을 출력
-            공지글인 경우에는 공지마크도 붙여준다 -->
           <q-item-label
             ><q-chip
               dense
@@ -33,18 +32,24 @@
         </q-item-section>
       </q-item>
       <q-separator />
+      <!-- 게시글 기본 정보 출력 끝 -->
+
+      <!-- 문제 정보 표시 시작(답안수정게시판, 질문게시판 한정) -->
       <board-problem-info
         :problemNo="article.problemNo"
         v-if="
           this.boardType === `answermodify` || this.boardType === `question`
         "
       />
-      <!-- 내용을 보여준다 -->
+      <!-- 문제 정보 표시 끝 -->
+
+      <!-- 내용 표시 시작 -->
       <q-card-section>
         <q-card-section class="col-4">{{ article.contents }} </q-card-section>
       </q-card-section>
+      <!-- 내용 표시 끝 -->
 
-      <!-- 자유게시판인 경우에는 좋아요버튼도 만들어준다 -->
+      <!-- 좋아요 정보 표시 시작 -->
       <template v-if="this.$store.state.boardType === `free`">
         <q-card-section align="right">
           <q-rating
@@ -61,11 +66,13 @@
           />
           <label for="#likeArea">
             LikeCount :
+            <!-- TODO:  DB와의 작업을 통해서 실제로 동작하도록 설정 -->
             {{ article.likeCount + likeBtn }}
           </label>
         </q-card-section>
       </template>
       <q-separator />
+      <!-- 좋아요 정보 표시 끝 -->
 
       <!-- 수정/삭제/목록으로 돌아가기 버튼 영역 시작-->
       <q-card-actions align="right">
@@ -77,21 +84,23 @@
 
       <q-separator />
       <q-card-section align="left">
-        <!-- 댓글 입력칸 컴포넌트 -->
+        <!-- 댓글 입력칸 컴포넌트 시작 -->
         <reply-write
           :articleNo="this.articleNo"
           @replyChanged="showChangedReply()"
         ></reply-write>
+        <!-- 댓글 입력칸 컴포넌트 끝 -->
       </q-card-section>
       <q-separator />
       <q-card-section>
-        <!-- 댓글 표시칸 컴포넌트 -->
+        <!-- 댓글 표시칸 컴포넌트 시작 -->
         <reply-row
           v-for="(reply, index) in replies"
           :reply="reply"
           :key="index"
           @replyChanged="showChangedReply()"
         ></reply-row>
+        <!-- 댓글 표시칸 컴포넌트 끝 -->
       </q-card-section>
     </q-card>
   </q-page>
@@ -100,11 +109,12 @@
 // 자유게시판 댓글 컴포넌트 가져오기
 import ReplyWrite from "components/board/reply/ReplyWrite.vue";
 import ReplyRow from "components/board/reply/ReplyRow.vue";
+// 문제 정보 표시 컴포넌트 가져오기
 import BoardProblemInfo from "components/board/materials/BoardProblemInfo.vue";
 
-import { SessionStorage } from "quasar";
 import Axios from "axios";
 import { mapState } from "vuex";
+import { SessionStorage } from "quasar";
 export default {
   data() {
     return {
@@ -125,7 +135,7 @@ export default {
   methods: {
     // 게시글 삭제 메서드
     deleteArticle: function() {
-      // 재차확인
+      // 삭제 재확인
       this.$q
         .dialog({
           title: "Confirm",
@@ -133,7 +143,7 @@ export default {
           cancel: true,
           persistent: true
         })
-        // 확인버튼을 누르면 삭제 진행
+        // 대화상자에서 확인버튼을 누르면 삭제 진행
         .onOk(() => {
           Axios.delete(`/${this.boardType}/deleteArticle/${this.articleNo}`)
             .then(response => {
@@ -146,7 +156,7 @@ export default {
                   message: "삭제 완료!",
                   color: "green"
                 });
-                // 실패할수도 있다
+                // 게시글 등록에 실패하였을 경우
               } else {
                 this.$q.notify({
                   progress: true,
@@ -161,7 +171,7 @@ export default {
             })
             .finally(() => (this.loading = false));
         })
-        // 취소하거나 무시한다면 게시글 상세페이지에 머무름
+        // 대화상자에서 취소버튼을 누르거나 무시한다면 게시글 상세페이지에 머무름
         .onCancel(() => {
           return;
         })
@@ -213,7 +223,7 @@ export default {
       .then(response => {
         // 반환된 게시글 정보 저장
         this.article = response.data;
-        // 댓글들 정보 가져옴
+        // 해당 게시물의 댓글 정보 읽어옴
         this.getReplyRow(this.articleNo);
       })
       .catch(() => {

@@ -61,6 +61,16 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 
 	@Transactional
 	@Override
+	public PracticeTestBoardDto selectPracticeTestandProblemsByPracticeNo(int practiceNo) throws Exception {
+		PracticeTestBoardDto result = practiceTestMapper.selectPracticeTestByPracticeNo(practiceNo).get(0);
+
+		result.setProblems(practiceTestMapper.selectProblemNosByPracticeNo(practiceNo));
+
+		return result;
+	}
+
+	@Transactional
+	@Override
 	public List<PracticeTestBoardDto> selectPracticeTestByWriter(String nickname) throws Exception {
 		return practiceTestMapper.selectPracticeTestByWriter("%" + nickname + "%");
 	}
@@ -69,6 +79,12 @@ public class PracticeTestBoardServiceImpl implements PracticeTestBoardService {
 	@Override
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception {
 		return practiceTestMapper.selectPracticeTestByTitle("%" + title + "%");
+	}
+
+	@Transactional
+	@Override
+	public List<ProblemDto> selectProblemNosByPracticeNo(int practiceNo) throws Exception {
+		return practiceTestMapper.selectProblemNosByPracticeNo(practiceNo);
 	}
 
 	@Transactional

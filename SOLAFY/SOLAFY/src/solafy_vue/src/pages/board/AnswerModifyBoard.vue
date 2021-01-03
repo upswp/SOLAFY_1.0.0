@@ -14,29 +14,11 @@ import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      article: {
-        title: null,
-        contents: null,
-        uid: "DFEIJC23WOSKXCNSWQ",
-        likeCount: 0,
-        notice: false,
-        regiTime: null,
-        isGroup: false,
-        groupNo: 1,
-        boardBNo: 0,
-        nickname: null
-      },
-      options: ["제목", "작성자", "문제번호"],
+      // 게시판 타입
       boardType: "answermodify",
-      // 댓글, 게시글, 공지글의 정보를 담는 변수
-      replies: [],
-      articles: [],
-      notices: [],
-
-      errored: false,
-      keyword: null,
-
-      showFlag: "list",
+      // 게시판 list에서 사용될 검색 옵션
+      options: ["제목", "작성자", "문제번호"],
+      // 게시판 list에서 사용될 컬럼
       columns: [
         {
           name: "articleNo",
@@ -87,13 +69,18 @@ export default {
     };
   },
   methods: {
+    // vuex에 저장되어있는 변수(state)를 바꿔주기 위한 메서드!(setter같은 기분)
     ...mapMutations(["SETBOARDCOLUMNS", "SETBOARDSEARCHKEYWORDS"])
   },
   created() {
+    /**
+     * 처음에 AnswerModifyBoard 기본 값들을 vuex의 states에 세팅
+     *
+     * 순서대로 검색옵션 - 테이블컬럼정보 - 게시판타입(이후 mapping url에 적용)
+     */
     this.$store.commit("SETBOARDSEARCHKEYWORDS", this.options);
     this.$store.commit("SETBOARDCOLUMNS", this.columns);
     this.$store.commit("SETBOARDTYPE", this.boardType);
-    console.log(this.options, this.columns, this.boardType);
   }
 };
 </script>

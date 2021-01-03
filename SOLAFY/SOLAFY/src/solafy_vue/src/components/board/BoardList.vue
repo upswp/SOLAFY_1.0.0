@@ -16,6 +16,8 @@
               maxlength="12"
               @keyup.enter="selectArticle"
             >
+              <!-- 검색 옵션 끝 -->
+
               <!-- 글쓰기 버튼 시작 (검색 옵션의 앞에 달려서 v-slot:before) -->
               <template v-slot:before>
                 <q-btn color="secondary" label="글쓰기" @click="gotoWrite" />
@@ -30,16 +32,16 @@
               <!-- 글쓰기 버튼 끝 -->
 
               <!-- 검색어입력칸 시작(검색 옵션에 이어지므로 v-slot:append) -->
-              <template v-slot:append>
-                <!-- 검색어입력칸 X아이콘, 검색아이콘 시작 -->
+              <template v-slot:append
+                >\
                 <q-icon
                   v-if="keyword !== ''"
                   name="close"
                   @click="keyword = ''"
                 />
                 <q-icon name="search" @click="selectArticle" />
-                <!-- 검색어 입력칸 아이콘 끝 -->
               </template>
+              <!-- 검색어 입력칸 끝 -->
 
               <!-- 검색 초기화 버튼 시작 -->
               <template v-slot:after>
@@ -48,7 +50,7 @@
                   color="black"
                   label="reset"
                   flat
-                  @click="selectAllArticles"
+                  @click="resetSearchKeyword"
                 />
               </template>
               <!-- 검색 초기화 버튼 끝 -->
@@ -57,8 +59,7 @@
           </td>
         </tr>
         <tr>
-          <!-- vuex에 저장되어있는 boardColumns의 요소를
-                      하나하나 빼와서 컬럼명에 추가
+          <!-- vuex에 저장되어있는 boardColumns의 요소를 이용하여 컬럼명 표시
                  (boardColumns : FreeBoard.vue나 AnswerModify.vue에서 vuex에 저장한 값)      -->
           <th
             v-for="(column, index) in boardColumns"
@@ -68,14 +69,16 @@
             {{ column.label }}
           </th>
         </tr>
+        <!-- 컬럼 표시 끝 -->
       </thead>
       <tbody>
-        <!-- 공지사항을 출력한다
-          공지사항 기능이 있는 자유게시판에서만 notices가 있으므로 그때 동작한다 -->
+        <!-- 공지사항 출력 시작(자유게시판 한정)
+          타 게시판은 notices에 값이 들어있지 않으므로 패스, 언제든지 기능추가 가능-->
         <tr
           v-for="notice in notices"
           :key="notice.articleNo"
           @click="gotoDetail(notice.articleNo)"
+          style="background-color:#DDD"
         >
           <td class="text-left">{{ notice.articleNo }}</td>
           <td class="text-left">{{ notice.nickname }}</td>
@@ -88,6 +91,7 @@
           <td class="text-left">{{ notice.regiTime }}</td>
           <td class="text-left">{{ notice.likeCount }}</td>
         </tr>
+        <!-- 공지사항 출력 끝 -->
 
         <!-- TODO: 컬럼의 순서와 DTO의 순서가 맞아야한다!, v-for를 이용하여 출력하기때문이다
                       DTO의 필드 배치 순서에 의존적이라 수정할건지? -->
@@ -104,7 +108,9 @@
           <td v-for="(name, value, index) in article" :key="index">
             {{ name }}
           </td>
+          <!-- 각 줄의 요소 출력 끝 -->
         </tr>
+        <!-- 게시글 출력 끝 -->
       </tbody>
     </q-markup-table>
   </div>
@@ -129,6 +135,7 @@ export default {
       articles: [],
       notices: [],
 
+      // error나 loading 상태 저장 변수
       errored: null,
       loading: null
     };
@@ -244,7 +251,7 @@ export default {
             this.errored = true;
           })
           .finally(() => (this.loading = false));
-        // 문제번호가 검색옵션에 있는 게시판 한정!
+        // 문제번호가 검색옵션에 있는 게시판 한정으로 문제번호 검색기능
       } else if (this.selection === "문제번호") {
         Axios.get(`/${this.boardType}/selectArticleByProblemNo/${this.keyword}`)
           .then(response => {
@@ -273,14 +280,13 @@ export default {
     },
     // 검색옵션, 검색 키워드에 다른 게시글 검색 끝
 
-    // 글쓰기 페이지로 넘어가는 기능 시작
+    // 글쓰기 페이지로 넘어감
     gotoWrite: function() {
       // (해당 보드)-board-wirte의 이름을 가진 라우트를 뿌려준다
       this.$router.push({
         name: `${this.boardType}-board-write`
       });
     },
-    // 글쓰기 페이지로 넘어가는 기능 끝
 
     // 게시글 상세보기 시작
     gotoDetail: function(articleNo) {
@@ -288,6 +294,12 @@ export default {
         name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
       });
+    },
+
+    // 검색조건 초기화 메서드
+    resetSearchKeyword: function() {
+      this.keyword = null;
+      this.selectAllArticles();
     }
   },
 
@@ -300,11 +312,9 @@ export default {
   /**
    * 이 뷰 인스턴스가 만들어질때
    *
-   * 해당 게시판 전체 게시글을,
-   * 공지글도 사용하는 게시판이라면 전체 공지글도 얻어온다
+   * 전체 게시글을 읽어옴(공지글이 있다면 공지글까지)
    *
    *  */
-
   created() {
     this.selectAllArticles();
   }

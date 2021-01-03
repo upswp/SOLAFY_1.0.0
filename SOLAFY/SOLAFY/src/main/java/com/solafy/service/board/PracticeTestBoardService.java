@@ -1,8 +1,10 @@
 package com.solafy.service.board;
 
 import java.util.List;
+import java.util.Map;
 
 import com.solafy.model.PracticeTestBoardDto;
+import com.solafy.model.ProblemDto;
 
 /**
  * 
@@ -48,6 +50,18 @@ public interface PracticeTestBoardService {
 	 * 20-01-02 반환 값을 PracticeTestBoardDto에서 List<PracticeTestBoardDto>로 수정
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByPracticeNo(int practiceNo) throws Exception;
+	
+	/**
+	 * 모의고사 번호로 검색한 결과와 문제들의 상세 정보를 목록으로 반환한다.
+	 * 
+	 * @param articleNo - int, 모의고사 번호
+	 * @return PracticeTestBoardDto - 번호, uid, 제목, 등록시간, 시작시간, 종료시간, 제한시간, 문제목록, 별명 포함
+	 * @throws Exception
+	 * 
+	 * @변경이력
+	 * 20-01-03 메소드 추가
+	 */
+	public PracticeTestBoardDto selectPracticeTestandProblemsByPracticeNo(int practiceNo) throws Exception;
 
 	/**
 	 * 검색된 별명과 작성자 별명이 동일한 모의고사들 반환
@@ -72,6 +86,18 @@ public interface PracticeTestBoardService {
 	 */
 	public List<PracticeTestBoardDto> selectPracticeTestByTitle(String title) throws Exception;
 
+	/**
+	 * 모의고사에 있는 문제들의 정보를 반환한다.
+	 * 
+	 * @param practiceNo - int, 모의고사 번호
+	 * @return List<ProblemDto>
+	 * @throws Exception
+	 * 
+	 * @변경이력
+	 * 21-01-03 [이주희] 메소드 추가
+	 */
+	public List<ProblemDto> selectProblemNosByPracticeNo(int practiceNo) throws Exception;
+	
 	/**
 	 * 모의고사 정보 수정 및 문제 mapping 갱신
 	 * 

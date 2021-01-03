@@ -52,18 +52,7 @@ export default function(/* { ssrContext } */) {
         state.boardType = payload;
       }
     },
-    // 비동기나 순차적 call이 필요할 때 사용
-    actions: {
-      [SETBOARDCOLUMNS](state, payload) {
-        state.boardColumns = payload;
-      },
-      [SETBOARDSEARCHKEYWORDS](state, payload) {
-        state.boardSearchKeywords = payload;
-      },
-      [SETBOARDTYPE](state, payload) {
-        state.boardType = payload;
-      }
-    },
+    actions: {},
 
     modules: {
       // example

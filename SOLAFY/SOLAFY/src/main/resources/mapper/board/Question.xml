@@ -25,6 +25,7 @@
 		FROM questionboard q JOIN
 		userinfo u
 		USING (uid)
+		order by articleNo desc
 	</select>
 
 	<!-- 질문글 번호로 질문글 상세 내용 반환 -->

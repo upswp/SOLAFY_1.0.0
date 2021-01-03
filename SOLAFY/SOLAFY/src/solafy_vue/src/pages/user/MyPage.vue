@@ -10,8 +10,8 @@
           <q-tab name="problemset" icon="movie" label="ProblemSets" />
         </q-tabs>
 
-        <!-- 회원 정보 탭 -->
         <q-tab-panels v-model="tab" animated>
+          <!-- 회원 정보 탭 -->
           <q-tab-panel name="mypage">
             <div class="text-h6">{{ userinfo.nickname }} 님 ({{ email }})</div>
             상태메시지: {{ userinfo.statusMessage }}
@@ -44,14 +44,28 @@
 
           <!-- 문제 탭 -->
           <q-tab-panel name="problem">
-            <div class="text-h6">Alarms</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <q-table
+              title="내가 출제한 문제"
+              :data="problems"
+              :columns="problemcols"
+              row-key="name"
+              :loading="loading"
+              @row-click="problemDetail"
+              no-data-label="검색결과가 없습니다"
+            ></q-table>
           </q-tab-panel>
 
           <!-- 문제집 탭 -->
           <q-tab-panel name="problemset">
-            <div class="text-h6">Movies</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <q-table
+              title="내가 만든 문제집"
+              :data="problemSets"
+              :columns="problemsetcols"
+              row-key="name"
+              :loading="loading"
+              @row-click="problemSetDetail"
+              no-data-label="검색결과가 없습니다"
+            ></q-table>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -84,15 +98,93 @@ import axios from "axios";
 import { mapActions } from "vuex";
 import { firebaseAuth, firebaseSt } from "boot/firebase";
 import { notify } from "src/api/common.js";
+import { SessionStorage } from "quasar";
 
 export default {
   data() {
     return {
+      loading: false,
       userinfo: {},
       tab: "mypage",
       email: firebaseAuth.currentUser.email,
       password: "",
-      dialog: false
+      dialog: false,
+      problems: [],
+      problemSets: [],
+      problemcols: [
+        {
+          name: "problemNo",
+          required: true,
+          label: "문제번호",
+          align: "left",
+          field: row => row.problemNo,
+          format: val => `${val}`,
+          sortable: true,
+          style: "width = 10px"
+        },
+        {
+          name: "title",
+          label: "제목",
+          required: true,
+          align: "left",
+          field: row => row.title,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "nickname",
+          label: "작성자",
+          required: true,
+          align: "left",
+          field: row => row.nickname,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "regiTime",
+          label: "작성일자",
+          required: true,
+          align: "left",
+          field: row => row.regiTime,
+          format: val => `${val}`,
+          sortable: true
+        }
+      ],
+      problemsetcols: [
+        {
+          name: "problemSetNo",
+          required: true,
+          label: "문제집 번호",
+          align: "left",
+          field: "problemSetNo",
+          sortable: true,
+          style: "width = 10px"
+        },
+        {
+          name: "title",
+          label: "제목",
+          required: true,
+          align: "left",
+          field: "title",
+          sortable: true
+        },
+        {
+          name: "nickname",
+          label: "작성자",
+          required: true,
+          align: "left",
+          field: "nickname",
+          sortable: true
+        },
+        {
+          name: "regiTime",
+          label: "작성일자",
+          required: true,
+          align: "left",
+          field: "regiTime",
+          sortable: true
+        }
+      ]
     };
   },
   // uid로 회원 정보 가져옴
@@ -104,6 +196,37 @@ export default {
       })
       .catch(error => {
         console.log(error);
+      });
+    axios
+      .get(
+        "/problem/search/작성자/" + SessionStorage.getItem("loginUser").nickname
+      )
+      .then(response => {
+        this.problems = response.data;
+      })
+      .catch(error => {
+        this.$q.notify({
+          color: "red-6",
+          textColor: "white",
+          icon: "warning",
+          message: "조회 실패"
+        });
+      });
+    axios
+      .get(
+        "problem/problemset/problemSetSelectByWriter/" +
+          SessionStorage.getItem("loginUser").nickname
+      )
+      .then(response => {
+        this.problemSets = response.data;
+      })
+      .catch(error => {
+        this.$q.notify({
+          color: "red-6",
+          textColor: "white",
+          icon: "warning",
+          message: "조회 실패"
+        });
       });
   },
   methods: {
@@ -172,6 +295,24 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    problemDetail(evt, row) {
+      this.loading = true;
+      this.$router.push({
+        name: "ProblemDetail",
+        params: {
+          problemNo: row.problemNo
+        }
+      });
+    },
+    problemSetDetail(evt, row) {
+      this.loading = true;
+      this.$router.push({
+        name: "ProblemDetailByProblemSetInfo",
+        params: {
+          problemSetNo: row.problemSetNo
+        }
+      });
     }
   }
 };
