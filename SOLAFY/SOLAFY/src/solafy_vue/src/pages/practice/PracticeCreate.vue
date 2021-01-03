@@ -85,7 +85,7 @@
         </template>
       </q-table>
       <div>
-        <q-btn label="제출" color="primary" @click="onSubmit" />
+        <q-btn label="등록" color="primary" @click="onSubmit" />
         <q-btn label="취소" color="primary" @click="goPracticeList" />
       </div>
     </div>
