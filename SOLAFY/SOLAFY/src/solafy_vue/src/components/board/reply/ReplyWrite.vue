@@ -51,9 +51,13 @@ export default {
       }
 
       // 내용이 들어있었다면 댓글 등록 진행
-      Axios.post(`${this.$store.state.boardType}reply/createReply`)
+      Axios.post(
+        `${this.$store.state.boardType}reply/createReply`,
+        this.replyForm
+      )
         .then(response => {
           // 댓글이 등록되면 부모컴포넌트에 갱신 요청
+          this.replyForm.contents = "";
           this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
