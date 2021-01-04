@@ -50,10 +50,11 @@
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo, title, contents, uid, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo, fb.uid)
+		2021-01-04(BUMSEOK SEO) : 프로필 사진을 불러오기 위해 필요한 uid를 가져오는 쿼리문 추가
 	-->
 	<select id="selectArticleByArticleNo" parameterType="int" resultType="FreeBoardDto">
-		select articleNo, title, contents, nickname, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo 
+		select articleNo, title, contents, nickname, likeCount,isNotice, regiTime, isGroup, groupNo, boardNo ,fb.uid
 		from freeboard fb join userinfo ui
         on fb.uid = ui.uid
 		where articleNo = #{articleNo}
