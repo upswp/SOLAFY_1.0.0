@@ -136,7 +136,7 @@ export default {
       this.formData.password = null;
     },
     goUserRegi() {
-      this.$router.push("UserRegi");
+      this.$router.push("UserCreate");
     },
     // 이메일과 이메일 저장 여부를 로컬 저장소에 저장
     checkidsave() {

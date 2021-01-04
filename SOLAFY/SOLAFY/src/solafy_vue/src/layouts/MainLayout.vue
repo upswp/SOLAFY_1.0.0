@@ -181,7 +181,7 @@ export default {
       this.$router.push("MyPage");
     },
     goRegi() {
-      this.$router.push("UserRegi");
+      this.$router.push("UserCreate");
     },
     goLogin() {
       this.$router.push("/");
@@ -194,7 +194,7 @@ export default {
       else this.$router.push("/main");
     },
     goUserManage() {
-      this.$router.push("/manageuser");
+      this.$router.push("UserManage");
     },
     checkUser() {
       firebaseAuth.onAuthStateChanged(user => {

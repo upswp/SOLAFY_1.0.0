@@ -232,7 +232,7 @@ export default {
   methods: {
     // 회원 정보 수정 버튼을 누르면 페이지 이동
     goUpdateUserInfo() {
-      this.$router.push("/updateuser");
+      this.$router.push("UserUpdate");
     },
     // 탈퇴 버튼 클릭 시 호출
     clickwithdrawalbtn() {
