@@ -384,7 +384,7 @@ export default {
       this.item.hashTag.splice(index, 1);
     },
     /**
-     * @Method설명 : 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
+     * @Method설명 : 해쉬태그 리스트에 해쉬태그 등록
      * @변경이력 :
      */
     createHashTagByKeyboard() {
@@ -392,7 +392,7 @@ export default {
       this.hashTagText = "";
     }, 
     /**
-     * @Method설명 : 클릭 혹은 엔터 시 선지 Input을 하나 추가
+     * @Method설명 : 선지 Input을 하나 추가
      * @변경이력 :
      */
     createInput() {
