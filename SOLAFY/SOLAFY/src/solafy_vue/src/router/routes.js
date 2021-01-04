@@ -330,21 +330,21 @@ const routes = [
 
       // user
       {
-        path: "/userregi",
-        name: "UserRegi",
-        component: () => import("pages/user/CreateUser.vue"),
+        path: "/usercreate",
+        name: "UserCreate",
+        component: () => import("pages/user/UserCreate.vue"),
         beforeEnter: requireNullAuth()
       },
       {
-        path: "/updateuser",
-        name: "UpdateUser",
-        component: () => import("pages/user/UpdateUser.vue"),
+        path: "/userupdate",
+        name: "UserUpdate",
+        component: () => import("pages/user/UserUpdate.vue"),
         beforeEnter: requireAuth()
       },
       {
-        path: "/manageUser",
-        name: "ManageUser",
-        component: () => import("pages/user/ManageUser.vue"),
+        path: "/usermanage",
+        name: "UserManage",
+        component: () => import("pages/user/UserManage.vue"),
         beforeEnter: requireAuth()
       },
       {
