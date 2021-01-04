@@ -649,6 +649,7 @@ export default {
     };
   },
   methods: {
+    //TODO : 회원을 클릭하면 어떤 이벤트를 발생시킬 것인가? 결정된 사항없음
     clickRow() {},
     // TODO :  듀플리케이트 부터 onSubmit까지 다 컴포넌트로 묶기
     titleDuplicate() {
@@ -669,7 +670,7 @@ export default {
       );
     },
     onSubmit() {
-      if (this.titleCheck) {
+      if (this.DupCheck) {
         //그룹타입 확인
         if (this.groupData.type != this.groupType) {
           this.groupData.type = Number(this.groupType);
