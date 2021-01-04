@@ -216,6 +216,8 @@ export default {
   },
   data() {
     return {
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
       // quasar-tiptap에 입력된 content가 json 변환되어 저장
       json: "",
       // quasar-tiptap에 입력된 content가 html로 변환되어 저장
@@ -302,7 +304,9 @@ export default {
           //객관,주관,서술 type
           type: 0,
           //사용자 nickname
-          nickname: ""
+          nickname: "",
+          // 문제 작성자 uid
+          uid: ""
         },
         //기존의 카테고리 대분류 정보
         categoryLarge: {
@@ -492,6 +496,11 @@ export default {
         .get("problem/" + this.$route.params.problemNo)
         .then(response => {
           this.item = response.data;
+          // ! 기능 확인 필요
+          if (item.problem.uid != currentUserUid) {
+            notify("red", "white", "error", "권한이 없습니다.");
+            this.$router.go(-1);
+          }
           // item내의 hashtagDto List를 String List로 변경
           var list = [];
           response.data.hashTag.forEach(element => {

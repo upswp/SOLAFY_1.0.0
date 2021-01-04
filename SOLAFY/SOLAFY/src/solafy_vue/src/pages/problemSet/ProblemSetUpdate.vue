@@ -99,10 +99,20 @@
       <!-- 버튼들 -->
       <div class="row">
         <div class="col">
-          <q-btn outline color="primary" label="수정취소" @click="goToProblemDetailByProblemSetInfo" />
+          <q-btn
+            outline
+            color="primary"
+            label="수정취소"
+            @click="goToProblemDetailByProblemSetInfo"
+          />
         </div>
         <div class="col">
-          <q-btn color="primary" label="문제수정" @click="updateProblemSet"  style="float:right"/>
+          <q-btn
+            color="primary"
+            label="문제수정"
+            @click="updateProblemSet"
+            style="float:right"
+          />
         </div>
       </div>
     </div>
@@ -117,6 +127,8 @@ export default {
   name: "ProblemSetCreateByProblemSetInfo",
   data() {
     return {
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
       // 로딩 flag
       loading: true,
       // 문제집에 포함되지 않은 문제 리스트
@@ -130,7 +142,9 @@ export default {
           // 문제집 제목
           title: "",
           // 작성자 닉네임
-          nickname: ""
+          nickname: "",
+          // 작성자 uid
+          uid: ""
         },
         // 문제 리스트
         problemList: []
@@ -184,13 +198,17 @@ export default {
      * @변경이력 :
      */
     selectProblemSetByNo() {
-      Axios
-        .get(
-          "problem/problemset/problemSetSelectByNo/" +
-            this.$route.params.problemSetNo
-        )
+      Axios.get(
+        "problem/problemset/problemSetSelectByNo/" +
+          this.$route.params.problemSetNo
+      )
         .then(Response => {
           this.item = Response.data;
+          // ! 기능 확인 필요
+          if (item.problemSet.uid != currentUserUid) {
+            notify("red", "white", "error", "권한이 없습니다.");
+            this.$router.go(-1);
+          }
         })
         .catch(error => {
           notify("negative", "white", "error", "조회 실패");
@@ -204,8 +222,7 @@ export default {
      * @변경이력 :
      */
     selectProblemList() {
-      Axios
-        .get("problem")
+      Axios.get("problem")
         .then(response => {
           // 이미 선택되어 있는 문제는 제거
           this.remainProblemList = response.data;
@@ -287,8 +304,7 @@ export default {
         return;
       }
       // 문제 수정
-      Axios
-        .put("problem/problemset/updateProblemSet", this.item)
+      Axios.put("problem/problemset/updateProblemSet", this.item)
         .then(response => {
           if ((response.data = "success")) {
             notify("positive", "white", "done", "수정 성공");
@@ -318,7 +334,7 @@ export default {
   created() {
     this.selectProblemSetByNo();
     this.selectProblemList();
-  },
+  }
 };
 </script>
 <style scoped>
