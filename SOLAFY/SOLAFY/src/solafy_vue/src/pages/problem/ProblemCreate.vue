@@ -108,6 +108,8 @@
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 v-model="choi.choice"
+                @keypress.enter="createInput"
+                autofocus
               >
                 <template v-slot:before>
                   <q-checkbox v-model="choi.check" />
@@ -123,7 +125,6 @@
                 color="primary"
                 icon="add"
                 @click="createInput"
-                @keypress.enter="createInput"
                 style="margin-top:10px;margin-bottom:10px"
               />
             </q-tab-panel>
