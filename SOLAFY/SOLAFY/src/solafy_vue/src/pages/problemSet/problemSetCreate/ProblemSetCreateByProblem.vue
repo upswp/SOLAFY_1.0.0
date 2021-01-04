@@ -73,21 +73,9 @@
             align="justify"
             narrow-indicator
           >
-            <q-tab
-              name="객관식"
-              label="객관식"
-              @click.prevent="setType('객관식')"
-            />
-            <q-tab
-              name="주관식"
-              label="주관식"
-              @click.prevent="setType('주관식')"
-            />
-            <q-tab
-              name="서술형"
-              label="서술형"
-              @click.prevent="setType('서술형')"
-            />
+            <q-tab name="객관식" label="객관식" @click="setType('객관식')" />
+            <q-tab name="주관식" label="주관식" @click="setType('주관식')" />
+            <q-tab name="서술형" label="서술형" @click="setType('서술형')" />
           </q-tabs>
 
           <q-separator />
@@ -415,8 +403,7 @@ export default {
      * @변경이력 :
      */
     selectCategoryLargeList() {
-      Axios
-        .get("category/large")
+      Axios.get("category/large")
         .then(response => {
           this.largeList = response.data;
         })
@@ -430,8 +417,7 @@ export default {
      * @변경이력 :
      */
     selectCategoryMediumList() {
-      Axios
-        .get("category/medium/" + this.selectLarge.categoryNo)
+      Axios.get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
         })
@@ -444,8 +430,7 @@ export default {
      * @변경이력 :
      */
     selectCategorySmallList() {
-      Axios
-        .get("category/small/" + this.selectMedium.categoryNo)
+      Axios.get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
         })
@@ -515,11 +500,11 @@ export default {
       this.options.content = " ";
       this.tab = "객관식";
       this.tab_pre = "객관식";
-      // this.selectLarge = null;
-      // this.mediumList = [];
-      // this.selectMedium = null;
-      // this.smallList = [];
-      // this.selectSmall = null;
+      this.selectLarge = null;
+      this.mediumList = [];
+      this.selectMedium = null;
+      this.smallList = [];
+      this.selectSmall = null;
       this.hashTagText = "";
       this.choiceList = [];
     },
@@ -529,8 +514,7 @@ export default {
      */
     createProblem() {
       this.insertProblem(0);
-      Axios
-        .post("problem/createProblemList", this.problemList)
+      Axios.post("problem/createProblemList", this.problemList)
         .then(response => {
           this.updateProblemFlag();
         })
@@ -544,61 +528,51 @@ export default {
      * @변경이력 :
      */
     updateProblemFlag() {
-      Axios
-        .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
+      Axios.put("problem/updateflag/" + firebaseAuth.currentUser.uid)
         .then(response => {
           notify("positive", "white", "done", "문제 등록 성공");
-            this.$router.push({
-              name: "ProblemSet"
-            });
+          this.$router.push({
+            name: "ProblemSet"
+          });
         })
         .catch(error => {
           console.log(error);
           this.result = false;
           notify("red", "white", "error", "문제 등록 실패");
-        })
+        });
     },
     /**
      * @Method설명 : 탭 클릭 시 type 설정
      * @변경이력 :
      */
     setType(name) {
-      this.$q.notify({
-        progress: true,
-        message:
-          "이때까지 입력한 정답 데이터가 날아갑니다. \n넘어가시겠습니까?",
-        color: "primary",
-        icon: "warning",
-        position: "center",
-        // '네' 클릭 시 tab과 이전상태tab을 현재 클릭한 탭으로 변경
-        // '아니오' 클릭 시 tab을 이전상태의 tab으로 변경
-        actions: [
-          {
-            label: "네",
-            color: "yellow",
-            handler: () => {
-              this.clearInput();
-              this.tab = name;
-              this.tab_pre = name;
-            }
-          },
-          {
-            label: "아니오",
-            color: "white",
-            handler: () => {
-              this.tab = this.tab_pre;
-            }
+      this.$q
+        .dialog({
+          title: "Warning",
+          message:
+            "이때까지 입력한 <Strong>정답 데이터</Strong>가 날아갑니다. <br> 넘어가시겠습니까??",
+          html: true,
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          this.clearInput();
+          this.tab = name;
+          this.tab_pre = name;
+        })
+        .onCancel(() => {
+          this.tab = this.tab_pre;
+        })
+        .onDismiss(() => {
+          if (name == "객관식") {
+            this.problemList[this.pIndex].problem.type = 0;
+          } else if (name == "주관식") {
+            this.problemList[this.pIndex].problem.type = 1;
+            console.log(this.problemList[this.pIndex].problem.type);
+          } else {
+            this.problemList[this.pIndex].problem.type = 2;
           }
-        ]
-      });
-      if (name == "객관식") {
-        this.problemList[this.pIndex].problem.type = 0;
-      } else if (name == "주관식") {
-        this.problemList[this.pIndex].problem.type = 1;
-        console.log(this.problemList[this.pIndex].problem.type);
-      } else {
-        this.problemList[this.pIndex].problem.type = 2;
-      }
+        });
     },
     /**
      * @Method설명 : input값 초기화
@@ -617,7 +591,15 @@ export default {
       this.pIndex = index;
       this.choiceList = [];
       this.options.content = this.problemList[this.pIndex].problem.contents;
-      //TODO : 카테고뤼 저장하는 로직 구현 부탁드림 -견2-
+      //TODO : 카테고리를 불러오는 법
+      //TODO : 1. 카테고리를 지금처럼 대분류, 중분류, 소분류 따로따로 불러온다 => 매 문제마다 3번씩 spring과 통신해야함
+      //TODO : 2. 모든 카테고리 리스트를 불러서 여기서 필터링해서 보여준다. 
+      //TODO : => 맨 처음 한 번씩(large,medium,small,mapping 2개, 총 5개) 불러오면 되지만 스크립트에서 필터링 함수를 구현해야함.
+      // 대분류 카테고리 번호
+      var categoryNo = this.problemList[this.pIndex].problem.categoryNo;
+      var largeNo = parseInt(categoryNo.slice(0, 2));
+      var mediumNo = parseInt(categoryNo.slice(2, 5));
+      var smallNo = parseInt(categoryNo.slice(5, 10));
       // this.selectLarge = this.problemList[this.pIndex].problem
       if (this.problemList[this.pIndex].problem.multipleChoice != null) {
         this.problemList[this.pIndex].problem.multipleChoice
@@ -632,7 +614,7 @@ export default {
           });
         console.log(this.choiceList);
       }
-    },
+    }
   },
   created() {
     this.problemList.push(this._.cloneDeep(this.item));
