@@ -16,7 +16,7 @@
       <template v-slot:prepend>
         <!-- TODO: 로그인한 사람의 정보에서 가져온다 -->
         <q-avatar>
-          <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          <img :src="profileImageUrl" />
         </q-avatar>
       </template>
       <template v-slot:label> </template>
@@ -26,16 +26,18 @@
 </template>
 
 <script>
-// import { mapState } from "vuex";
 import Axios from "axios";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { SessionStorage, uid } from "quasar";
 import { mapState } from "vuex";
 export default {
   name: "replywrite",
   data() {
     return {
+      // 프로필 이미지 주소를 저장
+      profileImageUrl: "",
       replyForm: {
-        // 로그인한 사람의 uid를 가져온다.
-        uid: "DFEIJC23WOSKXCNSWQ",
+        uid: SessionStorage.getItem("loginUser").uid,
         contents: "",
         // 게시글 번호는
         // 현재 머무르는 게시글의 번
@@ -61,7 +63,28 @@ export default {
           this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
+    },
+
+    /**
+     * @Method설명 : uid에 해당하는 사용자의 프로필 이미지를 가져오는 메소드
+     * @변경이력 :
+     */
+    getProfileImageUrl: function() {
+      firebaseSt
+        .ref()
+        .child("profileimg/" + SessionStorage.getItem("loginUser").uid)
+        .getDownloadURL()
+        .then(url => {
+          this.profileImageUrl = url;
+        })
+        .catch(error => {
+          this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
+          console.log("error is ", error);
+        });
     }
+  },
+  created() {
+    this.getProfileImageUrl();
   }
 };
 </script>

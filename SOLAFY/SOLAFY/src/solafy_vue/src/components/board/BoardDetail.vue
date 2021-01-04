@@ -4,17 +4,16 @@
     <q-card flat bordered>
       <q-item>
         <q-item-section avatar>
-          <!-- TODO: 작성자의 프로필 사진을 가져와야하는데 서버에 요청해야하나 -->
+          <!-- 게시글 작성자의 프로필 사진 표시 -->
           <q-avatar>
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            <img :src="profileImageUrl" />
           </q-avatar>
         </q-item-section>
 
-        <!-- 게시글 기본 정보(게시글 번호 제목, 닉네임, 작성시간) 출력
-            공지글인 경우에는 공지마크도 붙여준다 -->
+        <!-- 게시글 기본 정보(게시글 번호 제목, 닉네임, 작성시간) 출력-->
         <q-item-section>
           <q-item-label overline> # {{ article.articleNo }} </q-item-label>
-
+          <!--공지글인 경우에는 공지마크 출력 -->
           <q-item-label
             ><q-chip
               dense
@@ -34,7 +33,7 @@
       <q-separator />
       <!-- 게시글 기본 정보 출력 끝 -->
 
-      <!-- 문제 정보 표시 시작(답안수정게시판, 질문게시판 한정) -->
+      <!-- 문제 정보 표시 컴포넌트 시작(답안수정게시판, 질문게시판 한정) -->
       <board-problem-info
         :problemNo="article.problemNo"
         v-if="
@@ -87,7 +86,7 @@
         <!-- 댓글 입력칸 컴포넌트 시작 -->
         <reply-write
           :articleNo="this.articleNo"
-          @replyChanged="showChangedReply()"
+          @replyChanged="getReplyRow()"
         ></reply-write>
         <!-- 댓글 입력칸 컴포넌트 끝 -->
       </q-card-section>
@@ -114,15 +113,22 @@ import BoardProblemInfo from "components/board/materials/BoardProblemInfo.vue";
 
 import Axios from "axios";
 import { mapState } from "vuex";
-import { SessionStorage } from "quasar";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { SessionStorage, uid } from "quasar";
 export default {
   data() {
     return {
+      // 프로필 이미지 주소를 저장
+      profileImageUrl: "",
+      // 좋아요 버튼 기본값
       likeBtn: 0,
+      // 게시글 상세 내용 저장 배열
       article: [],
+      // 해당 게시글의 댓글 저장 배열
       replies: [],
+      // store에 저장되어있는 현재 이용하고 있는 게시판 타입
       boardType: this.$store.state.boardType,
-      type: "",
+      // url에서 게시글 번호를 받아와 저장
       articleNo: this.$route.params.articleNo
     };
   },
@@ -133,7 +139,10 @@ export default {
     ReplyRow
   },
   methods: {
-    // 게시글 삭제 메서드
+    /**
+     * @Method설명 : 게시글 삭제 요청 메서드
+     * @변경이력 :
+     */
     deleteArticle: function() {
       // 삭제 재확인
       this.$q
@@ -143,7 +152,7 @@ export default {
           cancel: true,
           persistent: true
         })
-        // 대화상자에서 확인버튼을 누르면 삭제 진행
+        // 대화상자에서 OK버튼을 누르면 삭제 진행
         .onOk(() => {
           Axios.delete(`/${this.boardType}/deleteArticle/${this.articleNo}`)
             .then(response => {
@@ -180,7 +189,10 @@ export default {
         });
     },
 
-    // 댓글 목록
+    /**
+     * @Method설명 : 해당 게시글의 댓글 배열을 불러오는 메소드
+     * @변경이력 :
+     */
     getReplyRow: function() {
       // vuex에 저장된 게시판 형식(boardType)을 이용하여,
       // 해당 게시판의 해당 게시글의 댓글들을 불러온다
@@ -193,12 +205,6 @@ export default {
           this.errored = true;
         })
         .finally(() => (this.loading = false));
-    },
-
-    // 댓글이 갱신되었다면 댓글을 다시 가져오도록 요청
-    showChangedReply: function() {
-      console.log("현재 게시물 번호", this.articleNo);
-      this.getReplyRow(this.articleNo);
     },
 
     // 해당 게시판의 목록으로 돌아간다
@@ -214,6 +220,24 @@ export default {
         name: `${this.boardType}-board-update`,
         params: { articleNo: this.articleNo }
       });
+    },
+
+    /**
+     * @Method설명 : uid에 해당하는 사용자의 프로필 이미지를 가져오는 메소드
+     * @변경이력 :
+     */
+    getProfileImageUrl: function(uid) {
+      firebaseSt
+        .ref()
+        .child("profileimg/" + uid)
+        .getDownloadURL()
+        .then(url => {
+          this.profileImageUrl = url;
+        })
+        .catch(error => {
+          this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
+          console.log("error is ", error);
+        });
     }
   },
 
@@ -225,12 +249,15 @@ export default {
         this.article = response.data;
         // 해당 게시물의 댓글 정보 읽어옴
         this.getReplyRow(this.articleNo);
+        console.log(this.article);
+        this.getProfileImageUrl(this.article.uid);
       })
       .catch(() => {
         this.errored = true;
       })
 
       .finally(() => (this.loading = false));
+    console.log(this.article.uid, "where it tis");
   }
 
   /**

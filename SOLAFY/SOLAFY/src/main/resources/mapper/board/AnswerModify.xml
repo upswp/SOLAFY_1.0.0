@@ -34,10 +34,11 @@
 	
 	<!--
 		인자값으로 가져온 게시글 번호에 맞는 게시글을 반환.
-		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,ui.nickname, problemNo, uis.nickname,title, contents, regiTime)
+		해당 게시글의 모든 저장된 정보를 가져온다(articleNo,ui.nickname, problemNo, uis.nickname,title, contents, regiTime ,amb.uid)
+		2021-01-04(BUMSEOK SEO) : 프로필 사진을 불러오기 위해 필요한 uid를 가져오는 쿼리 추가
 	-->
 	<select id="selectArticleByArticleNo" parameterType="int" resultType="AnswerModifyBoardDto">
-		select articleNo, ui.nickname, problemNo, uis.nickname, title, contents, regiTime 
+		select articleNo, ui.nickname, problemNo, uis.nickname, title, contents, regiTime ,amb.uid
 		from answermodifyboard amb join userinfo ui join userinfo uis
 		on amb.uid = ui.uid and amb.uid_submitter = uis.uid
         where articleNo = #{articleNo};

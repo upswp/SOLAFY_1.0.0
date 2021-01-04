@@ -408,7 +408,8 @@ export default {
         .then(url => {
           this.profileImageUrl = url;
         })
-        .catch(function(error) {
+        .catch(error => {
+          this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
           console.log("error is ", error);
         });
     },
