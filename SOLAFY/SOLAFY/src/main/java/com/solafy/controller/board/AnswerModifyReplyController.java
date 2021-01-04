@@ -98,7 +98,7 @@ public class AnswerModifyReplyController {
 	* @변경이력 :
 	*/
 	@ApiOperation(value = "댓글을 삭제한다", response = List.class)
-	@PostMapping(value = "/delteReply")
+	@PostMapping(value = "/deleteReply")
 	public ResponseEntity<String> deleteReply(@RequestBody AnswerModifyReplyDto answerModifyReplyDto){
 		logger.info("deleteReply - 호출" + new Date());
 		if(answerModifyReplyService.deleteReply(answerModifyReplyDto)) {

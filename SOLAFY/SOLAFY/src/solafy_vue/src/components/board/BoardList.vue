@@ -304,7 +304,6 @@ export default {
   },
 
   // mapState : vuex의 state(변수)를 가져다 쓰고 싶을 때
-  // TODO: 이렇게 선언해줘야한다고 한다 -확인바람-
   computed: {
     ...mapState(["boardColumns", "boardSearchKeywords", "boardType"])
   },

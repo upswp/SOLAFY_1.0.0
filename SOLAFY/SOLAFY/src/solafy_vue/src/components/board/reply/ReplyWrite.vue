@@ -67,7 +67,12 @@ export default {
         .then(response => {
           // 댓글이 등록되면 부모컴포넌트에 댓글 정보 갱신 요청
           this.replyForm.contents = "";
-          this.$emit("replyChanged", response.data);
+          // TODO : 댓글을 작성한 후에 프로필 사진이 바로 갱신 되지 않는 버그(새로고침으로 일단 기능 완료)
+          this.$router.go({
+            name: `${this.boardType}-board-detail`,
+            params: { articleNo: this.articleNo }
+          });
+          // this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
     },
@@ -77,12 +82,16 @@ export default {
      * @변경이력 :
      */
     getProfileImageUrl: function() {
-      console.log("untioln hrere is ookay");
       firebaseSt
         .ref()
         .child("profileimg/" + SessionStorage.getItem("loginUser").uid)
         .getDownloadURL()
         .then(url => {
+          console.log(
+            url,
+            "is that you?",
+            SessionStorage.getItem("loginUser").uid
+          );
           this.profileImageUrl = url;
         })
         .catch(error => {
