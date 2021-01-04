@@ -341,15 +341,26 @@
                                       : '정체불명'
                                   "
                                 ></q-chip>
-                                <q-btn
-                                  v-else-if="col.name === 'action'"
-                                  dense
-                                  flat
-                                  color="primary"
-                                  field="edit"
-                                  icon="edit"
-                                  @click="editItem(props.row)"
-                                ></q-btn>
+                                <div v-else-if="col.name === 'action'">
+                                  <q-btn
+                                    dense
+                                    flat
+                                    color="primary"
+                                    field="edit"
+                                    icon="edit"
+                                    @click="editItem(props.row)"
+                                  ></q-btn>
+                                  <q-btn
+                                    v-if="myInfo.grade != 1"
+                                    dense
+                                    flat
+                                    round
+                                    color="red"
+                                    field="deleteMember"
+                                    icon="delete_forever"
+                                    @click="confirmDelete(props.row)"
+                                  ></q-btn>
+                                </div>
                                 <q-item-label
                                   v-else
                                   caption
@@ -443,6 +454,65 @@
                                     label="일반회원"
                                     color="primary"
                                   />
+                                </div>
+                                <!-- 그룹장 권한을 넘기기 위해 그룹 인원 리스트를 불러와서 리스트로 뿌려줌 -->
+                                <div
+                                  v-if="
+                                    myInfo.grade == 1 &&
+                                      editedItem.grade != 1 &&
+                                      editedItem.uid == myInfo.uid
+                                  "
+                                >
+                                  <q-list
+                                    bordered
+                                    padding
+                                    class="rounded-borders text-primary"
+                                  >
+                                    <q-item
+                                      v-for="(member, index) in groupMembers"
+                                      :key="index"
+                                      :clickable="member.uid != myInfo.uid"
+                                      v-ripple
+                                      :active="select === index"
+                                      @click="select = index"
+                                      active-class="my-menu-link"
+                                    >
+                                      <q-item-section avatar>
+                                        <q-chip
+                                          :color="
+                                            member.grade == '1'
+                                              ? 'green'
+                                              : member.grade == '2'
+                                              ? 'red'
+                                              : member.grade == '3'
+                                              ? 'primary'
+                                              : member.grade == '99'
+                                              ? 'orange'
+                                              : 'grey'
+                                          "
+                                          text-color="white"
+                                          dense
+                                          class="text-weight-bolder"
+                                          square
+                                          v-text="
+                                            member.grade == '1'
+                                              ? '그룹장'
+                                              : member.grade == '2'
+                                              ? '관리자'
+                                              : member.grade == '3'
+                                              ? '일반회원'
+                                              : member.grade == '99'
+                                              ? '가입대기'
+                                              : '정체불명'
+                                          "
+                                        ></q-chip>
+                                      </q-item-section>
+
+                                      <q-item-section>{{
+                                        member.nickName
+                                      }}</q-item-section>
+                                    </q-item>
+                                  </q-list>
                                 </div>
                               </q-item-section>
                             </q-item>
@@ -593,7 +663,8 @@ export default {
       show_dialog: false,
       editedIndex: -1,
       editedItem: defaultItem,
-      mode: "list",
+      select: "", //그룹장 위임에 선택된 그룹원
+      mode: "grid",
       currencyColumns: currencyColumns,
       groupMembers: [],
 
@@ -797,3 +868,9 @@ export default {
 </script>
 
 <style></style>
+
+<style lang="sass">
+.my-menu-link
+  color: white
+  background: #F2C037
+</style>
