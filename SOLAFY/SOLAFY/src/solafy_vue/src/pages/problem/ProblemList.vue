@@ -100,6 +100,7 @@
 <script>
 import Axios from "axios";
 import routes from "src/router/routes";
+import { notify } from "src/api/common.js";
 
 export default {
   data() {
@@ -118,7 +119,7 @@ export default {
       smallList: null,
       //로딩 변수에 대한 default
       loading: false,
-      //문제 리스트의 filter기능 
+      //문제 리스트의 filter기능
       filter: "",
       //카테고리 번호
       categoryNo: "",
@@ -175,7 +176,7 @@ export default {
     };
   },
   methods: {
-     /**
+    /**
      * @Method설명 : 문제 전체 리스트 반환
      * @변경이력 :
      */
@@ -192,7 +193,7 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
-     /**
+    /**
      * @Method설명 : 문제 검색 및 검색 예외처리
      * @변경이력 :
      */
@@ -202,26 +203,16 @@ export default {
         .then(response => {
           this.problems = response.data;
           if (this.problems.length === 0) {
-            this.$q.notify({
-              color: "red-6",
-              textColor: "white",
-              icon: "warning",
-              message: "조회 실패"
-            });
+            notify("red-6", "white", "warning", "조회 실패");
           }
           console.log(this.problems[0]);
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red-6",
-            textColor: "white",
-            icon: "warning",
-            message: "조회 실패"
-          });
+          notify("red-6", "white", "warning", "조회 실패");
         })
         .finally(() => (this.loading = false));
     },
-     /**
+    /**
      * @Method설명 : 문제 대분류 반환
      * @변경이력 :
      */
@@ -241,7 +232,7 @@ export default {
           this.$router.go(-1);
         });
     },
-     /**
+    /**
      * @Method설명 : 문제 중분류 반환
      * @변경이력 :
      */
@@ -267,11 +258,11 @@ export default {
           console.log(this.selectMedium[0]);
         })
         .catch(error => {
-          alert(error);
+          notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
           this.errored = true;
         });
     },
-     /**
+    /**
      * @Method설명 : 문제 소분류 반환
      * @변경이력 :
      */
@@ -294,11 +285,12 @@ export default {
           console.log(this.selectSmall[0]);
         })
         .catch(() => {
+          notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
           this.errored = true;
         });
     },
 
-     /**
+    /**
      * @Method설명 : 카테고리 대분류, 중분류, 소분류에 따른 ProblemList 반환
      * @변경이력 :
      */
@@ -307,25 +299,15 @@ export default {
         .then(response => {
           this.problems = response.data;
           if (this.problems.length === 0) {
-            this.$q.notify({
-              color: "red-6",
-              textColor: "white",
-              icon: "warning",
-              message: "조회 실패"
-            });
+            notify("red-6", "white", "warning", "조회 실패");
           }
           console.log(this.problems[0]);
         })
         .catch(error => {
-          this.$q.notify({
-            color: "red-6",
-            textColor: "white",
-            icon: "warning",
-            message: "조회 실패"
-          });
+          notify("red-6", "white", "warning", "조회 실패");
         });
     },
-     /**
+    /**
      * @Method설명 : 소분류일때 카테고리NO 조합
      * @변경이력 :
      */
@@ -337,7 +319,7 @@ export default {
       //console.log("this.categoryNo::::" + this.categoryNo);
       this.selectProblemByCategory();
     },
-     /**
+    /**
      * @Method설명 : problemSetList로 이동
      * @변경이력 :
      */
@@ -347,7 +329,7 @@ export default {
         name: "ProblemSet"
       });
     },
-     /**
+    /**
      * @Method설명 : problemCreate page로 이동
      * @변경이력 :
      */
@@ -357,7 +339,7 @@ export default {
         name: "ProblemCreate"
       });
     },
-     /**
+    /**
      * @Method설명 : problemDetail page로 이동
      * @변경이력 :
      */

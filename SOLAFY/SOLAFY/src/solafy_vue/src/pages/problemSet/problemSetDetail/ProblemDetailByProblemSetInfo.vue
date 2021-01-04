@@ -109,6 +109,7 @@
 <script>
 import Axios from "axios";
 import routes from "src/router/routes";
+import { notify } from "src/api/common.js";
 
 export default {
   name: "ProblemDetailByProblemSetInfo",
@@ -200,13 +201,8 @@ export default {
           this.data[2].content = this.item.problemSet.regiTime;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "조회 실패"
-          });
-          this.goToproblemList();
+          notify("red", "white", "error", "조회 실패");
+          this.$router.go(-1);
         })
         .finally(() => {
           this.loading = false;

@@ -515,6 +515,7 @@ export default {
         })
         .catch(error => {
           notify("red", "white", "error", "문제 정보 가져오기 실패");
+          this.$router.go(-1);
         });
     },
     /**

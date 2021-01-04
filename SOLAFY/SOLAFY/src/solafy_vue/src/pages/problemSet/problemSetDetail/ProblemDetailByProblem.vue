@@ -84,6 +84,7 @@ import Axios from "axios";
 import routes from "src/router/routes";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
+import { notify } from "src/api/common.js";
 
 export default {
   name: "problemSetListByProblem",
@@ -311,13 +312,8 @@ export default {
           // console.log(this.resultList.length + "length");
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "문제집 정보 조회 실패"
-          });
-          console.log("errormsg" + error);
+          notify("red", "white", "error", "문제집 정보 조회 실패");
+          this.$router.go(-1);
         })
         .finally(() => {
           this.loading = false;
