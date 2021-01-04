@@ -20,7 +20,11 @@
 
               <!-- 글쓰기 버튼 시작 (검색 옵션의 앞에 달려서 v-slot:before) -->
               <template v-slot:before>
-                <q-btn color="secondary" label="글쓰기" @click="gotoWrite" />
+                <q-btn
+                  color="secondary"
+                  label="글쓰기"
+                  @click="goToBoardWrite"
+                />
                 <q-select
                   style="margin-left:300px; width:120px"
                   filled
@@ -77,7 +81,7 @@
         <tr
           v-for="notice in notices"
           :key="notice.articleNo"
-          @click="gotoDetail(notice.articleNo)"
+          @click="goToBoardDetail(notice.articleNo)"
           style="background-color:#DDD"
         >
           <td class="text-left">{{ notice.articleNo }}</td>
@@ -97,11 +101,11 @@
                       DTO의 필드 배치 순서에 의존적이라 수정할건지? -->
 
         <!-- 게시들을 출력
-        각 tr(Row)를 클릭하면 goToDetail함수가 실행 -->
+        각 tr(Row)를 클릭하면 goToBoardDetail함수가 실행 -->
         <tr
           v-for="article in articles"
           :key="article.articleNo"
-          @click="gotoDetail(article.articleNo)"
+          @click="goToBoardDetail(article.articleNo)"
         >
           <!-- 각 줄의 요소를 순차적으로 출력
           ex) 46	호랑돌이	(공지)보드 마무리입니다	2021-01-01 13:55:54	0 -->
@@ -141,7 +145,10 @@ export default {
     };
   },
   methods: {
-    // 모든 게시글 가져오기
+    /**
+     * @Method설명 : 전체 게시글 목록을 가져오는 메서드
+     * @변경이력 :
+     */
     selectAllArticles: function() {
       /**
        * ${this.boardType} 와 같이 현재 보는 게시판의 형식을 vuex에 기억하여서
@@ -180,9 +187,11 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
-    // 모든 게시글 가져오기 끝
 
-    // 공지사항 가져오기 (FreeBoard같이 공지사항을 다루는 게시판 한정으로 사용)
+    /**
+     * @Method설명 : 전체 공지사항 게시글 가져오기
+     * @변경이력 :
+     */
     selectAllNotices: function() {
       Axios.get(`/${this.boardType}/selectAllNotices`)
         .then(response => {
@@ -193,12 +202,12 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
-    // 공지사항 가져오기 끝
 
-    // 검색 조건, 키워드에 따른 검색 기능 시작
+    /**
+     * @Method설명 : 검색 조건, 키워드에 따른 검색
+     * @변경이력 :
+     */
     selectArticle: function() {
-      console.log(this.keyword);
-
       // 검색 옵션이 제목일때
       if (this.selection === "제목") {
         Axios.get(`/${this.boardType}/selectArticleByTitle/${this.keyword}`)
@@ -278,25 +287,33 @@ export default {
           .finally(() => (this.loading = false));
       }
     },
-    // 검색옵션, 검색 키워드에 다른 게시글 검색 끝
 
-    // 글쓰기 페이지로 넘어감
-    gotoWrite: function() {
-      // (해당 보드)-board-wirte의 이름을 가진 라우트를 뿌려준다
+    /**
+     * @Method설명 : 글쓰기 페이지로 이동하는 메소드
+     * @변경이력 :
+     */
+    goToBoardWrite: function() {
+      // (해당 보드)-board-wirte의 이름을 가진 라우트로 이동한다
       this.$router.push({
         name: `${this.boardType}-board-write`
       });
     },
 
-    // 게시글 상세보기 시작
-    gotoDetail: function(articleNo) {
+    /**
+     * @Method설명 : 검색 조건, 키워드에 따른 검색
+     * @변경이력 :
+     */
+    goToBoardDetail: function(articleNo) {
       this.$router.push({
         name: `${this.boardType}-board-detail`,
         params: { articleNo: articleNo }
       });
     },
 
-    // 검색조건 초기화 메서드
+    /**
+     * @Method설명 : 검색조건 초기화 메소드
+     * @변경이력 :
+     */
     resetSearchKeyword: function() {
       this.keyword = null;
       this.selectAllArticles();
@@ -307,13 +324,6 @@ export default {
   computed: {
     ...mapState(["boardColumns", "boardSearchKeywords", "boardType"])
   },
-
-  /**
-   * 이 뷰 인스턴스가 만들어질때
-   *
-   * 전체 게시글을 읽어옴(공지글이 있다면 공지글까지)
-   *
-   *  */
   created() {
     this.selectAllArticles();
   }
