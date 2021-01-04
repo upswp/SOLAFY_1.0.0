@@ -23,7 +23,7 @@
 		댓글번호, 내용, 댓글 등록한 사람의 UID, 등록시간을 반환
 	-->
 	<select id="selectReplies" parameterType="int" resultType="FreeReplyDto">
-		select replyNo, articleNo,contents, nickname, regiTime
+		select replyNo, articleNo,contents, nickname, regiTime,fr.uid
 		from freereply fr join userinfo ui
         on fr.uid = ui.uid
 		where articleNo = #{articleNo}

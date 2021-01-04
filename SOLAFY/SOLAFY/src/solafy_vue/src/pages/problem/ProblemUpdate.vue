@@ -26,7 +26,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="대분류"
-                    @input="clickLargeList"
+                    @input="clickCategoryLargeList"
                   />
                   <q-select
                     class="selectbox col"
@@ -36,7 +36,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="중분류"
-                    @input="clickMediumList"
+                    @input="clickCategoryMediumList"
                   />
                   <q-select
                     class="selectbox col"
@@ -194,7 +194,7 @@
         <q-btn
           color="primary"
           label="수정 취소"
-          @click="goProblemDetail"
+          @click="goToProblemDetail"
           id="btn"
         />
       </div>
@@ -211,57 +211,51 @@ import ProblemDetailVue from "./ProblemDetail.vue";
 
 export default {
   name: "ProblemUpdate",
+  components: {
+    QuasarTiptap
+  },
   data() {
     return {
-      item: {
-        problem: {
-          problemNo: "",
-          categoryNo: "",
-          contents: "",
-          multipleChoice: "",
-          title: "",
-          type: 0,
-          nickname: ""
-        },
-        categoryLarge: {
-          categoryNo: 0,
-          categoryName: ""
-        },
-        categoryMedium: {
-          categoryNo: 0,
-          categoryName: ""
-        },
-        categorySmall: {
-          categoryNo: 0,
-          categoryName: ""
-        },
-        hashTag: [],
-        problemAnswer: {
-          problemNo: 0,
-          answer: "",
-          solution: "",
-          keyword: ""
-        }
-      },
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
+      // quasar-tiptap에 입력된 content가 json 변환되어 저장
+      json: "",
+      // quasar-tiptap에 입력된 content가 html로 변환되어 저장
+      html: "",
+      // 대분류 카테고리 리스트
       largeList: [],
+      // 중분류 카테고리 리스트
       mediumList: [],
+      // 소분류 카테고리 리스트
       smallList: [],
+      // 해쉬태그 input에 바인딩되는 변수
       hashTagText: "",
+      // 현재 선택하고 있는 탭
       tab: "객관식",
+      // 이전에 선택되어있던 탭
       tab_pre: "객관식",
+      // 객관식일 경우 선택된 정답 리스트
       choiceList: [],
+      // 문제 등록 결과
       result: true,
+      // 로딩 변수
       loading: true,
+      // quasar-tiptap 옵션
       options: {
+        // 글 내용
         content: "",
+        // 수정 가능 여부
         editable: true,
+        // 툴바 표시 여부
         showToolbar: true,
+        // 메뉴 버블 사용 여부
         showBubble: true,
         extensions: [
           ...RecommendedExtensions
           // other extenstions
           // name string, or custom extension
         ],
+        // quasar-tiptap 툴바 구성 요소
         toolbar: [
           "add-more",
           "separator",
@@ -293,22 +287,73 @@ export default {
           "redo"
         ]
       },
-      json: "",
-      html: ""
+      //받아오는 기존 문제에 대한 정보
+      item: {
+        //문제에 대한 정보
+        problem: {
+          //문제 번호
+          problemNo: "",
+          //카테고리번호
+          categoryNo: "",
+          //문제내용
+          contents: "",
+          //객관식 다지선택
+          multipleChoice: "",
+          //문제이름
+          title: "",
+          //객관,주관,서술 type
+          type: 0,
+          //사용자 nickname
+          nickname: "",
+          // 문제 작성자 uid
+          uid: ""
+        },
+        //기존의 카테고리 대분류 정보
+        categoryLarge: {
+          categoryNo: 0,
+          categoryName: ""
+        },
+        //기존의 카테고리 중분류 정보
+        categoryMedium: {
+          categoryNo: 0,
+          categoryName: ""
+        },
+        //기존의 카테고리 소분류 정보
+        categorySmall: {
+          categoryNo: 0,
+          categoryName: ""
+        },
+        //기존의 hashTag 정보
+        hashTag: [],
+        //문제에 대한 정답
+        problemAnswer: {
+          //문제 번호
+          problemNo: 0,
+          //문제 답
+          answer: "",
+          //문제 해설
+          solution: "",
+          //문제 답 구성 keword
+          keyword: ""
+        }
+      }
     };
   },
-  components: {
-    QuasarTiptap
-  },
   methods: {
-    // quasar-tiptap안에 내용이 변경 될 때마다 html출력
+    /**
+     * @Method설명 : quasar-tiptap안에 내용이 변경 될 때마다 html출력
+     * @변경이력 :
+     */
     onUpdate({ getJSON, getHTML }) {
       this.json = getJSON();
       this.html = getHTML();
       //console.log("html", this.html);
     },
-    // 카테고리 대분류 선택
-    selectLargeList() {
+    /**
+     * @Method설명 : 카테고리 대분류 선택
+     * @변경이력 :
+     */
+    selectCategoryLargeList() {
       axios
         .get("category/large")
         .then(response => {
@@ -319,8 +364,11 @@ export default {
           this.$router.go(-1);
         });
     },
-    // 카테고리 중분류 선택
-    selectMediumList() {
+    /**
+     * @Method설명 :  카테고리 중분류 선택
+     * @변경이력 :
+     */
+    selectCategoryMediumList() {
       axios
         .get("category/medium/" + this.item.categoryLarge.categoryNo)
         .then(response => {
@@ -330,8 +378,11 @@ export default {
           notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
         });
     },
-    // 카테고리 소분류 선택
-    selectSmallList() {
+    /**
+     * @Method설명 :  카테고리 소분류 선택
+     * @변경이력 :
+     */
+    selectCategorySmallList() {
       axios
         .get("category/small/" + this.item.categoryMedium.categoryNo)
         .then(response => {
@@ -341,30 +392,59 @@ export default {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
     },
-    clickLargeList() {
-      this.selectMediumList();
+    /**
+     * @Method설명 : LargeList selectbox click evt
+     * @변경이력 :
+     */
+    clickCategoryLargeList() {
+      this.selectCategoryMediumList();
       this.item.categoryMedium = null;
       this.smallList = [];
       this.item.categorySmall = null;
     },
-    clickMediumList() {
-      this.selectSmallList();
+    /**
+     * @Method설명 : MediumList selectbox click evt
+     * @변경이력 :
+     */
+    clickCategoryMediumList() {
+      this.selectCategorySmallList();
       this.item.categorySmall = null;
     },
-    // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
+    /**
+     * @Method설명 : x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
+     * @변경이력 :
+     */
     removeHashTag(index) {
       this.item.hashTag.splice(index, 1);
     },
-    // 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
+    /**
+     * @Method설명 : 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
+     * @변경이력 :
+     */
     insertHashTag() {
       this.item.hashTag.push(this.hashTagText);
       this.hashTagText = "";
     },
-    // 클릭 시 Input을 하나 추가한다.
+    /**
+     * @Method설명 : 클릭 시 Input을 하나 추가한다.
+     * @변경이력 :
+     */
     addInput() {
       this.choiceList.push({ choice: "", check: false });
     },
-    // 문제 수정 처리
+    /**
+     * @Method설명 : input값 초기화
+     * @변경이력 :
+     */
+    clearInput() {
+      this.item.problemAnswer.answer = "";
+      this.item.problemAnswer.keyword = "";
+      this.choiceList = [];
+    },
+    /**
+     * @Method설명 : 문제 수정 처리
+     * @변경이력 :
+     */
     updateProblem() {
       // 객관식인 경우
       if (this.item.problem.type == 0) {
@@ -407,12 +487,20 @@ export default {
         }
       });
     },
-    // 문제 정보 가져오기
-    selectProblemDetail() {
+    /**
+     * @Method설명 : 문제 정보 가져오기
+     * @변경이력 :
+     */
+    selectProblemDetailByProblemNo() {
       axios
         .get("problem/" + this.$route.params.problemNo)
         .then(response => {
           this.item = response.data;
+          // ! 기능 확인 필요
+          if (item.problem.uid != currentUserUid) {
+            notify("red", "white", "error", "권한이 없습니다.");
+            this.$router.go(-1);
+          }
           // item내의 hashtagDto List를 String List로 변경
           var list = [];
           response.data.hashTag.forEach(element => {
@@ -428,18 +516,22 @@ export default {
               : "서술형";
           this.options.content = this.item.problem.contents;
           // 카테고리 리스트 호출
-          this.selectMediumList();
-          this.selectSmallList();
+          this.selectCategoryMediumList();
+          this.selectCategorySmallList();
 
           // 답안 정보 호출
-          this.selectProblemAnswer();
+          this.selectProblemAnswerByProblemNo();
         })
         .catch(error => {
           notify("red", "white", "error", "문제 정보 가져오기 실패");
+          this.$router.go(-1);
         });
     },
-    // 답안 정보 가져오기
-    selectProblemAnswer() {
+    /**
+     * @Method설명 : 답안 정보 가져오기
+     * @변경이력 :
+     */
+    selectProblemAnswerByProblemNo() {
       axios
         .get("problem/answer/" + this.$route.params.problemNo)
         .then(response => {
@@ -464,7 +556,10 @@ export default {
           this.loading = false;
         });
     },
-    // 탭 클릭 시 type 설정
+    /**
+     * @Method설명 : 탭 클릭 시 type 설정
+     * @변경이력 :
+     */
     setType(name) {
       this.$q.notify({
         progress: true,
@@ -502,13 +597,12 @@ export default {
         this.item.problem.type = 2;
       }
     },
-    // input값 초기화
-    clearInput() {
-      this.item.problemAnswer.answer = "";
-      this.item.problemAnswer.keyword = "";
-      this.choiceList = [];
-    },
-    goProblemDetail() {
+
+    /**
+     * @Method설명 : 문제상세보기
+     * @변경이력 :
+     */
+    goToProblemDetail() {
       this.loading = true;
       this.$router.push({
         name: "ProblemDetail",
@@ -519,8 +613,8 @@ export default {
     }
   },
   created() {
-    this.selectProblemDetail();
-    this.selectLargeList();
+    this.selectProblemDetailByProblemNo();
+    this.selectCategoryLargeList();
   }
 };
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <!-- 문제 정보 표시 시작-->
   <q-card-section align="left">
     <q-separator />
     {{ problemInfo.problemNo }}번 문제<br />
@@ -6,6 +7,7 @@
     ><br />
     <b>{{ problemInfo.contents }}</b
     ><br />
+    <!-- 객관식 문제일 경우, 기존의 답과 해설 표시 시작-->
     <template v-if="problemInfo.type === 0">
       <div v-for="(choice, index) in multipleChoice" :key="index">
         {{ index + 1 }} : {{ choice }}
@@ -27,8 +29,10 @@
         >
       </div>
     </template>
+    <!-- 객관식 문제, 답과 해설 끝 -->
     <q-separator />
   </q-card-section>
+  <!-- 문제정보 출력 끝 -->
 </template>
 <script>
 import Axios from "axios";
@@ -38,29 +42,31 @@ export default {
   props: ["problemNo"],
   data() {
     return {
-      problemInfo: [],
-      answerInfo: [],
       error: null,
       loading: null,
-      multipleChoice: [],
-      problemGetNo: ""
+
+      // 다루고자 하는 문제 정보 저장
+      problemInfo: [],
+      // 객관식 문제의 답 정보 저장
+      answerInfo: [],
+      // 객관식 문제의 선택지 정보 저장
+      multipleChoice: []
     };
   },
   method: {},
   watch: {
     problemNo: function() {
       // 문제 정보를 불러온다
-      this.problemGetNo = "" + this.problemNo;
-      Axios.get(`problem/` + this.problemGetNo)
+      Axios.get(`problem/` + this.problemNo)
         .then(response => {
           // 문제 정보 저장
           this.problemInfo = response.data["problem"];
           this.multipleChoice = this.problemInfo.multipleChoice.split(",");
 
-          // 문제 정보를 불러온다
-          Axios.get(`problem/answer/` + this.problemGetNo)
+          // 답안 정보를 불러온다
+          Axios.get(`problem/answer/` + this.problemNo)
             .then(response => {
-              // 문제 정보 저장
+              // 답안 정보 저장
               this.answerInfo = response.data;
               console.log(this.answerInfo);
             })
