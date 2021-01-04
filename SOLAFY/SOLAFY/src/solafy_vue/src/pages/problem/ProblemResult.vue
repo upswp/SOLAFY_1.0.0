@@ -47,7 +47,7 @@
               id="btn"
               color="primary"
               label="돌아가기"
-              @click="GoProblemSetList"
+              @click="goToProblemList"
             />
           </div>
         </div>
@@ -63,7 +63,9 @@ export default {
   name: "ProblemDetailByProblemSetInfo",
   data() {
     return {
-      current: 3,
+      // 추천문제 list
+      recommendProblemList: [],
+      //pagination custumizing
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -71,10 +73,12 @@ export default {
         rowsPerPage: 3
         // rowsNumber: xx if getting data from a server
       },
+      //문제 정답결과에 따른 text 반환
       resultText: {
         fail: "오답입니다.",
         success: "정답입니다."
       },
+      //result table columns에 대한 설정
       columns: [
         { name: "title", align: "left", label: "title", field: "title" },
         {
@@ -85,6 +89,7 @@ export default {
           align: "left"
         }
       ],
+      //유사문제 추천 table에 대한 columns 설정
       listColumns: [
         {
           name: "문제번호",
@@ -111,11 +116,14 @@ export default {
           regiTime: "",
           nickname: ""
         }
-      },
-      recommendProblemList: []
+      }
     };
   },
   methods: {
+    /**
+     * @Method설명 : params로 넘어오는 문제 결과를 확인하여 text값 반환
+     * @변경이력 :
+     */
     checkResult: function() {
       if (this.$route.params.result === "false") {
         this.resultText = this.resultText.fail;
@@ -123,6 +131,10 @@ export default {
         this.resultText = this.resultText.success;
       }
     },
+    /**
+     * @Method설명 : 풀이한 문제에 대한 값을 problemNo를 기준으로 가져옴
+     * @변경이력 :
+     */
     selectProblemByNo: function() {
       this.showLoading();
       Axios.get("problem/" + this.$route.params.problemNo)
@@ -130,19 +142,18 @@ export default {
           this.itemProblem = Response.data;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "조회 실패"
-          });
-          this.goToproblemList();
+          notify("red", "white", "error", "문제정보 조회 실패");
+          this.$router.go(-1);
+          this.goToProblemList();
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    //ProblemSet Contents - table 반환
+    /**
+     * @Method설명 : ProblemSet Contents - table 반환
+     * @변경이력 :
+     */
     selectRecommendProblemListmByNo: function() {
       //   this.showLoading();
       Axios.get("problem/recommend/" + this.$route.params.problemNo)
@@ -157,14 +168,17 @@ export default {
             icon: "error",
             message: "조회 실패"
           });
-          this.goToproblemList();
+          this.goToProblemList();
         })
         .finally(() => {
           this.loading = false;
         });
     },
 
-    // show LoadingPage
+    /**
+     * @Method설명 : show LoadingPage
+     * @변경이력 :
+     */
     showLoading() {
       this.$q.loading.show();
 
@@ -175,8 +189,11 @@ export default {
       }, 2000);
     },
 
-    //ProblemSetList 이동
-    GoProblemSetList: function() {
+    /**
+     * @Method설명 : ProblemSetList 이동
+     * @변경이력 :
+     */
+    goToProblemList: function() {
       this.$router.push({
         name: "Problem"
       });
