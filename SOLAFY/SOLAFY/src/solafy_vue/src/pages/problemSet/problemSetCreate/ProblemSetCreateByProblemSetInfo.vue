@@ -3,6 +3,7 @@
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <div class="row">
+        <!-- 문제집 정보 입력 -->
         <q-markup-table separator="cell">
           <tbody>
             <tr>
@@ -25,14 +26,14 @@
             color="primary"
             label="목록으로 돌아가기"
             outline
-            @click="goToproblemSetList"
+            @click="goToProblemSet"
           />
         </div>
         <div class="col">
           <q-btn
             color="primary"
             label="문제 제출 시작"
-            @click="goToCreateProblemList"
+            @click="goToProblemSetCreateByProblem"
             style="float:right"
           />
         </div>
@@ -41,49 +42,46 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
+import { SessionStorage } from "quasar";
 import { notify } from "src/api/common.js";
 
 export default {
   name: "ProblemSetCreateByProblemSetInfo",
   data() {
     return {
-      nickname: "",
+      // 작성자 닉네임
+      nickname: SessionStorage.getItem("loginUser").nickname,
+      // 문제집 정보
       ProblemSet: {
-        uid: "",
+        // 작성자 uid
+        uid: firebaseAuth.currentUser.uid,
+        // 문제집 제목
         title: ""
       }
     };
   },
   methods: {
-    // User의 Nickname반환
-    selectNickname() {
-      axios
-        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
-        .then(response => {
-          this.nickname = response.data.nickname;
-        })
-        .catch(error => {
-          notify("red", "white", "error", "닉네임 불러오기 실패");
-          this.$router.go(-1);
-        });
-    },
-    // 문제집 리스트로 이동
-    goToproblemSetList() {
+    /**
+     * @Method설명 : 문제집 리스트로 이동
+     * @변경이력 :
+     */
+    goToProblemSet() {
       this.$router.push({ name: "ProblemSet" });
     },
-    // 문제집을 db에 임시 저장 후 출제 화면으로 이동
-    goToCreateProblemList() {
+    /**
+     * @Method설명 : 문제집을 db에 임시 저장 후 출제 화면으로 이동
+     * @변경이력 :
+     */
+    goToProblemSetCreateByProblem() {
       // 예외처리
       if (this.ProblemSet.title == "") {
         notify("warning", "white", "warning", "문제집 제목을 입력해주세요");
         return;
       }
-      // uid를 객체에 저장
-      this.ProblemSet.uid = firebaseAuth.currentUser.uid;
       // 문제집 임시 등록
-      axios
+      Axios
         .post("problem/problemset/createProblemSet", this.ProblemSet)
         .then(response => {
           this.$router.push({
@@ -97,9 +95,6 @@ export default {
           notify("red", "white", "error", "문제집 임시저장 실패");
         });
     }
-  },
-  created() {
-    this.selectNickname();
   }
 };
 </script>
