@@ -5,6 +5,7 @@
     <!-- 중앙 메인 col 6칸 -->
     <div class="col-md-6">
       <div class="row">
+        <!-- 상단 문제 부가 정보 입력 테이블 -->
         <q-markup-table separator="cell">
           <tbody>
             <tr>
@@ -28,7 +29,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="대분류"
-                    @input="selectMediumList"
+                    @input="selectCategoryMediumList"
                   />
                   <q-select
                     class="selectbox col"
@@ -38,7 +39,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="중분류"
-                    @input="selectSmallList"
+                    @input="selectCategorySmallList"
                   />
                   <q-select
                     class="selectbox col"
@@ -59,7 +60,9 @@
           </tbody>
         </q-markup-table>
       </div>
+      <!-- 문제 내용 입력 -->
       <div class="row" id="editor">
+        <!-- 객관식, 주관식, 서술형을 나누는 탭 -->
         <q-card style="padding-left:20px;padding-right:20px;">
           <q-tabs
             v-model="tab"
@@ -91,12 +94,14 @@
           <p style="font-size:20px; margin-top:10px;margin-bottom:10px">
             문제
           </p>
+          <!-- 문제 내용 입력 -->
           <quasar-tiptap
             class="shadow-3"
             v-bind="options"
             @update="onUpdate"
             style="margin-top:10px;margin-bottom:10px"
           />
+          <!-- 문제 타입에 따른 문제 정답 입력 -->
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel class="panel" name="객관식">
               <p style="font-size:20px; margin-top:10px;margin-bottom:10px">
@@ -108,7 +113,7 @@
                 filled
                 style="margin-top:10px;margin-bottom:10px"
                 v-model="choi.choice"
-                @keyup.enter="addInput"
+                @keyup.enter="createInput"
                 autofocus
               >
                 <template v-slot:before>
@@ -124,7 +129,7 @@
                 round
                 color="primary"
                 icon="add"
-                @click="addInput"
+                @click="createInput"
                 style="margin-top:10px;margin-bottom:10px"
               />
             </q-tab-panel>
@@ -155,6 +160,7 @@
               />
             </q-tab-panel>
           </q-tab-panels>
+          <!-- 해설 입력 -->
           <q-input
             filled
             autogrow
@@ -169,12 +175,13 @@
           </div>
         </q-card>
       </div>
+      <!-- 해쉬태그 입력 -->
       <div class="row self-center hashtag">
         <q-chip
           v-for="(hashTag, index) in problemList[pIndex].hashTag"
           :key="index"
           removable
-          @remove="removeHashTag(index)"
+          @remove="deleteHashTagByBtn(index)"
           color="primary"
           text-color="white"
         >
@@ -185,15 +192,16 @@
           outlined
           dense
           v-model="hashTagText"
-          @keypress.space="insertHashTag"
-          @keypress.enter="insertHashTag"
+          @keypress.space="createHashTagByKeyboard"
+          @keypress.enter="createHashTagByKeyboard"
           label="HashTag"
         />
       </div>
       <hr />
+      <!-- 버튼들 -->
       <div class="row">
         <div class="col">
-          <q-btn color="warning" label="문제 추가" @click="InsertProblem(1)" />
+          <q-btn color="warning" label="문제 추가" @click="insertProblem(1)" />
         </div>
         <div class="col">
           <q-btn
@@ -207,6 +215,7 @@
     </div>
     <!-- 오른쪽 col 3칸 -->
     <div class="col-md-3">
+      <!-- 생성된 문제 리스트 -->
       <aside
         class="q-drawer q-drawer--right q-drawer--standard fixed"
         style="width: 220px; transform: translateX(0px); top: 50px;"
@@ -268,60 +277,97 @@
 </template>
 <script>
 //TODO : 예외처리 하나도 안해놨음(누군지 말 안함)
-import axios from "axios";
+import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
+import { SessionStorage } from "quasar";
 import { notify } from "src/api/common.js";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
 
 export default {
-  name: "ProblemCreate",
+  name: "ProblemSetCreateByProblem",
+  components: {
+    QuasarTiptap
+  },
   data() {
     return {
-      item: {
-        problem: {
-          categoryNo: null,
-          contents: null,
-          multipleChoice: null,
-          title: null,
-          type: 0,
-          uid: null
-        },
-        problemAnswer: {
-          answer: null,
-          keyword: null,
-          solution: null
-        },
-        hashTag: [],
-        problemSetNo: this.$route.params.problemSetNo
-      },
       // ! 문제 리스트
       problemList: [],
       // ! 선택된 문제 표시하기 위해 필요
       pIndex: 0,
-
-      nickname: "",
+      // 작성자 닉네임
+      nickname: SessionStorage.getItem("loginUser").nickname,
+      // 대분류 카테고리 리스트
       largeList: [],
+      // 선택된 대분류 카테고리
       selectLarge: null,
+      // 중분류 카테고리 리스트
       mediumList: [],
+      // 선택된 중분류 카테고리
       selectMedium: null,
+      // 소분류 카테고리 리스트
       smallList: [],
+      // 선택된 소분류 카테고리
       selectSmall: null,
+      // 해쉬태그 input에 바인딩되는 변수
       hashTagText: "",
+      // 현재 선택하고 있는 탭
       tab: "객관식",
+      // 이전에 선택되어있던 탭
       tab_pre: "객관식",
+      // 객관식일 경우 선택된 정답 리스트
       choiceList: [],
+      // 문제 등록 결과
       result: true,
+      // quasar-tiptap에 입력된 content가 html로 변환되어 저장
+      html: "",
+      // 문제 정보
+      item: {
+        // 문제
+        problem: {
+          // 카테고리 번호
+          categoryNo: null,
+          // 내용
+          contents: null,
+          // 선지
+          multipleChoice: null,
+          // 제목
+          title: null,
+          // 문제 타입(객관식, 주관식, 서술형)
+          type: 0,
+          // 작성자 uid
+          uid: null
+        },
+        // 문제 정답
+        problemAnswer: {
+          // 정답
+          answer: null,
+          // 정답 키워드
+          keyword: null,
+          // 해설
+          solution: null
+        },
+        // 해쉬태그
+        hashTag: [],
+        // 문제집 번호
+        problemSetNo: this.$route.params.problemSetNo
+      },
+      // quasar-tiptap 옵션
       options: {
+        // 글 내용
         content: "",
+        // 수정 가능 여부
         editable: true,
+        // 툴바 표시 여부
         showToolbar: true,
+        // 메뉴 버블 사용 여부
         showBubble: true,
         extensions: [
           ...RecommendedExtensions
           // other extenstions
           // name string, or custom extension
         ],
+        // quasar-tiptap 툴바 구성 요소
         toolbar: [
           "add-more",
           "separator",
@@ -352,24 +398,24 @@ export default {
           "undo",
           "redo"
         ]
-      },
-      json: "",
-      html: ""
+      }
     };
   },
-  components: {
-    QuasarTiptap
-  },
   methods: {
-    // quasar-tiptap안에 내용이 변경 될 때마다 html출력
-    onUpdate({ getJSON, getHTML }) {
-      this.json = getJSON();
+    /**
+     * @Method설명 : quasar-tiptap안에 내용이 변경 될 때마다 html에 저장
+     * @변경이력 :
+     */
+    onUpdate({ getHTML }) {
       this.html = getHTML();
       //console.log("html", this.html);
     },
-    // 카테고리 대분류 선택
-    selectLargeList() {
-      axios
+    /**
+     * @Method설명 : 카테고리 대분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategoryLargeList() {
+      Axios
         .get("category/large")
         .then(response => {
           this.largeList = response.data;
@@ -379,9 +425,12 @@ export default {
           this.$router.go(-1);
         });
     },
-    // 카테고리 중분류 선택
-    selectMediumList() {
-      axios
+    /**
+     * @Method설명 : 카테고리 중분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategoryMediumList() {
+      Axios
         .get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
@@ -390,9 +439,12 @@ export default {
           notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
         });
     },
-    // 카테고리 소분류 선택
-    selectSmallList() {
-      axios
+    /**
+     * @Method설명 : 카테고리 소분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategorySmallList() {
+      Axios
         .get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
@@ -401,21 +453,33 @@ export default {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
     },
-    // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
-    removeHashTag(index) {
+    /**
+     * @Method설명 : x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
+     * @변경이력 :
+     */
+    deleteHashTagByBtn(index) {
       this.problemList[this.pIndex].hashTag.splice(index, 1);
     },
-    // 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
-    insertHashTag() {
+    /**
+     * @Method설명 : 해쉬태그 리스트에 해쉬태그 등록
+     * @변경이력 :
+     */
+    createHashTagByKeyboard() {
       this.problemList[this.pIndex].hashTag.push(this.hashTagText);
       this.hashTagText = "";
     },
-    // 클릭 시 Input을 하나 추가한다.
-    addInput() {
+    /**
+     * @Method설명 : 선지 Input을 하나 추가
+     * @변경이력 :
+     */
+    createInput() {
       this.choiceList.push({ choice: "", check: false });
     },
-    // 문제 등록 처리
-    InsertProblem(flag) {
+    /**
+     * @Method설명 : 문제 등록관련 데이터 전처리 후 등록
+     * @변경이력 :
+     */
+    insertProblem(flag) {
       // 객관식인 경우
       if (this.problemList[this.pIndex].problem.type == 0) {
         // 선지 저장
@@ -447,6 +511,7 @@ export default {
         this.problemList.push(this._.cloneDeep(this.item));
       }
       this.pIndex++;
+      // 데이터 초기화
       this.options.content = " ";
       this.tab = "객관식";
       this.tab_pre = "객관식";
@@ -458,22 +523,28 @@ export default {
       this.hashTagText = "";
       this.choiceList = [];
     },
-    // 문제 등록
+    /**
+     * @Method설명 : 문제 등록
+     * @변경이력 :
+     */
     createProblem() {
-      this.InsertProblem(0);
-      axios
+      this.insertProblem(0);
+      Axios
         .post("problem/createProblemList", this.problemList)
         .then(response => {
-          this.updateFlag();
+          this.updateProblemFlag();
         })
         .catch(error => {
           console.log(error);
           this.result = false;
         });
     },
-    // 문제의 flag를 0에서 1로 변경
-    updateFlag() {
-      axios
+    /**
+     * @Method설명 : 문제의 flag를 0에서 1로 변경
+     * @변경이력 :
+     */
+    updateProblemFlag() {
+      Axios
         .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
         .then(response => {
           notify("positive", "white", "done", "문제 등록 성공");
@@ -487,7 +558,10 @@ export default {
           notify("red", "white", "error", "문제 등록 실패");
         })
     },
-    // 탭 클릭 시 type 설정
+    /**
+     * @Method설명 : 탭 클릭 시 type 설정
+     * @변경이력 :
+     */
     setType(name) {
       this.$q.notify({
         progress: true,
@@ -526,12 +600,19 @@ export default {
         this.problemList[this.pIndex].problem.type = 2;
       }
     },
-    // input값 초기화
+    /**
+     * @Method설명 : input값 초기화
+     * @변경이력 :
+     */
     clearInput() {
       this.problemList[this.pIndex].problemAnswer.answer = "";
       this.problemList[this.pIndex].problemAnswer.keyword = "";
       this.choiceList = [];
     },
+    /**
+     * @Method설명 : 문제에 대한 정보를 현재 페이지 변수에 넣음
+     * @변경이력 :
+     */
     getProblem(index) {
       this.pIndex = index;
       this.choiceList = [];
@@ -552,24 +633,10 @@ export default {
         console.log(this.choiceList);
       }
     },
-    // User의 Nickname반환
-    selectNickname() {
-      axios
-        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
-        .then(response => {
-          this.nickname = response.data.nickname;
-        })
-        .catch(error => {
-          notify("red", "white", "error", "닉네임 불러오기 실패");
-          this.$router.go(-1);
-        });
-    }
   },
   created() {
     this.problemList.push(this._.cloneDeep(this.item));
-    console.log(this.problemList);
-    this.selectLargeList();
-    this.selectNickname();
+    this.selectCategoryLargeList();
   }
 };
 </script>
