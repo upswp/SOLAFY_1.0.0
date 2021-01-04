@@ -3,6 +3,7 @@
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <div class="row">
+        <!-- 상단 문제 부가 정보 입력 테이블 -->
         <q-markup-table separator="cell">
           <tbody>
             <tr>
@@ -23,7 +24,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="대분류"
-                    @input="selectMediumList"
+                    @input="selectCategoryMediumList"
                   />
                   <q-select
                     class="selectbox col"
@@ -33,7 +34,7 @@
                     option-value="categoryNo"
                     option-label="categoryName"
                     label="중분류"
-                    @input="selectSmallList"
+                    @input="selectCategorySmallList"
                   />
                   <q-select
                     class="selectbox col"
@@ -54,7 +55,9 @@
           </tbody>
         </q-markup-table>
       </div>
+      <!-- 문제 내용 입력 -->
       <div class="row" id="editor">
+        <!-- 객관식, 주관식, 서술형을 나누는 탭 -->
         <q-card style="padding-left:20px;padding-right:20px;">
           <q-tabs
             v-model="tab"
@@ -86,12 +89,14 @@
           <p style="font-size:20px; margin-top:10px;margin-bottom:10px">
             문제
           </p>
+          <!-- 문제 내용 입력 -->
           <quasar-tiptap
             class="shadow-3"
             v-bind="options"
             @update="onUpdate"
             style="margin-top:10px;margin-bottom:10px"
           />
+          <!-- 문제 타입에 따른 문제 정답 입력 -->
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel class="panel" name="객관식">
               <p style="font-size:20px; margin-top:10px;margin-bottom:10px">
@@ -117,7 +122,8 @@
                 round
                 color="primary"
                 icon="add"
-                @click="addInput"
+                @click="createInput"
+                @keypress.enter="createInput"
                 style="margin-top:10px;margin-bottom:10px"
               />
             </q-tab-panel>
@@ -148,6 +154,7 @@
               />
             </q-tab-panel>
           </q-tab-panels>
+          <!-- 해설 입력 -->
           <q-input
             filled
             autogrow
@@ -157,12 +164,13 @@
           />
         </q-card>
       </div>
+      <!-- 해쉬태그 입력 -->
       <div class="row self-center hashtag">
         <q-chip
           v-for="(hashTag, index) in item.hashTag"
           :key="index"
           removable
-          @remove="removeHashTag(index)"
+          @remove="deleteHashTagByBtn(index)"
           color="primary"
           text-color="white"
         >
@@ -173,14 +181,20 @@
           outlined
           dense
           v-model="hashTagText"
-          @keypress.space="insertHashTag"
-          @keypress.enter="insertHashTag"
+          @keypress.space="createHashTagByKeyboard"
+          @keypress.enter="createHashTagByKeyboard"
           label="HashTag"
         />
       </div>
       <hr />
+      <!-- 버튼들 -->
       <div class="row">
-        <q-btn color="primary" label="문제 등록" @click="InsertProblem" />
+        <div class="col">
+        <q-btn outline color="primary" label="목록으로 돌아가기" @click="goToProblem" />
+        </div>
+        <div class="col">
+          <q-btn color="primary" label="문제 등록" @click="insertProblem" style="float:right"/>
+        </div>
       </div>
     </div>
   </div>
@@ -188,53 +202,91 @@
 <script>
 import axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
+import { SessionStorage } from "quasar";
 import { notify } from "src/api/common.js";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
 
 export default {
   name: "ProblemCreate",
+  components: {
+    QuasarTiptap
+  },
   data() {
     return {
+      // 작성자 닉네임
+      nickname: SessionStorage.getItem("loginUser").nickname,
+      // 대분류 카테고리 리스트
+      largeList: [],
+      // 선택된 대분류 카테고리
+      selectLarge: null,
+      // 중분류 카테고리 리스트
+      mediumList: [],
+      // 선택된 중분류 카테고리
+      selectMedium: null,
+      // 소분류 카테고리 리스트
+      smallList: [],
+      // 선택된 소분류 카테고리
+      selectSmall: null,
+      // 해쉬태그 input에 바인딩되는 변수
+      hashTagText: "",
+      // 현재 선택하고 있는 탭
+      tab: "객관식",
+      // 이전에 선택되어있던 탭
+      tab_pre: "객관식",
+      // 객관식일 경우 선택된 정답 리스트
+      choiceList: [],
+      // 문제 등록 결과
+      result: true,
+      // quasar-tiptap에 입력된 content가 html로 변환되어 저장
+      html: "",
+      // 문제 정보
       item: {
+        // 문제
         problem: {
+          // 카테고리 번호
           categoryNo: "",
+          // 내용
           contents: "",
+          // 선지
           multipleChoice: "",
+          // 제목
           title: "",
+          // 문제 타입(객관식, 주관식, 서술형)
           type: 0,
+          // 작성자 uid
           uid: ""
         },
+        // 문제 정답
         problemAnswer: {
+          // 정답
           answer: "",
+          // 정답 키워드
           keyword: "",
+          // 해설
           solution: ""
         },
+        // 해쉬태그
         hashTag: [],
+        // 문제집 번호 : 문제 한 개만 등록 하므로 0을 주어서 문제집과 연결을 안함.
         problemSetNo: 0
       },
-      nickname: "",
-      largeList: [],
-      selectLarge: null,
-      mediumList: [],
-      selectMedium: null,
-      smallList: [],
-      selectSmall: null,
-      hashTagText: "",
-      tab: "객관식",
-      tab_pre: "객관식",
-      choiceList: [],
-      result: true,
+      // quasar-tiptap 옵션
       options: {
+        // 글 내용
         content: "",
+        // 수정 가능 여부
         editable: true,
+        // 툴바 표시 여부
         showToolbar: true,
+        // 메뉴 버블 사용 여부
         showBubble: true,
         extensions: [
           ...RecommendedExtensions
           // other extenstions
           // name string, or custom extension
         ],
+        // quasar-tiptap 툴바 구성 요소
         toolbar: [
           "add-more",
           "separator",
@@ -265,23 +317,22 @@ export default {
           "undo",
           "redo"
         ]
-      },
-      json: "",
-      html: ""
+      }
     };
   },
-  components: {
-    QuasarTiptap
-  },
   methods: {
-    // quasar-tiptap안에 내용이 변경 될 때마다 html출력
-    onUpdate({ getJSON, getHTML }) {
-      this.json = getJSON();
+    /**
+     * @Method설명 : quasar-tiptap안에 내용이 변경 될 때마다 html에 저장
+     * @변경이력 :
+     */
+    onUpdate({ getHTML }) {
       this.html = getHTML();
-      //console.log("html", this.html);
     },
-    // 카테고리 대분류 선택
-    selectLargeList() {
+    /**
+     * @Method설명 : 카테고리 대분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategoryLargeList() {
       axios
         .get("category/large")
         .then(response => {
@@ -292,8 +343,11 @@ export default {
           this.$router.go(-1);
         });
     },
-    // 카테고리 중분류 선택
-    selectMediumList() {
+    /**
+     * @Method설명 : 카테고리 중분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategoryMediumList() {
       axios
         .get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
@@ -306,8 +360,11 @@ export default {
           notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
         });
     },
-    // 카테고리 소분류 선택
-    selectSmallList() {
+    /**
+     * @Method설명 : 카테고리 소분류 리스트 저장
+     * @변경이력 :
+     */
+    selectCategorySmallList() {
       axios
         .get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
@@ -318,21 +375,33 @@ export default {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
         });
     },
-    // x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
-    removeHashTag(index) {
+    /**
+     * @Method설명 : x버튼을 눌렀을 때 해쉬태그 리스트에서 제거
+     * @변경이력 :
+     */
+    deleteHashTagByBtn(index) {
       this.item.hashTag.splice(index, 1);
     },
-    // 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
-    insertHashTag() {
+    /**
+     * @Method설명 : 엔터, 스페이스바 입력 시 해쉬태그 리스트에 등록
+     * @변경이력 :
+     */
+    createHashTagByKeyboard() {
       this.item.hashTag.push(this.hashTagText);
       this.hashTagText = "";
-    },
-    // 클릭 시 Input을 하나 추가한다.
-    addInput() {
+    }, 
+    /**
+     * @Method설명 : 클릭 혹은 엔터 시 선지 Input을 하나 추가
+     * @변경이력 :
+     */
+    createInput() {
       this.choiceList.push({ choice: "", check: false });
     },
-    // 문제 등록 처리
-    InsertProblem() {
+    /**
+     * @Method설명 : 문제 등록관련 데이터 전처리 후 등록
+     * @변경이력 :
+     */
+    insertProblem() {
       // 객관식인 경우
       if (this.item.problem.type == 0) {
         // 선지 저장
@@ -359,22 +428,29 @@ export default {
         String(this.selectLarge.categoryNo).padStart(2, "0") +
         String(this.selectMedium.categoryNo).padStart(3, "0") +
         String(this.selectSmall.categoryNo).padStart(5, "0");
+      //문제 등록
       this.createProblem();
     },
-    // 문제 등록
+    /**
+     * @Method설명 : 문제 등록
+     * @변경이력 :
+     */
     createProblem() {
       axios
         .post("problem/create", this.item)
         .then(response => {
-          this.updateFlag();
+          this.updateProblemFlag();
         })
         .catch(error => {
           console.log(error);
           this.result = false;
         });
     },
-    // 문제의 flag를 0에서 1로 변경
-    updateFlag() {
+    /**
+     * @Method설명 : 문제의 flag를 0에서 1로 변경
+     * @변경이력 :
+     */
+    updateProblemFlag() {
       axios
         .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
         .then(response => {})
@@ -393,7 +469,10 @@ export default {
           }
         });
     },
-    // 탭 클릭 시 type 설정
+    /**
+     * @Method설명 : 탭 클릭 시 type 설정
+     * @변경이력 :
+     */
     setType(name) {
       this.$q.notify({
         progress: true,
@@ -431,28 +510,25 @@ export default {
         this.item.problem.type = 2;
       }
     },
-    // input값 초기화
+    /**
+     * @Method설명 : input값 초기화
+     * @변경이력 :
+     */
     clearInput() {
       this.item.problemAnswer.answer = "";
       this.item.problemAnswer.keyword = "";
       this.choiceList = [];
     },
-    // User의 Nickname반환
-    selectNickname() {
-      axios
-        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
-        .then(response => {
-          this.nickname = response.data.nickname;
-        })
-        .catch(error => {
-          notify("red", "white", "error", "닉네임 불러오기 실패");
-          this.$router.go(-1);
-        });
-    }
+    /**
+     * @Method설명 : 문제리스트로 이동
+     * @변경이력 :
+     */
+    goToProblem() {
+      this.$router.push({ name: "Problem" });
+    },
   },
   created() {
-    this.selectLargeList();
-    this.selectNickname();
+    this.selectCategoryLargeList();
   }
 };
 </script>
