@@ -68,12 +68,14 @@
 		#{problemNo}
 	</select>
 
-	<!-- 질문글 수정 -->
+	<!-- 질문글 수정
+		2021-01-04(BEOMSEOK SEO) : 질문게시판의 게시글에서 다루는 문제번호도 수정할 수 있도록 쿼리문 수정
+		 -->
 	<update id="updateQuestion" parameterType="QuestionBoardDto">
 		UPDATE questionboard
 		SET title = #{title},
 		contents = #{contents},
-		regiTime = now()
+		problemNo = #{problemNo}
 		WHERE articleNo = #{articleNo}
 	</update>
 

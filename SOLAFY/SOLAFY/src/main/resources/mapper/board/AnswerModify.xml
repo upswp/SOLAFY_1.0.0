@@ -78,11 +78,12 @@
 	
 	<!--
 		게시물 수정.
-		수정가능한 내용은 제목(title), 내용(contents)
+		수정가능한 내용은 제목(title), 내용(contents), 문제번호(problemNo)
+		2021-01-04(BEOMSEOK SEO) : 답안수정게시판의 게시글에서 다루는 문제번호도 수정할 수 있도록 쿼리문 수정
 	-->
 	<update id="updateArticle" parameterType="AnswerModifyBoardDto">
 		update answermodifyboard 
-		set title = #{title}, contents = #{contents}
+		set title = #{title}, contents = #{contents}, problemNo = #{problemNo}
 		where articleNo = #{articleNo}
 	</update>
 	
