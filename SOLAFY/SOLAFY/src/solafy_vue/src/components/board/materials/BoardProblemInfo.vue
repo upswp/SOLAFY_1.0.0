@@ -1,10 +1,11 @@
 <template>
   <q-card-section align="left">
     <q-separator />
-    문제 제출자 : <strong>{{ problemInfo.nickname }}</strong
+    {{ problemInfo.problemNo }}번 문제<br />
+    <span style="font-size:0.5em">문제 작성자 : {{ problemInfo.nickname }}</span
     ><br />
-    {{ problemNo }}번 문제 : <strong>{{ problemInfo.contents }}</strong>
-
+    <b>{{ problemInfo.contents }}</b
+    ><br />
     <template v-if="problemInfo.type === 0">
       <div v-for="(choice, index) in multipleChoice" :key="index">
         {{ index + 1 }} : {{ choice }}
@@ -21,7 +22,9 @@
     </template>
     <template v-else>
       <div>
-        <i>*주관식과 서술형은 정답이 제공되지 않습니다.*</i>
+        <span style="font-size:0.3em"
+          ><i>*주관식과 서술형은 정답이 제공되지 않습니다.*</i></span
+        >
       </div>
     </template>
     <q-separator />
