@@ -32,6 +32,104 @@
         </q-item-section>
       </q-item>
       <q-separator />
+
+      <q-btn
+        color="primary"
+        label="문제 변경하기"
+        @click="isProblemSelected = false"
+      />
+      <!-- 게시글에서 다룰 문제 검색 부분 구현 시작(답안수정게시판, 질문게시판 한정) -->
+      <template
+        v-if="
+          this.boardType === `answermodify` || this.boardType === `question`
+        "
+      >
+        <!-- 문제를 선택하지 않았을 경우 -->
+        <q-card-section v-if="!isProblemSelected">
+          <q-table
+            :title="message"
+            :data="problems"
+            :columns="columns"
+            row-key="name"
+            :loading="loading"
+            @row-click="selectProblem"
+          >
+            <!-- 검색 조건, 키워드에 따른 문제 검색 시작 -->
+            <template v-slot:top-right>
+              <q-input
+                bottom-slots
+                v-model="keyword"
+                label="검색어를 입력해주세요"
+                counter
+                maxlength="12"
+                @keyup.enter="search"
+                style="min-width:400px"
+              >
+                <template v-slot:before>
+                  <q-select
+                    id="selectbox"
+                    filled
+                    v-model="selection"
+                    :options="options"
+                    label="검색조건"
+                    style="min-width:120px"
+                  />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    v-if="keyword !== ''"
+                    name="close"
+                    @click="keyword = ''"
+                    class="cursor-pointer"
+                  />
+                  <q-icon name="search" @click="search" />
+                </template>
+              </q-input>
+            </template>
+            <!-- 검색 조건, 키워드에 따른 문제 검색 끝 -->
+
+            <!-- 데이터가 존재하지 않는다면 안내문구 출력 시작 -->
+            <template v-slot:no-data>
+              <div class="full-width row flex-center text-accent q-gutter-sm">
+                <q-icon size="2em" name="volume_off" />
+                <b style="font-size:15px">
+                  문제를 검색해주세요
+                </b>
+              </div>
+            </template>
+            <!-- 데이터가 존재하지 않는다면 안내문구 출력 끝 -->
+          </q-table>
+        </q-card-section>
+        <!-- 문제가 선택 되었을 경우 -->
+        <q-card-section v-else-if="isProblemSelected">
+          <!-- 문제 정보 표시 시작 -->
+          <q-separator />
+          문제 작성자 : {{ problemInfo.nickname }}<br /><br />
+          {{ problemInfo.problemNo }}번째 문제 내용<br />
+          <strong>{{ problemInfo.contents }}</strong
+          ><br />
+
+          <template v-if="problemInfo.type === 0">
+            <div v-for="(choice, index) in multipleChoice" :key="index">
+              {{ index + 1 }} : {{ choice }}
+            </div>
+          </template>
+          <!-- 검색 초기화 버튼 시작 -->
+          <template>
+            <q-btn
+              outline
+              color="black"
+              label="문제 다시 선택하기"
+              flat
+              @click="isProblemSelected = false"
+            />
+          </template>
+          <!-- 검색 초기화 버튼 끝 -->
+        </q-card-section>
+        <!-- 문제 정보 표시 끝 -->
+      </template>
+      <!-- 게시글에서 다룰 문제 검색 부분 구현 끝 -->
+
       <q-card-section>
         <q-card-section class="col-4">
           <!-- 수정할 내용 입력 시작 -->
@@ -47,7 +145,7 @@
       </q-card-section>
 
       <!-- 공지사항 여부 시작(자유게시판 한정) -->
-      <q-card-section align="right"
+      <q-card-section align="right" v-if="this.boardType === `free`"
         ><q-checkbox v-model="article.notice" label="공지사항 여부" />
       </q-card-section>
       <q-separator />
@@ -71,7 +169,59 @@ export default {
     return {
       // 이미 있던 내용을 수정하므로, 기존 데이터를 저장할 변수 선언
       article: [],
-      articleNo: this.$route.params.articleNo
+      articleNo: this.$route.params.articleNo,
+      boardType: this.$store.state.boardType,
+
+      // 문제검색을 위한 데이터 시작
+      selection: "제목",
+      options: ["제목", "문제번호", "작성자"],
+      keyword: "",
+      columns: [
+        {
+          name: "problemNo",
+          required: true,
+          label: "문제번호",
+          align: "left",
+          field: row => row.problemNo,
+          format: val => `${val}`,
+          sortable: true,
+          style: "width = 10px"
+        },
+        {
+          name: "nickname",
+          label: "작성자",
+          required: true,
+          align: "left",
+          field: row => row.nickname,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "title",
+          label: "제목",
+          required: true,
+          align: "left",
+          field: row => row.title,
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "regiTime",
+          label: "등록일자",
+          required: true,
+          align: "left",
+          field: row => row.regiTime,
+          format: val => `${val}`,
+          sortable: true
+        }
+      ],
+      problems: [],
+      isProblemSelected: true,
+      problemInfo: [],
+      //문제 검색을 위한 데이터 끝
+
+      loading: "",
+      message: ""
     };
   },
   methods: {
@@ -79,6 +229,7 @@ export default {
     updateArticle: function() {
       // 오류 상태 저장 플래그
       var successFlag = true;
+      console.log("finally", this.article);
 
       // 제목 비어있는지 확인
       if (this.article.title === null || this.article.title == "") {
@@ -160,11 +311,75 @@ export default {
         name: `${this.$store.state.boardType}-board-detail`,
         params: { articleNo: this.articleNo }
       });
+    },
+
+    // 문제 검색을 위한 메서드 시작
+    //문제 검색 및 검색 예외처리
+    search: function() {
+      this.loading = true;
+      Axios.get(`/problem/search/${this.selection}/${this.keyword}`)
+        .then(response => {
+          this.problems = response.data;
+          if (this.problems.length === 0) {
+            this.$q.notify({
+              color: "red-6",
+              textColor: "white",
+              icon: "warning",
+              message: "조회 실패"
+            });
+          }
+          console.log(this.problems[0]);
+        })
+        .catch(() => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        })
+        .finally(() => (this.loading = false));
+    },
+    // 문제를 선택했을때 메서드
+    selectProblem: function(evt, row) {
+      Axios.get(`problem/${row.problemNo}`)
+        .then(response => {
+          this.problemInfo = response.data["problem"];
+          console.log(this.problemInfo);
+          if (this.problemInfo.multipleChoice !== null)
+            this.multipleChoice = this.problemInfo.multipleChoice.split(",");
+          this.article.problemNo = this.problemInfo.problemNo;
+          this.article.uid_submitter = this.problemInfo.uid;
+          console.log(this.article.problemNo);
+        })
+        .catch(error => console.log(error))
+        .finally(() => (this.loading = false));
+      this.isProblemSelected = true;
+    },
+    // 문제를 선택했을때 메서드
+    selectProblemByNo: function() {
+      console.log("hwe4eywey");
+      console.log(this.article.problemNo, "is not good");
+      Axios.get(`problem/${this.article.problemNo}`)
+        .then(response => {
+          console.log("hello----------");
+          console.log("response.data", response.data);
+          this.problemInfo = response.data["problem"];
+          console.log(this.problemInfo);
+          if (this.problemInfo.multipleChoice !== null)
+            this.multipleChoice = this.problemInfo.multipleChoice.split(",");
+          this.article.problemNo = this.problemInfo.problemNo;
+          this.article.uid_submitter = this.problemInfo.uid;
+          console.log(this.article.problemNo);
+        })
+        .catch(error => console.log(error))
+        .finally(() => (this.loading = false));
+      this.isProblemSelected = true;
     }
   },
 
   // 기존의 정보를 입력칸에 뿌려주기 위한 작업
-  created() {
+  mounted() {
     // 해당 게시판에서,
     // 게시글 번호를 통해,
     // 게시글 정보 가져옴
@@ -172,8 +387,13 @@ export default {
       `/${this.$store.state.boardType}/selectArticleByArticleNo/${this.articleNo}`
     )
       .then(response => {
+        console.log(this.articleNo);
         // 가져왔다면 게시글 정보를 data에 기억
         this.article = response.data;
+        console.log(this.article);
+        console.log("hello?");
+        console.log("hello?");
+        this.selectProblemByNo();
       })
       .catch(() => {
         this.errored = true;

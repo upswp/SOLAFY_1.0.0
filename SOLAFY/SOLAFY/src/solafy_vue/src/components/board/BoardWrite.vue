@@ -9,9 +9,8 @@
         <q-item-section avatar>
           <q-avatar>
             <!-- TODO: 프로필사진 가져오기 -->
-
             <!-- <img src="https://cdn.quasar.dev/img/boy-avatar.png" /> -->
-            <img :src="profileUrl" />
+            <img id="profileImg" />
           </q-avatar>
         </q-item-section>
 
@@ -179,7 +178,7 @@ export default {
         isNotice: false,
         groupNo: 1
       },
-      profileUrl: "",
+      profileUrl: "https://cdn.quasar.dev/img/boy-avatar.png",
       // 게시판 형식 값을
       // store에서 가져와 data에 저장
       boardType: this.$store.state.boardType,
@@ -241,6 +240,7 @@ export default {
       var successFlag = true;
       this.article.uid = "DFEIJC23WOSKXCNSWQ";
       this.article.uid_submitter = this.problemInfo.uid;
+      console.log(this.article.uid_submitter);
 
       // 게시글 제목이 비어있다면
       if (this.article.title === null || this.article.title == "") {
@@ -345,17 +345,30 @@ export default {
         .finally(() => (this.loading = false));
       this.isProblemSelected = true;
     },
-    // User의 Nickname반환
-    selectNickname() {
-      axios
-        .get("user/selectbyuid/" + firebaseAuth.currentUser.uid)
-        .then(response => {
-          this.nickname = response.data.nickname;
+    getProfileImageUrl: function() {
+      var returnValue;
+      var hello = firebaseSt
+        .ref()
+        .child("profileimg/" + this.article.uid)
+        .getDownloadURL()
+        .then(function(url) {
+          console.log(url);
+          document.getElementById("profileImg").setAttribute("src", url);
+          return url;
+          // console.log(this.profileUrl);
+          // Get the download URL for 'images/stars.jpg'
+          // This can be inserted into an <img> tag
+          // This can also be downloaded directly
         })
-        .catch(error => {
-          notify("red", "white", "error", "닉네임 불러오기 실패");
-          this.$router.go(-1);
+        .catch(function(error) {
+          // Handle any errors
+          console.log("error is ", error);
         });
+      console.log(hello, "this is hello");
+      hello.then(function(result) {
+        returnValue = hello;
+      });
+      return returnValue;
     }
   },
   // 게시판에 따른 안내문구 설정
@@ -365,10 +378,10 @@ export default {
     } else if (this.boardType === "question") {
       this.message = "질문할 문제 검색";
     }
+    console.log("hello");
     // this.profileUrl = firebaseSt.ref().child("profileimg/" + this.article.uid);
-    this.profileUrl = firebaseSt
-      .ref()
-      .child("profileimg/" + "NDoXV9efsFd4gRXiIpo5uv80tSZ2");
+    this.profileUrl = this.getProfileImageUrl();
+    console.log(this.getProfileImageUrl(), "why");
   }
 };
 </script>
