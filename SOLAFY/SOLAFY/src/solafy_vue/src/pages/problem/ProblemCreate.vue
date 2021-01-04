@@ -200,7 +200,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import Axios from "axios";
 import { firebaseAuth } from "src/boot/firebase";
 import { SessionStorage } from "quasar";
 import { notify } from "src/api/common.js";
@@ -333,7 +333,7 @@ export default {
      * @변경이력 :
      */
     selectCategoryLargeList() {
-      axios
+      Axios
         .get("category/large")
         .then(response => {
           this.largeList = response.data;
@@ -348,7 +348,7 @@ export default {
      * @변경이력 :
      */
     selectCategoryMediumList() {
-      axios
+      Axios
         .get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
@@ -365,7 +365,7 @@ export default {
      * @변경이력 :
      */
     selectCategorySmallList() {
-      axios
+      Axios
         .get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
@@ -436,7 +436,7 @@ export default {
      * @변경이력 :
      */
     createProblem() {
-      axios
+      Axios
         .post("problem/create", this.item)
         .then(response => {
           this.updateProblemFlag();
@@ -451,7 +451,7 @@ export default {
      * @변경이력 :
      */
     updateProblemFlag() {
-      axios
+      Axios
         .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
         .then(response => {})
         .catch(error => {
