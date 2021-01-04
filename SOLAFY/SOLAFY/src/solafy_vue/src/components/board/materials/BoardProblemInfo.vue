@@ -1,4 +1,5 @@
 <template>
+  <!-- 문제 정보 표시 시작-->
   <q-card-section align="left">
     <q-separator />
     {{ problemInfo.problemNo }}번 문제<br />
@@ -6,6 +7,7 @@
     ><br />
     <b>{{ problemInfo.contents }}</b
     ><br />
+    <!-- 객관식 문제일 경우, 기존의 답과 해설 표시 시작-->
     <template v-if="problemInfo.type === 0">
       <div v-for="(choice, index) in multipleChoice" :key="index">
         {{ index + 1 }} : {{ choice }}
@@ -27,8 +29,10 @@
         >
       </div>
     </template>
+    <!-- 객관식 문제, 답과 해설 끝 -->
     <q-separator />
   </q-card-section>
+  <!-- 문제정보 출력 끝 -->
 </template>
 <script>
 import Axios from "axios";
