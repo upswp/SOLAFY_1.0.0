@@ -82,18 +82,20 @@
         <div class="row">
           <div class="col-7"></div>
           <div class="col-5">
-            <q-btn
-              id="btn"
-              color="primary"
-              label="문제집 삭제"
-              @click="ProblemSetDeleteByProblemSetNo"
-            />
-            <q-btn
-              id="btn"
-              color="primary"
-              label="문제집 수정"
-              @click="goToProblemSetUpdate"
-            />
+            <template v-if="item.problemSet.uid == currentUserUid">
+              <q-btn
+                id="btn"
+                color="primary"
+                label="문제집 삭제"
+                @click="ProblemSetDeleteByProblemSetNo"
+              />
+              <q-btn
+                id="btn"
+                color="primary"
+                label="문제집 수정"
+                @click="goToProblemSetUpdate"
+              />
+            </template>
             <q-btn
               id="btn"
               color="primary"
@@ -110,11 +112,14 @@
 import Axios from "axios";
 import routes from "src/router/routes";
 import { notify } from "src/api/common.js";
+import { firebaseAuth } from "src/boot/firebase";
 
 export default {
   name: "ProblemDetailByProblemSetInfo",
   data() {
     return {
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
       // pagination custumizing
       pagination: {
         sortBy: "desc",
@@ -132,8 +137,10 @@ export default {
           title: "",
           //문제집 작성일자
           regiTime: "",
-          //문제집 작성자
-          nickname: ""
+          //문제집 작성자 nickname
+          nickname: "",
+          //문제집 작성자 uid
+          uid: ""
         },
         //문제집이 가지고 있는 문제 list
         problemList: []

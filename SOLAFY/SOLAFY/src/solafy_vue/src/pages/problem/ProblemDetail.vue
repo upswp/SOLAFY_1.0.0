@@ -49,24 +49,30 @@
             outline
             @click="goToProblem"
           />
-          <q-btn color="primary" label="문제답안제출" @click="goToProblemResult" />
+          <q-btn
+            color="primary"
+            label="문제답안제출"
+            @click="goToProblemResult"
+          />
           <q-btn
             color="positive"
             label="문제수정요청"
             @click="goToAnswerModifyBoardDetail"
           />
-          <q-btn
-            color="positive"
-            label="문제수정"
-            outline
-            @click="goToProblemUpdate"
-          />
-          <q-btn
-            color="negative"
-            label="문제삭제"
-            outline
-            @click="deleteProblem"
-          />
+          <template v-if="item.problem.uid == currentUserUid">
+            <q-btn
+              color="positive"
+              label="문제수정"
+              outline
+              @click="goToProblemUpdate"
+            />
+            <q-btn
+              color="negative"
+              label="문제삭제"
+              outline
+              @click="deleteProblem"
+            />
+          </template>
         </div>
         <hr />
         <!-- 해쉬태그 -->
@@ -82,6 +88,7 @@
 
 <script>
 import Axios from "axios";
+import { firebaseAuth } from "src/boot/firebase";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
 import { notify } from "src/api/common.js";
@@ -93,6 +100,8 @@ export default {
   },
   data() {
     return {
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
       // 로딩 flag
       loading: true,
       // 문제의 채점 결과
@@ -121,8 +130,10 @@ export default {
           type: 0,
           // 등록 시간
           regiTime: "",
-          // 문제 작성자
-          nickname: ""
+          // 문제 작성자 nickname
+          nickname: "",
+          // 문제 작성자 uid
+          uid: ""
         },
         // 대분류 카테고리
         categoryLarge: {
@@ -197,7 +208,7 @@ export default {
      * @Method설명 : 문제 번호를 통해 문제정보를 받아온 후 데이터 전처리
      * @변경이력 :
      */
-    selectProblem(){
+    selectProblem() {
       Axios.get("problem/" + this.$route.params.problemNo)
         .then(Response => {
           this.item = Response.data;
@@ -223,7 +234,7 @@ export default {
           this.options.content = this.item.problem.contents;
         })
         .catch(error => {
-          notify("negative","white","error","조회 실패");
+          notify("negative", "white", "error", "조회 실패");
           this.goToProblem();
         })
         .finally(() => {
@@ -247,7 +258,7 @@ export default {
         (type === 0 && this.answerChecklist == "") ||
         ((type === 1 || type === 2) && this.answerText == "")
       ) {
-        notify("warning","white","warning","정답을 입력해주세요");
+        notify("warning", "white", "warning", "정답을 입력해주세요");
         return;
       }
       this.answerChecklist.sort();
@@ -261,7 +272,7 @@ export default {
             // 객관식인 경우, 입력한 정답이 문제 정답과 같을 때
             if (type === 0 && answer === this.answerChecklist.toString()) {
               this.result = true;
-            } 
+            }
             // 주관식인 경우, 입력한 정답이 문제 정답과 같을 때
             else if (type === 1 && answer === this.answerText) {
               this.result = true;
@@ -276,13 +287,13 @@ export default {
             });
           })
           .catch(error => {
-            notify("negative","white","error","채점 실패");
+            notify("negative", "white", "error", "채점 실패");
           })
           .finally(() => {
             this.loading = false;
           });
       } else if (type === 2) {
-        notify("positive","white","done","주관식입니다");
+        notify("positive", "white", "done", "주관식입니다");
       }
     },
     /**
@@ -309,16 +320,16 @@ export default {
     deleteProblem() {
       Axios.delete("problem/delete/" + this.item.problem.problemNo)
         .then(Response => {
-          notify("positive","white","done","삭제 완료");
+          notify("positive", "white", "done", "삭제 완료");
           this.goToProblem();
         })
         .catch(error => {
-          notify("negative","white","error","삭제 실패");
+          notify("negative", "white", "error", "삭제 실패");
         });
     }
   },
   created() {
-      this.selectProblem();
+    this.selectProblem();
   }
 };
 </script>
