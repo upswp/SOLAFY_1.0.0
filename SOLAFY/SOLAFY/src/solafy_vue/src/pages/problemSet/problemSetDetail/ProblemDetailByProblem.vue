@@ -6,16 +6,20 @@
       </div>
       <div class="col">
         <div class="row">
-          <div class="col-8"></div>
-          <div class="col-4">
+          <div class="col-8">
             <q-btn color="primary" label="문제수정요청" />
-            <q-btn color="primary" label="돌아가기" />
+            <q-btn
+              color="primary"
+              label="돌아가기"
+              @click="goToProblemSetList"
+            />
           </div>
+          <div class="col-4"></div>
         </div>
       </div>
       <div class="col">
         <div class="row">
-          <div class="col-8">
+          <div class="col-9">
             <!-- 문제 내용 -->
 
             <!-- 마크다운으로 문제 내용 출력 -->
@@ -46,7 +50,7 @@
               <q-input v-model="answerText" dense outlined autogrow />
             </div>
           </div>
-          <div class="col-4">
+          <!-- <div class="col-4">
             <div class="q-pa-md">
               <q-table
                 title="문제 List"
@@ -65,6 +69,64 @@
                 />
               </div>
             </div>
+          </div> -->
+          <!-- 오른쪽 col 3칸 -->
+          <div class="col-md-3">
+            <!-- 생성된 문제 리스트 -->
+            <aside
+              class="q-drawer q-drawer--right q-drawer--standard fixed"
+              style="width: 220px; transform: translateX(0px); top: 50px;"
+            >
+              <div class="q-drawer__content fit scroll">
+                <div class="fit q-scrollarea">
+                  <div class="scroll relative-position fit hide-scrollbar">
+                    <div class="absolute full-width">
+                      <!----><!---->
+                      <q-list padding class="rounded-borders text-primary">
+                        <q-item
+                          v-for="(p, index) in itemProblemSet.problemList"
+                          :key="index"
+                          clickable
+                          v-ripple
+                          :active="pIndex === index"
+                          @click="selectFirstProblemByNo(index)"
+                          active-class="my-problem-pIndex"
+                        >
+                          <q-item-section avatar>
+                            <q-icon
+                              :name="
+                                p.type == 0
+                                  ? 'check_circle'
+                                  : p.type == 1
+                                  ? 'title'
+                                  : 'text_fields'
+                              "
+                            />
+                          </q-item-section>
+
+                          <q-item-section
+                            v-text="
+                              p.title == null ? 'title을 입력하세요.' : p.title
+                            "
+                          ></q-item-section>
+                        </q-item>
+                      </q-list>
+                    </div>
+                    <!---->
+                  </div>
+                  <!---->
+                  <div
+                    aria-hidden="true"
+                    class="q-scrollarea__bar q-scrollarea__bar--v absolute-right q-scrollarea__bar--invisible"
+                  ></div>
+                  <div
+                    aria-hidden="true"
+                    class="q-scrollarea__thumb q-scrollarea__thumb--v absolute-right q-scrollarea__thumb--invisible"
+                    style="top: 0px;"
+                  ></div>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
       </div>
@@ -93,6 +155,8 @@ export default {
   },
   data() {
     return {
+      // ! 선택된 문제 표시하기 위해 필요
+      pIndex: 0,
       // String이던 item.problem.multipleChoice(문제 선지)를 배열로 저장
       multipleChoice: [],
       // 문제(객관식) 정답 입력값
@@ -211,8 +275,9 @@ export default {
      * @Method설명 : 문제 현황 table 클릭시 problemNo에 해당하는 문제 반환
      * @변경이력 :
      */
-    selectProblemByNo: function(evt, row) {
+    selectProblemByNo: function(index) {
       var type = this.itemProblem.problem.type;
+      this.pIndex = index;
       //객관식일때
       if (type === 0) {
         console.log("객관식 type 처리중입니다.");
@@ -376,6 +441,15 @@ export default {
           message: "주관식입니다"
         });
       }
+    },
+    /**
+     * @Method설명 :ProblemSetList 이동
+     * @변경이력 :
+     */
+    goToProblemSetList: function() {
+      this.$router.push({
+        name: "ProblemSet"
+      });
     }
   },
   computed: {
@@ -403,5 +477,9 @@ export default {
 }
 #contents {
   padding-bottom: 20px;
+}
+.my-problem-pIndex {
+  color: white;
+  background: #f2c037;
 }
 </style>
