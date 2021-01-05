@@ -147,7 +147,10 @@
       </q-card-section>
 
       <!-- 공지사항 여부 시작(자유게시판 한정) -->
-      <q-card-section align="right" v-if="this.boardType === `free`"
+
+      <q-card-section
+        align="right"
+        v-if="this.boardType === `free` && isQualified"
         ><q-checkbox v-model="article.notice" label="공지사항 여부" />
       </q-card-section>
       <q-separator />
@@ -183,6 +186,8 @@ export default {
 
       // 프로필 사진 주소값 저장 변수
       profileImageUrl: "",
+      // 로그인한 회원의 공지사항 생성 가능 여부 flag
+      isQualified: false,
       // 문제 선택 여부 flag
       isProblemSelected: true,
       // 문제 검색 테이블에 표시할 문제 모음
@@ -425,6 +430,21 @@ export default {
         this.message = "질문할 문제 검색";
       }
     },
+    /**
+     * @Method설명 : 현재 로그인 사용자가 관리자 권한이 있는지 판단
+     * @변경이력 :
+     */
+    setIsQualified: function() {
+      var loginUserUid = SessionStorage.getItem("loginUser").uid;
+      Axios.get(`user/selectbyuid/${loginUserUid}`)
+        .then(response => {
+          if (response.data.admin === 0) this.isQualified = true;
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          this.loading = true;
+        });
+    },
 
     /**
      * @Method설명 : 해당 글 상세페이지로 이동하는 메소드.
@@ -443,6 +463,7 @@ export default {
     this.selectArticleByArticleNo();
     this.setMessage();
     this.getProfileImageUrl(SessionStorage.getItem("loginUser").uid);
+    this.setIsQualified();
   }
 };
 </script>
