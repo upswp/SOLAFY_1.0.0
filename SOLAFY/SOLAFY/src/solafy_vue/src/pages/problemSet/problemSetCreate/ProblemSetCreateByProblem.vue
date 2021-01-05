@@ -305,8 +305,6 @@ export default {
       tab_pre: "객관식",
       // 객관식일 경우 선택된 정답 리스트
       choiceList: [],
-      // 문제 등록 결과
-      result: true,
       // quasar-tiptap에 입력된 content가 html로 변환되어 저장
       html: "",
       // 문제 정보
@@ -420,6 +418,9 @@ export default {
       Axios.get("category/medium/" + this.selectLarge.categoryNo)
         .then(response => {
           this.mediumList = response.data;
+          this.selectMedium = null;
+          this.smallList = [];
+          this.selectSmall = null;
         })
         .catch(error => {
           notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
@@ -433,6 +434,7 @@ export default {
       Axios.get("category/small/" + this.selectMedium.categoryNo)
         .then(response => {
           this.smallList = response.data;
+          this.selectSmall = null;
         })
         .catch(error => {
           notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
@@ -465,8 +467,79 @@ export default {
      * @변경이력 :
      */
     insertProblem(flag) {
+      // ================예외 처리==================
+      if (this.problemList[this.pIndex].problem.title == null) {
+        notify("warning", "white", "warning", "문제 제목을 입력해주세요.");
+        return;
+      }
+      if (
+        this.selectLarge == null ||
+        this.selectMedium == null ||
+        this.selectSmall == null
+      ) {
+        notify("warning", "white", "warning", "카테고리를 선택 해주세요.");
+        return;
+      }
+      // html내용을 content변수에 저장
+      var content = this.html;
+      // content에 있는 html태그를 제거
+      content = content.replace(/(<([^>]+)>)/gi, "");
+      if (content == "") {
+        notify("warning", "white", "warning", "문제 내용을 입력 해주세요.");
+        return;
+      }
+      var type = this.problemList[this.pIndex].problem.type;
+      if (type == 0) {
+        if (this.choiceList.length < 2) {
+          notify(
+            "warning",
+            "white",
+            "warning",
+            "문제 선지는 최소 2개이상 입력해주세요."
+          );
+          return;
+        }
+        var checknum = 0;
+        this.choiceList.forEach(el => {
+          if (el.check) {
+            checknum++;
+          }
+        });
+        console.log(checknum);
+        if (checknum == 0) {
+          notify(
+            "warning",
+            "white",
+            "warning",
+            "문제 답안은 최소 1개이상 입력해주세요."
+          );
+          return;
+        }
+      }
+      if (
+        type == 1 &&
+        this.problemList[this.pIndex].problemAnswer.answer == null
+      ) {
+        notify("warning", "white", "warning", "정답을 입력해주세요.");
+        return;
+      }
+      if (type == 2) {
+        if (this.problemList[this.pIndex].problemAnswer.answer == null) {
+          notify("warning", "white", "warning", "정답을 입력해주세요.");
+          return;
+        }
+        if (this.problemList[this.pIndex].problemAnswer.keyword == null) {
+          notify("warning", "white", "warning", "정답키워드를 입력해주세요.");
+          return;
+        }
+      }
+      if (this.problemList[this.pIndex].problemAnswer.solution == null) {
+        notify("warning", "white", "warning", "해설을 입력해주세요.");
+        return;
+      }
+      // ================입력값 저장================
       // 객관식인 경우
-      if (this.problemList[this.pIndex].problem.type == 0) {
+      if (type == 0) {
         // 선지 저장
         this.problemList[this.pIndex].problem.multipleChoice = this.choiceList
           .map(el => {
@@ -497,7 +570,7 @@ export default {
       }
       this.pIndex++;
       // 데이터 초기화
-      this.options.content = " ";
+      this.options.content = null;
       this.tab = "객관식";
       this.tab_pre = "객관식";
       this.selectLarge = null;
@@ -508,36 +581,52 @@ export default {
       this.hashTagText = "";
       this.choiceList = [];
     },
+    //TODO : 상의하기
+    //! 문제등록에 성공했어도 문제집 플래그 전환이 실패하면 문제 중복 등록 염려가 있음. => 이 과정을 하나로?
     /**
      * @Method설명 : 문제 등록
      * @변경이력 :
      */
     createProblem() {
       this.insertProblem(0);
+      // if(this.problemList.length<2){
+      //   notify("warning", "white", "warning", "최소 한 문제 이상 등록해주세요.");
+      //   return;
+      // }
       Axios.post("problem/createProblemList", this.problemList)
         .then(response => {
-          this.updateProblemFlag();
+          if (response.data == "success") {
+            this.updateProblemSetFlag();
+          } else {
+            notify("red", "white", "error", "문제 등록 실패");
+          }
         })
         .catch(error => {
           console.log(error);
-          this.result = false;
+          notify("red", "white", "error", "문제 등록 실패");
         });
     },
     /**
-     * @Method설명 : 문제의 flag를 0에서 1로 변경
+     * @Method설명 : 문제집 flag 변경
      * @변경이력 :
      */
-    updateProblemFlag() {
-      Axios.put("problem/updateflag/" + firebaseAuth.currentUser.uid)
+    updateProblemSetFlag() {
+      Axios.put(
+        "problem/problemset/updateProblemSetFlag/" +
+          firebaseAuth.currentUser.uid
+      )
         .then(response => {
-          notify("positive", "white", "done", "문제 등록 성공");
-          this.$router.push({
-            name: "ProblemSet"
-          });
+          if (response.data == "success") {
+            notify("positive", "white", "done", "문제 등록 성공");
+            this.$router.push({
+              name: "ProblemSet"
+            });
+          } else {
+            notify("red", "white", "error", "문제 등록 실패");
+          }
         })
         .catch(error => {
           console.log(error);
-          this.result = false;
           notify("red", "white", "error", "문제 등록 실패");
         });
     },
@@ -592,16 +681,15 @@ export default {
       this.choiceList = [];
       this.options.content = this.problemList[this.pIndex].problem.contents;
       //TODO : 카테고리를 불러오는 법
-      //TODO : 1. 카테고리를 지금처럼 대분류, 중분류, 소분류 따로따로 불러온다 => 매 문제마다 3번씩 spring과 통신해야함
-      //TODO : 2. 모든 카테고리 리스트를 불러서 여기서 필터링해서 보여준다. 
-      //TODO : => 맨 처음 한 번씩(large,medium,small,mapping 2개, 총 5개) 불러오면 되지만 스크립트에서 필터링 함수를 구현해야함.
-      // 대분류 카테고리 번호
-      var categoryNo = this.problemList[this.pIndex].problem.categoryNo;
-      var largeNo = parseInt(categoryNo.slice(0, 2));
-      var mediumNo = parseInt(categoryNo.slice(2, 5));
-      var smallNo = parseInt(categoryNo.slice(5, 10));
-      // this.selectLarge = this.problemList[this.pIndex].problem
-      if (this.problemList[this.pIndex].problem.multipleChoice != null) {
+      //! : 1. 카테고리를 지금처럼 대분류, 중분류, 소분류 따로따로 불러온다 => 매 문제마다 3번씩 spring과 통신해야함
+      //! : 2. 모든 카테고리 리스트를 불러서 여기서 필터링해서 보여준다.
+      //! => 맨 처음 한 번씩(large,medium,small,mapping 2개, 총 5개) 불러오면 되지만 스크립트에서 필터링 함수를 구현해야함.
+      //! ==> 우선 1번으로 진행
+      //카테고리 가져오기
+      this.getCategoryAll();
+
+      // 문제 선지 가져오기
+      if (this.problemList[this.pIndex].problem.type == 0) {
         this.problemList[this.pIndex].problem.multipleChoice
           .split(",")
           .forEach((element, index) => {
@@ -612,8 +700,52 @@ export default {
                 .includes(index + 1 + "")
             });
           });
-        console.log(this.choiceList);
       }
+    },
+    /**
+     * @Method설명 : 문제의 카테고리 정보를 현재 페이지 변수에 넣음
+     * @변경이력 :
+     */
+    //TODO:Promise, async공부해서 도입하기
+    getCategoryAll() {
+      var categoryNo = this.problemList[this.pIndex].problem.categoryNo;
+      var largeNo = parseInt(categoryNo.slice(0, 2));
+      var mediumNo = parseInt(categoryNo.slice(2, 5));
+      var smallNo = parseInt(categoryNo.slice(5, 10));
+      this.largeList.forEach(el => {
+        if (el.categoryNo == largeNo) {
+          this.selectLarge=el;
+          return;
+        }
+      });
+      //medium리스트 가져오기
+      Axios.get("category/medium/" + this.selectLarge.categoryNo)
+        .then(response => {
+          this.mediumList = response.data;
+          this.mediumList.forEach(el => {
+            if (el.categoryNo == mediumNo) {
+              this.selectMedium = el;
+              return;
+            }
+          });
+          //small리스트 가져오기
+          Axios.get("category/small/" + this.selectMedium.categoryNo)
+            .then(response => {
+              this.smallList = response.data;
+              this.smallList.forEach(el => {
+                if (el.categoryNo == smallNo) {
+                  this.selectSmall = el;
+                  return;
+                }
+              });
+            })
+            .catch(error => {
+              notify("red", "white", "error", "카테고리 소분류 불러오기 실패");
+            });
+        })
+        .catch(error => {
+          notify("red", "white", "error", "카테고리 중분류 불러오기 실패");
+        });
     }
   },
   created() {
