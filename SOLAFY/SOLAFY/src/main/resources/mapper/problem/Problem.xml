@@ -125,7 +125,7 @@
 	<!-- useGeneratedKeys="true" keyProperty="값을 받아올컬럼명"을 써주면 insert문 실행 후 ProblemDto의 해당 컬럼에 값을 넣어준다 -->
 	<insert id="createProblem" parameterType="ProblemDto" useGeneratedKeys="true" keyProperty="problemNo">
 		insert into problem (multipleChoice, title, uid, contents, categoryNo, type, flag)
-		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categoryNo},#{type},0)
+		values(#{multipleChoice}, #{title}, #{uid},#{contents},#{categoryNo},#{type},1)
 	</insert>
 	
 	<!-- 문제와 해시태그를 연결 -->
@@ -141,11 +141,11 @@
 	</insert>
 	
 	<!-- 문제의 플래그를 임시저장 상태에서 저장으로 변경 -->
-	<update id="updateProblemFlag" parameterType="String">
+	<!-- <update id="updateProblemFlag" parameterType="String">
 		update problem
 		set flag = 1
 		where uid = #{uid} and flag = 0	
-	</update>
+	</update> -->
 	
 	<!-- 플래그가 임시저장 상태인 문제를 삭제 -->
 	<delete id="deleteProblemFlag" parameterType="String">

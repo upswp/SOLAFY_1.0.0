@@ -112,12 +112,8 @@ public class ProblemSetServiceImpl implements ProblemSetService {
 	}
 
 	@Override
-	@Transactional
 	public boolean updateProblemSetFlag(String uid) throws Exception {
-		boolean result = (problemSetMapper.updatePrblemSetFlag(uid)>0);
-		result &= (problemMapper.updateProblemFlag(uid)>0);
-		
-		return result;
+		return (problemSetMapper.updatePrblemSetFlag(uid)>0);
 	}
 
 	@Override

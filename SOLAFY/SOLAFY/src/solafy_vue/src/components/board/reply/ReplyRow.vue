@@ -24,11 +24,13 @@
           </q-input>
           <!-- 작성일자정보 수정/삭제 버튼 시작-->
           <span style="font-size:0.5em">작성일자 : {{ reply.regiTime }}</span>
-          <q-btn style="margin-left:60%" @click="isModify = true" dense flat
-            >수정</q-btn
-          >
-          /
-          <q-btn @click="deleteReply" dense flat>삭제</q-btn>
+          <template v-if="isQualified">
+            <q-btn style="margin-left:60%" @click="isModify = true" dense flat
+              >수정</q-btn
+            >
+            /
+            <q-btn @click="deleteReply" dense flat>삭제</q-btn>
+          </template>
           <!-- 작성일자정보 수정/삭제 버튼 끝 -->
         </template>
       </div>
@@ -72,6 +74,8 @@ export default {
   props: ["reply"],
   data() {
     return {
+      // 로그인 사용자의 수정/삭제 권한 여부 flag
+      isQualified: false,
       // 게시판 형식 값을 저장
       boardType: this.$store.state.boardType,
       // (댓글) 수정 버튼이 눌렸는지 여부 확인용 flag
@@ -143,10 +147,27 @@ export default {
           this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
           console.log("error is ", error);
         });
+    },
+    /**
+     * @Method설명 : 현재 로그인 사용자가 댓글 수정/삭제 권한이 있는지 판단
+     * @변경이력 :
+     */
+    setIsQualified: function() {
+      var loginUserUid = SessionStorage.getItem("loginUser").uid;
+      this.isQualified = loginUserUid === this.reply.uid;
+      Axios.get(`user/selectbyuid/${loginUserUid}`)
+        .then(response => {
+          if (response.data.admin === 1) this.isQualified = true;
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          this.loading = true;
+        });
     }
   },
   mounted() {
     this.getProfileImageUrl(this.reply.uid);
+    this.setIsQualified();
   }
 };
 </script>

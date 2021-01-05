@@ -182,7 +182,7 @@ public interface ProblemMapper {
 	* @Method 설명 : 임시 저장된 문제들의 flag를 0에서 1로 바꿈
 	* @변경이력 :
 	*/
-	public int updateProblemFlag(String uid) throws SQLException;
+	//public int updateProblemFlag(String uid) throws SQLException;
 	
 	/**
 	* @param uid - 유저토큰값
