@@ -7,13 +7,7 @@
           v-model="modifydata.nickname"
           label="별명 *"
           lazy-rules
-          :rules="[
-            val => (val && val.length > 0) || '별명을 입력해주세요',
-            val =>
-              beforenickname == modifydata.nickname ||
-              nicknameDup ||
-              '중복 확인을 해주세요'
-          ]"
+          :rules="[val => (val && val.length > 0) || '별명을 입력해주세요']"
         >
           <template v-slot:append>
             <q-btn label="중복 확인" @click="clickDupbtn"></q-btn>
@@ -47,32 +41,40 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
 import { firebaseAuth } from "boot/firebase";
 import { notify } from "src/api/common.js";
 
 export default {
   data() {
     return {
-      beforenickname: {},
-      modifydata: {},
-      nicknameDup: false
+      // 현재 DB에 저장되어 있는 닉네임
+      beforenickname: "",
+      // 닉네임 중복 여부를 확인한 닉네임 저장
+      nicknamecnf: "",
+      // 수정할 데이터를 저장
+      modifydata: {}
     };
   },
-  // DB에서 회원 정보 가져옴
-  mounted: function() {
-    axios
-      .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
-      .then(response => {
-        this.beforenickname = response.data.nickname;
-        this.modifydata = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
   methods: {
-    // 중복체크 버튼 클릭 시 호출
+    /**
+     * @Method설명 : 회원의 정보를 가져옴
+     * @변경이력 :
+     */
+    getUserInfo() {
+      axios
+        .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
+        .then(response => {
+          this.beforenickname = response.data.nickname;
+          this.modifydata = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    /**
+     * @Method설명 : 중복체크 버튼 클릭 시 호출
+     * @변경이력 :
+     */
     clickDupbtn() {
       // input 태그에 입력된 닉네임과 DB에 등록되어 있는 닉네임이 같으면
       // == 닉네임이 변경되지 않았으면
@@ -86,13 +88,13 @@ export default {
         .then(response => {
           // 사용 중인 닉네임일 경우
           if (response.data == "success") {
-            this.nicknameDup = false;
+            this.nicknamecnf = "";
             this.modifydata.nickname = "";
             notify("red-6", "white", "warning", "사용할 수 없는 별명입니다");
 
             // 사용 중이지 않은 닉네임일 경우
           } else {
-            this.nicknameDup = true;
+            this.nicknamecnf = this.modifydata.nickname;
             notify("green", "white", "check", "사용 가능한 별명입니다");
           }
         })
@@ -102,17 +104,27 @@ export default {
         });
     },
 
-    // 수정 버튼 클릭 시 호출
+    /**
+     * @Method설명 : 수정 완료 버튼 클릭 시 호출
+     * @변경이력 :
+     */
     onSubmit() {
-      // 닉네임이 변경되었는데 중복확인 버튼을 안 누른 경우
-      if (!this.nicknameDup && this.beforenickname != this.modifydata.nickname)
+      // 기존의 닉네임과 입력창의 닉네임이 다르고
+      // 입력창의 닉네임과 중복 검사 시에 저장한 닉네임이 다르면
+      // 현재 입력창의 닉네임은 중복 검사를 안한 닉네임임
+      if (
+        this.beforenickname != this.modifydata.nickname &&
+        this.modifydata.nickname != this.nicknamecnf
+      ) {
+        notify("red", "white", "warning", "닉네임 중복을 확인해주세요");
         return;
+      }
 
       // 닉네임 수정 요청
       axios
         .put("/user/update", this.modifydata)
         .then(response => {
-          notify("green", "white", "cloud", "사용 가능한 별명입니다");
+          notify("green", "white", "cloud", "회원 정보가 수정되었습니다");
           this.$router.push("/mypage");
         })
         .catch(error => {
@@ -123,6 +135,9 @@ export default {
     goMypage() {
       this.$router.push("/mypage");
     }
+  },
+  created: function() {
+    this.getUserInfo();
   }
 };
 </script>

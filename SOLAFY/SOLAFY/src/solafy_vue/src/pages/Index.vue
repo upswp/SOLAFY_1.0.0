@@ -48,7 +48,7 @@
     </div>
     <!-- 버튼 -->
     <div class="fit row justify-center content-center">
-      <q-btn flat label="회원가입" @click="goUserRegi" />
+      <q-btn flat label="회원가입" @click="goToUserCreate" />
       <q-btn flat label="비밀번호 재설정" @click="pwdprompt = true" />
     </div>
 
@@ -76,35 +76,36 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import { mapActions } from "vuex";
+import Axios from "axios";
 import { notify } from "src/api/common.js";
 import { firebaseAuth, firebaseSt, firebase } from "boot/firebase";
 import { SessionStorage } from "quasar";
 
 export default {
-  name: "PageIndex",
+  name: "Index",
   data() {
     return {
+      //* 로그인
+      // 로그인에 사용되는 이메일과 비밀번호
       formData: {
         email: "",
         password: ""
       },
+      // 아이디 저장 여부
       idsave: null,
+      //* 비밀번호 재설정
+      // 비밀번호 재설정 다이얼로그 오픈 여부
       pwdprompt: false,
+      // 비밀번호 재설정 팝업에서 입력된 이메일
       promptemail: ""
     };
   },
-  // 로컬 저장소에 저장되어 있는 이메일과 이메일 저장 여부(boolean) 가져옴
-  mounted() {
-    this.idsave = localStorage.idsave;
-    this.formData.email = localStorage.email;
-  },
   methods: {
-    ...mapActions("store", ["loginUser"]),
-    //로그인 버튼 클릭 시 호출
+    /**
+     * @Method설명 : 로그인 버튼 클릭 시 호출
+     * @변경이력
+     */
     onSubmit() {
-      // 이메일과 이메일 저장 여부를 로컬 저장소에 저장
       this.checkidsave();
       // 로그인 결과를 세션에 저장
       firebaseAuth
@@ -117,9 +118,17 @@ export default {
               this.formData.password
             )
             .then(response => {
-              //this.getLoginUserInfo(response.user.uid);
-              console.log("emit");
+              // 메인 레이아웃에 login user가 바뀌었음을 알림
               this.$emit("updateLoginUser");
+            })
+            .catch(error => {
+              if (error.code == "auth/invalid-email")
+                notify("red", "white", "warning", "유효하지 않은 이메일입니다");
+              else if (error.code == "auth/user-not-found")
+                notify("red", "white", "warning", "이메일을 확인해주세요");
+              else if (error.code == "auth/wrong-password")
+                notify("red", "white", "warning", "비밀번호를 확인해주세요");
+              else notify("red", "white", "warning", "로그인 실패");
             });
         })
         .then(() => {
@@ -131,15 +140,27 @@ export default {
           notify("red-6", "white", "warning", "로그인 실패");
         });
     },
+    /**
+     * @Method설명 : 리셋 버튼 클릭 시 호출
+     * @변경이력
+     */
     onReset() {
       this.formData.email = null;
       this.formData.password = null;
     },
-    goUserRegi() {
-      this.$router.push("UserCreate");
+    /**
+     * @Method설명 : 리셋 버튼 클릭 시 호출
+     * @변경이력
+     */
+    getIdSave() {
+      this.idsave = localStorage.idsave;
+      this.formData.email = localStorage.email;
     },
-    // 이메일과 이메일 저장 여부를 로컬 저장소에 저장
-    checkidsave() {
+    /**
+     * @Method설명 : 이메일과 이메일 저장 여부를 로컬 저장소에 저장
+     * @변경이력
+     */
+    checkIdSave() {
       if (this.idsave) {
         localStorage.idsave = true;
         localStorage.email = this.formData.email;
@@ -148,7 +169,10 @@ export default {
         localStorage.email = "";
       }
     },
-    // 비밀번호 재설정 다이얼로그의 메일보내기 버튼 클릭 시 호출
+    /**
+     * @Method설명 : 비밀번호 재설정 다이얼로그의 메일보내기 버튼 클릭 시 호출
+     * @변경이력
+     */
     sendPwdEmail() {
       // 다이얼로그 닫음
       this.pwdprompt = false;
@@ -168,16 +192,17 @@ export default {
           notify("red-6", "white", "warning", "메일 전송에 실패했습니다");
         });
     },
-    getLoginUserInfo(uid) {
-      axios
-        .get("/user/selectbyuid/" + uid)
-        .then(response => {
-          SessionStorage.set("loginUser", response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    /**
+     * @Method설명 : 회원 가입 페이지로 이동
+     * @변경이력
+     */
+    goToUserCreate() {
+      this.$router.push("UserCreate");
     }
+  },
+  // 로컬 저장소에 저장되어 있는 이메일과 이메일 저장 여부(boolean) 가져옴
+  mounted() {
+    this.getIdSave();
   }
 };
 </script>

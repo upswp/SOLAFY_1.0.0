@@ -36,12 +36,17 @@ import { notify } from "src/api/common.js";
 export default {
   data() {
     return {
+      // 하단의 이메일 변경 탭 오픈 여부
       expanded: false,
+      // 입력된 변경 이메일
       email: ""
     };
   },
   methods: {
-    // 이메일 변경하기 버튼 클릭 시 호출
+    /**
+     * @Method설명 :  이메일 변경하기 버튼 클릭 시 호출
+     * @변경이력 :
+     */
     onSubmit() {
       // 이메일 업데이트 요청
       firebaseAuth.currentUser
@@ -55,7 +60,10 @@ export default {
           notify("red", "white", "warning", "이메일 변경 실패");
         });
     },
-    // 인증 메일 전송
+    /**
+     * @Method설명 : 이메일 전송 요청
+     * @변경이력 :
+     */
     sendEmail() {
       firebaseAuth.currentUser
         .sendEmailVerification()
@@ -71,6 +79,10 @@ export default {
         })
         .catch("email not sent");
     },
+    /**
+     * @Method설명 : 로그인 페이지로 이동
+     * @변경이력 :
+     */
     goindex() {
       this.$router.push("/");
     }

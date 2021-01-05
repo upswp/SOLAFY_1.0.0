@@ -18,7 +18,7 @@
             <q-separator />
             <div>something ...</div>
             <div>
-              <q-btn label="수정" @click="goUpdateUserInfo"></q-btn>
+              <q-btn label="수정" @click="goToUserUpdate"></q-btn>
               <q-btn label="test" @click="deleteImg_FB"></q-btn>
             </div>
           </q-tab-panel>
@@ -38,7 +38,7 @@
                     (val !== null && val !== '') || '비밀번호를 입력해주세요'
                 ]"
               />
-              <q-btn label="탈퇴하기" @click="clickwithdrawalbtn"></q-btn>
+              <q-btn label="탈퇴하기" @click="clickWithdrawalBtn"></q-btn>
             </div>
           </q-tab-panel>
 
@@ -50,7 +50,7 @@
               :columns="problemcols"
               row-key="name"
               :loading="loading"
-              @row-click="problemDetail"
+              @row-click="goToProblemDetail"
               no-data-label="검색결과가 없습니다"
             ></q-table>
           </q-tab-panel>
@@ -63,7 +63,7 @@
               :columns="problemsetcols"
               row-key="name"
               :loading="loading"
-              @row-click="problemSetDetail"
+              @row-click="goToProblemSetDetail"
               no-data-label="검색결과가 없습니다"
             ></q-table>
           </q-tab-panel>
@@ -95,22 +95,34 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
-import { firebaseAuth, firebaseSt } from "boot/firebase";
-import { notify } from "src/api/common.js";
 import { SessionStorage } from "quasar";
+import { notify } from "src/api/common.js";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
 
 export default {
   data() {
     return {
+      // data 로딩
       loading: false,
-      userinfo: {},
+      // 현재 보여지는 tab
       tab: "mypage",
+
+      //* my page tab
+      // 회원 정보
+      userinfo: {},
+      // TODO DB에 이메일도 넣기
       email: firebaseAuth.currentUser.email,
+
+      //* 탈퇴 tab
+      // 비밀번호 확인
       password: "",
+      // 탛퇴 confirm dailog 오픈 여부
       dialog: false,
+
+      //* 내가 출제한 문제 tab
+      // DB에서 받아온 문제 배열
       problems: [],
-      problemSets: [],
+      // 문제 table의 column 정보
       problemcols: [
         {
           name: "problemNo",
@@ -150,6 +162,11 @@ export default {
           sortable: true
         }
       ],
+
+      //* 내가 만든 문제집 tab
+      // DB에서 받아온 문제집 배열
+      problemSets: [],
+      // 문제집 table의 column 정보
       problemsetcols: [
         {
           name: "problemSetNo",
@@ -187,56 +204,79 @@ export default {
       ]
     };
   },
-  // uid로 회원 정보 가져옴
-  mounted: function() {
-    axios
-      .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
-      .then(response => {
-        this.userinfo = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    axios
-      .get(
-        "/problem/search/작성자/" + SessionStorage.getItem("loginUser").nickname
-      )
-      .then(response => {
-        this.problems = response.data;
-      })
-      .catch(error => {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "조회 실패"
-        });
-      });
-    axios
-      .get(
-        "problem/problemset/problemSetSelectByWriter/" +
-          SessionStorage.getItem("loginUser").nickname
-      )
-      .then(response => {
-        this.problemSets = response.data;
-      })
-      .catch(error => {
-        this.$q.notify({
-          color: "red-6",
-          textColor: "white",
-          icon: "warning",
-          message: "조회 실패"
-        });
-      });
-  },
   methods: {
-    // 회원 정보 수정 버튼을 누르면 페이지 이동
-    goUpdateUserInfo() {
+    /**
+     * @Method설명 : DB에서 회원 정보를 받아옴
+     * @변경이력 :
+     */
+    getUserInfo() {
+      axios
+        .get("/user/selectbyuid/" + firebaseAuth.currentUser.uid)
+        .then(response => {
+          this.userinfo = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    /**
+     * @Method설명 : DB에서 현재 로그인한 사용자가 출제한 문제 리스트를 받아옴
+     * @변경이력 :
+     */
+    getMyProblems() {
+      axios
+        .get(
+          "/problem/search/작성자/" +
+            SessionStorage.getItem("loginUser").nickname
+        )
+        .then(response => {
+          this.problems = response.data;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        });
+    },
+    /**
+     * @Method설명 : DB에서 현재 로그인한 사용자가 만든 문제집 리스트를 받아옴
+     * @변경이력 :
+     */
+    getMyProblemSets() {
+      axios
+        .get(
+          "problem/problemset/problemSetSelectByWriter/" +
+            SessionStorage.getItem("loginUser").nickname
+        )
+        .then(response => {
+          this.problemSets = response.data;
+        })
+        .catch(error => {
+          this.$q.notify({
+            color: "red-6",
+            textColor: "white",
+            icon: "warning",
+            message: "조회 실패"
+          });
+        });
+    },
+    /**
+     * @Method설명 : 회원 정보 수정 버튼 클릭 시 호출, 회원정보 수정 페이지로 이동
+     * @변경이력 :
+     */
+    goToUserUpdate() {
       this.$router.push("UserUpdate");
     },
+    /**
+     * @Method설명 : 탈퇴 버튼 클릭 시 호출
+     * @변경이력 :
+     */
     // 탈퇴 버튼 클릭 시 호출
-    clickwithdrawalbtn() {
-      // 비밀번호 입력하지 않으면
+    clickWithdrawalBtn() {
+      // 비밀번호 입력하지 않으면 아무 일 X
       if (this.password == "") return;
       // 입력된 비밀번호로 회원 인증
       firebaseAuth
@@ -258,7 +298,10 @@ export default {
           }
         });
     },
-    // 컨펌 다이얼로그에서 탈퇴하기 버튼 클릭 시 호출
+    /**
+     * @Method설명 : 컨펌 다이얼로그에서 탈퇴하기 버튼 클릭 시 호출
+     * @변경이력 :
+     */
     clickRealWithdrawalbtn() {
       //컨펌 다이얼로그를 끄고
       this.dialog = false;
@@ -271,7 +314,10 @@ export default {
 
       this.$router.push("/main");
     },
-    // FB의 명찰 사진, 프로필 사진 삭제
+    /**
+     * @Method설명 : FB에 저장되어 있던 명찰 사진, 프로필 사진 삭제
+     * @변경이력 :
+     */
     deleteImg_FB() {
       var nametagRef = firebaseSt
         .ref()
@@ -283,11 +329,17 @@ export default {
       nametagRef.delete();
       profileRef.delete();
     },
-    // DB의 회원 정보 삭제
+    /**
+     * @Method설명 : DB에 저장되어 있던 회원 정보 삭제
+     * @변경이력 :
+     */
     deleteUser_DB() {
       axios.delete("/user/delete/" + firebaseAuth.currentUser.uid);
     },
-    // FB의 인증 정보 삭제
+    /**
+     * @Method설명 : FB에 저장되어 있던 인증 정보 삭제
+     * @변경이력 :
+     */
     deleteUser_FB() {
       firebaseAuth.currentUser
         .delete()
@@ -296,7 +348,11 @@ export default {
           console.log(error);
         });
     },
-    problemDetail(evt, row) {
+    /**
+     * @Method설명 : 문제 table에서 행 클릭 시 호출, 해당 문제의 상세 페이지로 이동
+     * @변경이력 :
+     */
+    goToProblemDetail(evt, row) {
       this.loading = true;
       this.$router.push({
         name: "ProblemDetail",
@@ -305,7 +361,11 @@ export default {
         }
       });
     },
-    problemSetDetail(evt, row) {
+    /**
+     * @Method설명 : 문제집 table에서 행 클릭 시 호출, 해당 문제집의 상세 페이지로 이동
+     * @변경이력 :
+     */
+    goToProblemSetDetail(evt, row) {
       this.loading = true;
       this.$router.push({
         name: "ProblemDetailByProblemSetInfo",
@@ -314,6 +374,11 @@ export default {
         }
       });
     }
+  },
+  create: function() {
+    this.getUserInfo();
+    this.getMyProblems();
+    this.getMyProblemSets();
   }
 };
 </script>
