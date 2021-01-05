@@ -108,7 +108,7 @@
           <q-separator />
           문제 작성자 : {{ problemInfo.nickname }}<br /><br />
           {{ problemInfo.problemNo }}번째 문제 내용<br />
-          <strong>{{ problemInfo.contents }}</strong
+          <b>{{ problemInfo.contents }}</b
           ><br />
 
           <template v-if="problemInfo.type === 0">
@@ -174,7 +174,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      loading: "",
+      loading: false,
 
       // 문제 검색 테이블 안내 문구 변수
       message: "",
@@ -339,6 +339,7 @@ export default {
           this.selectProblem(this.article.problemNo);
         })
         .catch(() => {
+          this.$router.go(-1);
           this.errored = true;
         })
 
@@ -442,7 +443,7 @@ export default {
         })
         .catch(error => console.log(error))
         .finally(() => {
-          this.loading = true;
+          this.loading = false;
         });
     },
 

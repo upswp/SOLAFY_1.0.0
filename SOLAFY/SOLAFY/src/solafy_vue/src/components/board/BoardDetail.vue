@@ -154,8 +154,9 @@ export default {
           this.article = response.data;
           // 해당 게시물의 댓글 정보 읽어옴
           this.getReplyRow(this.articleNo);
-          console.log(this.article);
           this.getProfileImageUrl(this.article.uid);
+          // 해당 게시물의 uid를 이용하여 권한 여부 판단
+          this.setIsQualified();
         })
         .catch(() => {
           this.errored = true;
@@ -281,9 +282,8 @@ export default {
     }
   },
 
-  mounted() {
+  created() {
     this.selectArticleByArticleNo();
-    this.setIsQualified();
   }
 };
 </script>

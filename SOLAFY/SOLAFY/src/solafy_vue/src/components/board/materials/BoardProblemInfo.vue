@@ -15,11 +15,11 @@
       <q-separator />
       <template>
         기존 답 :
-        <strong>{{ answerInfo.answer }}</strong>
+        <b>{{ answerInfo.answer }}</b>
         <q-separator />
 
-        <strong> {{ answerInfo.keyword }}</strong>
-        기존 해설 : <strong>{{ answerInfo.solution }}</strong>
+        <b> {{ answerInfo.keyword }}</b>
+        기존 해설 : <b>{{ answerInfo.solution }}</b>
       </template>
     </template>
     <template v-else>
