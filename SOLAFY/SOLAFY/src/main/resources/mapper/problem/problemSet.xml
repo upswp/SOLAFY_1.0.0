@@ -18,7 +18,7 @@
 	
 	<!-- problemSetNo에 따른 문제집 호출 -->
 	<select id="selectProblemSetByNo" resultType="problemSetDto">
-		SELECT p.problemSetNo, u.nickname, p.title, p.regiTime
+		SELECT p.problemSetNo, u.nickname, p.title, p.regiTime, p.uid
 		FROM problemset p join userinfo u
 		ON p.uid = u.uid
 		WHERE problemSetNo = #{problemSetNo} and flag = 1

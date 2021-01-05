@@ -14,7 +14,7 @@
 
 	<!-- 문제 전체 검색 -->
 	<select id="selectProblemList" resultType="ProblemDto">
-		select p.problemNo, p.title, u.nickname, p.regiTime
+		select p.problemNo, p.title, u.nickname, p.regiTime, p.uid
 		from problem p join userinfo u
 		on p.uid = u.uid
 		where p.flag = 1
@@ -107,7 +107,7 @@
 	
 	<!-- 문제번호로 검색 -->
 	<select id="selectProblemByProblemNo" parameterType="int" resultType="ProblemDto">
-		select p.problemNo, p.title, u.nickname, p.regiTime
+		select p.problemNo, p.title, u.nickname, p.regiTime, p.uid
 		from problem p join userinfo u
 		on p.uid = u.uid
 		where p.problemNo = #{problemNo} and p.flag = 1
