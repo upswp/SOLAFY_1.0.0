@@ -438,7 +438,7 @@ export default {
       var loginUserUid = SessionStorage.getItem("loginUser").uid;
       Axios.get(`user/selectbyuid/${loginUserUid}`)
         .then(response => {
-          if (response.data.admin === 1) this.isQualified = true;
+          if (response.data.admin === 0) this.isQualified = true;
         })
         .catch(error => console.log(error))
         .finally(() => {
