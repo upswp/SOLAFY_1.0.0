@@ -75,8 +75,10 @@
 
       <!-- 수정/삭제/목록으로 돌아가기 버튼 영역 시작-->
       <q-card-actions align="right">
-        <q-btn color="primary" label="글 수정" @click="goToUpdate" />
-        <q-btn color="red" label="글 삭제" @click="deleteArticle" />
+        <template v-if="isQualified">
+          <q-btn color="primary" label="글 수정" @click="goToUpdate" />
+          <q-btn color="red" label="글 삭제" @click="deleteArticle" />
+        </template>
         <q-btn color="green" label="목록으로" @click="goToBoard" />
       </q-card-actions>
       <!-- 수정/삭제/목록으로 돌아가기 버튼 영역 끝-->
@@ -118,6 +120,8 @@ import { SessionStorage, uid } from "quasar";
 export default {
   data() {
     return {
+      // 로그인 유저의 게시글 수정/삭제 권한 여부 flag
+      isQualified: false,
       // 프로필 이미지 주소를 저장
       profileImageUrl: "",
       // 좋아요 버튼 기본값
@@ -139,6 +143,26 @@ export default {
     ReplyRow
   },
   methods: {
+    /**
+     * @Method설명 : 게시글 번호에 해당하는 게시물 요청 메서드
+     * @변경이력 :
+     */
+    selectArticleByArticleNo: function() {
+      Axios.get(`/${this.boardType}/selectArticleByArticleNo/${this.articleNo}`)
+        .then(response => {
+          // 반환된 게시글 정보 저장
+          this.article = response.data;
+          // 해당 게시물의 댓글 정보 읽어옴
+          this.getReplyRow(this.articleNo);
+          console.log(this.article);
+          this.getProfileImageUrl(this.article.uid);
+        })
+        .catch(() => {
+          this.errored = true;
+        })
+
+        .finally(() => (this.loading = false));
+    },
     /**
      * @Method설명 : 게시글 삭제 요청 메서드
      * @변경이력 :
@@ -238,26 +262,28 @@ export default {
           this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
           console.log("error is ", error);
         });
+    },
+    /**
+     * @Method설명 : 현재 로그인 사용자가 댓글 수정/삭제 권한이 있는지 판단
+     * @변경이력 :
+     */
+    setIsQualified: function() {
+      var loginUserUid = SessionStorage.getItem("loginUser").uid;
+      this.isQualified = loginUserUid === this.article.uid;
+      Axios.get(`user/selectbyuid/${loginUserUid}`)
+        .then(response => {
+          if (response.data.admin === 1) this.isQualified = true;
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          this.loading = true;
+        });
     }
   },
 
-  // 시작할때 해당 글 정보를 읽어들여와서 저장한다.
   mounted() {
-    Axios.get(`/${this.boardType}/selectArticleByArticleNo/${this.articleNo}`)
-      .then(response => {
-        // 반환된 게시글 정보 저장
-        this.article = response.data;
-        // 해당 게시물의 댓글 정보 읽어옴
-        this.getReplyRow(this.articleNo);
-        console.log(this.article);
-        this.getProfileImageUrl(this.article.uid);
-      })
-      .catch(() => {
-        this.errored = true;
-      })
-
-      .finally(() => (this.loading = false));
-    console.log(this.article.uid, "where it tis");
+    this.selectArticleByArticleNo();
+    this.setIsQualified();
   }
 };
 </script>
