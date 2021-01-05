@@ -814,9 +814,11 @@ export default {
           this.groupMembers[this.select],
           Response => {
             this.getGroupMember();
+            this.select = -1;
           },
           error => {
             notify("red-6", "white", "warning", "정보 수정 실패");
+            this.select = -1;
           }
         );
       }
