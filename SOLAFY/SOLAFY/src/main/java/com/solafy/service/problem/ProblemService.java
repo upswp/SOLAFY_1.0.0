@@ -100,7 +100,7 @@ public interface ProblemService {
 	* @Method 설명 : 임시 저장된 문제들의 flag를 0에서 1로 바꿈
 	* @변경이력 :
 	*/
-	public boolean updateProblemFlag(String uid) throws Exception;
+	//public boolean updateProblemFlag(String uid) throws Exception;
 	
 	/**
 	* @param map : problemDto - 문제정보, problemAnswerDto - 문제 정답 정보, hashTagList(List<String>) - 해시태그명 리스트

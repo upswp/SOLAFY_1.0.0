@@ -214,10 +214,10 @@ public class ProblemServiceImpl implements ProblemService {
 	}
 	
 	
-	@Override
-	public boolean updateProblemFlag(String uid) throws Exception{
-		return problemMapper.updateProblemFlag(uid)>0;
-	}
+//	@Override
+//	public boolean updateProblemFlag(String uid) throws Exception{
+//		return problemMapper.updateProblemFlag(uid)>0;
+//	}
 
 	@Override
 	@Transactional
