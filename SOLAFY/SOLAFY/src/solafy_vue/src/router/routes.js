@@ -67,6 +67,16 @@ const requireEmailNotVerified = () => (to, from, next) => {
   });
 };
 
+const requireAdmin = () => (to, from, next) => {
+  if (user && user.emailVerified
+    && SessionStorage.has("loginUser") && SessionStorage.getItem("loginUser").admin == 0) {
+    return next();
+  } else {
+    notify("red", "white", "warning", "접근 권한이 없습니다");
+    return;
+  }
+}
+
 const routes = [
   {
     path: "/",
@@ -345,7 +355,7 @@ const routes = [
         path: "/usermanage",
         name: "UserManage",
         component: () => import("pages/user/UserManage.vue"),
-        beforeEnter: requireAuth()
+        beforeEnter: requireAdmin()
       },
       {
         path: "/verifyemailwarn",
