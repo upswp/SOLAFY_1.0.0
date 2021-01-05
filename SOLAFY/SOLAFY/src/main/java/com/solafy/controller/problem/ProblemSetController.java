@@ -160,7 +160,7 @@ public class ProblemSetController {
 	
 	//TODO : <@PathVariable> 상태이면 주소창에 uid 노출이 되는지 확인하기.
 	
-	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집과 문제의 flag값을 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
+	@ApiOperation(value = "문제집 작성시 임시로 저장된 문제집의 flag값을 수정한다. 그리고 DB 수정 성공 여부에 따라 'success' 또는 'fail'을 반환한다." , response = String.class)
 	@PutMapping(value = "/updateProblemSetFlag/{uid}")
 	public ResponseEntity<String> updateProblemSetFlag(@PathVariable String uid) throws Exception{
 		logger.debug("updatePrblemSetFlag -- 호출");
