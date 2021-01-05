@@ -78,7 +78,12 @@ function deleteGroup(param, success, fail){}
 
 //그룹가입 신청 취소
 function deleteGroupMember(param, success, fail){
-    Axios.delete("group/deleteGroupMember", param)
+    Axios.delete("group/deleteGroupMember", {
+        data: {
+            uid: param.uid,
+            groupNo: param.groupNo
+        }
+    })
     .then(success)
     .catch(fail)
 }

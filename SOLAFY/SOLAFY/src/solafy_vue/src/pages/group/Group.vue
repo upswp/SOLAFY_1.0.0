@@ -25,7 +25,7 @@
         />
 
         <q-tab
-          v-if="myInfo.grade < 2"
+          v-if="myInfo.grade <= 2"
           class="text-red"
           name="modify"
           icon="verified_user"
@@ -277,7 +277,7 @@
 
                     <!-- action -->
                     <template #body-cell-action="props">
-                      <q-td>
+                      <q-td v-show="myInfo.grade <= props.row.grade">
                         <q-btn
                           dense
                           flat
@@ -288,6 +288,7 @@
                           @click="editItem(props.row)"
                         ></q-btn>
                         <q-btn
+                          v-show="props.row.grade != 1"
                           dense
                           flat
                           round
@@ -343,6 +344,7 @@
                                 ></q-chip>
                                 <div v-else-if="col.name === 'action'">
                                   <q-btn
+                                    v-show="myInfo.grade <= props.row.grade"
                                     dense
                                     flat
                                     color="primary"
@@ -351,7 +353,7 @@
                                     @click="editItem(props.row)"
                                   ></q-btn>
                                   <q-btn
-                                    v-if="myInfo.grade != 1"
+                                    v-show="props.row.grade != 1"
                                     dense
                                     flat
                                     round
@@ -663,7 +665,7 @@ export default {
       show_dialog: false,
       editedIndex: -1,
       editedItem: defaultItem,
-      select: "", //그룹장 위임에 선택된 그룹원
+      select: -1, //그룹장 위임에 선택된 그룹원
       mode: "grid",
       currencyColumns: currencyColumns,
       groupMembers: [],
@@ -774,11 +776,27 @@ export default {
       setTimeout(() => {
         this.editedItem = defaultItem;
         this.editedIndex = -1;
+        this.select = -1;
       }, 300);
     },
     updateRow() {
       // this.groupMembers.splice(this.editedIndex, 1, this.editedItem);
       // TODO : backend에서 return 해주는 값 변경해야 할 수도 있음
+      // TODO : 백엔드에서 1개 메서드로 합치기(그룹 맴버 권한 변경)
+      if (this.select != -1) {
+        //그룹장으로 승진 시킬 사람 선택
+        this.groupMembers[this.select].grade = 1;
+        console.log(this.groupMembers[this.select]);
+        updateGroupApplyConfirm(
+          this.groupMembers[this.select],
+          Response => {
+            this.getGroupMember();
+          },
+          error => {
+            notify("red-6", "white", "warning", "정보 수정 실패");
+          }
+        );
+      }
       updateGroupApplyConfirm(
         this.editedItem,
         Response => {
@@ -795,6 +813,10 @@ export default {
         Response => {
           this.groupMembers = Response.data;
           this.getMyInfo(); //그룹에서 나의 정보를 찾아서 저장해둠
+          //내정보가 일반회원으로 변경되었으면 노티스페이지로 이동
+          if (this.myInfo.grade == 3) {
+            this.tab = "notice";
+          }
         },
         error => {
           notify("red-6", "white", "warning", "그룹원 데이터 읽기 실패");
@@ -829,7 +851,11 @@ export default {
           groupNo: this.editedItem.groupNo
         },
         Response => {
-          this.getGroupMember();
+          if (this.editedItem.uid == this.myInfo.uid) {
+            this.$route.push("/main");
+          } else {
+            this.getGroupMember();
+          }
         },
         error => {
           notify("red-6", "white", "warning", "탈퇴 실패");
