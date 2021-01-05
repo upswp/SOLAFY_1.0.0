@@ -106,7 +106,7 @@ export default {
      * @변경이력
      */
     onSubmit() {
-      this.checkidsave();
+      this.checkIdSave();
       // 로그인 결과를 세션에 저장
       firebaseAuth
         .setPersistence(firebase.auth.Auth.Persistence.SESSION)
