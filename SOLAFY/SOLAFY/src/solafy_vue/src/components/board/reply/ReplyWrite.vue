@@ -68,10 +68,13 @@ export default {
           // 댓글이 등록되면 부모컴포넌트에 댓글 정보 갱신 요청
           this.replyForm.contents = "";
           // TODO : 댓글을 작성한 후에 프로필 사진이 바로 갱신 되지 않는 버그(새로고침으로 일단 기능 완료)
-          this.$router.go({
-            name: `${this.boardType}-board-detail`,
-            params: { articleNo: this.articleNo }
-          });
+          // this.$router.go({
+          //   name: `${this.boardType}-board-detail`,
+          //   params: { articleNo: this.articleNo }
+          // });
+          this.$router.go(0);
+          // 프로필사진 관련 이슈가 없을 경우,
+          // emit으로 이벤트를 발생시켜 페이지를 갱신할 필요 없음
           // this.$emit("replyChanged", response.data);
         })
         .catch(error => console.log(error));
@@ -87,11 +90,6 @@ export default {
         .child("profileimg/" + SessionStorage.getItem("loginUser").uid)
         .getDownloadURL()
         .then(url => {
-          console.log(
-            url,
-            "is that you?",
-            SessionStorage.getItem("loginUser").uid
-          );
           this.profileImageUrl = url;
         })
         .catch(error => {

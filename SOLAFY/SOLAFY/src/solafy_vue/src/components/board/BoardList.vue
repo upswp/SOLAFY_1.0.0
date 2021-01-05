@@ -162,7 +162,7 @@ export default {
            * 전체 DTO(ex- FreeBoardDto)에서 value값이 null이거나 null값에 준하는 컬럼이 있다면
            * 현재 불러온 객체에서 해당 컬럼을 지워준다
            *
-           * TODO: likeCount는 정말 좋아요 갯수가 없어서 0일수 있어서 예외로 두기로 한다.
+           * TODO: likeCount는 데이터로 0의 값을 가질 수 있어서 예외로 둠
            */
           for (var i = 0; i < this.articles.length; i++) {
             for (var propName in this.articles[i]) {

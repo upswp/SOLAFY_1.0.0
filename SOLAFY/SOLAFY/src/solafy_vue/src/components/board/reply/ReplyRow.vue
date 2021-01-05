@@ -5,7 +5,7 @@
       <!-- (댓글) 수정 버튼을 누르지 않았을 때 -->
       <div v-if="!isModify">
         <template>
-          <strong>{{ reply.nickname }}</strong
+          <b>{{ reply.nickname }}</b
           ><br />
           <!-- readonly로 댓글들을 보여준다 -->
           <q-input
@@ -37,7 +37,7 @@
 
       <!-- 댓글 수정 버튼을 눌렀을때 -->
       <div v-else>
-        <strong>{{ reply.nickname }}</strong>
+        <b>{{ reply.nickname }}</b>
         <q-input
           type="textarea"
           v-model="reply.contents"
@@ -138,7 +138,6 @@ export default {
         .child("profileimg/" + uid)
         .getDownloadURL()
         .then(url => {
-          console.log(uid, "??", url, " 내용", this.reply.contents);
           this.profileImageUrl = url;
         })
         .catch(error => {
