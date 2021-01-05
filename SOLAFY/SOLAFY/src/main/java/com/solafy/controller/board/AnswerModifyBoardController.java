@@ -45,7 +45,7 @@ public class AnswerModifyBoardController {
 	private AnswerModifyBoardService answerModifyBoardService;
 
 	/**
-	 * @param answerModifyBoardDto
+	 * @param answerModifyBoardDto 등록할 게시글 정보
 	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
 	 * @Method 설명 : 게시글 정보를 받아서 등록한다
 	 * @변경이력 :
@@ -75,7 +75,7 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @param articleNo
+	 * @param articleNo 반환하고 싶은 게시글의 번호
 	 * @return freeBoardDto
 	 * @Method 설명 : 게시글 번호에 해당하는 게시글을 반환한다.
 	 * @변경이력 : 2021-01-01(BUMSEOK SEO) : 해당 메서드 추가
@@ -89,7 +89,7 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @param title
+	 * @param title 제목 검색을 위한 키워드
 	 * @return List<AnswerModifyBoardDto> 게시글 list
 	 * @Method 설명 : 입력한 키워드를 포함하는 제목의 게시글들을 반환한다.
 	 * @변경이력 :
@@ -103,7 +103,7 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @param nickname
+	 * @param String nickname 닉네임 검색을 위한 키워드
 	 * @return List<AnswerModifyBoardDto> 게시글 list
 	 * @Method 설명 : 입력한 닉네임과 일치하는 작성자의 게시글들을 반환한다.
 	 * @변경이력 :
@@ -117,7 +117,7 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @param nickname
+	 * @param int problemNo 문제번호 검색을 위한 int
 	 * @return List<AnswerModifyBoardDto> 게시글 list
 	 * @Method 설명 : 입력한 문제번호에 해당하는 게시글들을 반환한다.
 	 * @변경이력 :
@@ -131,7 +131,7 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @param answerModifyBoardDto articleNo, title, contents의 정보를 가지고 있다.
+	 * @param answerModifyBoardDto 게시글 수정을 위한 정보
 	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
 	 * @Method 설명 : 게시글의 수정 정보를 입력받아 게시글 수정한다
 	 * @변경이력 :

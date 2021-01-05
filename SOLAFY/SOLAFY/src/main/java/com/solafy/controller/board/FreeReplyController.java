@@ -72,10 +72,10 @@ public class FreeReplyController {
 	/**
 	* @param articleNo
 	* @return List<FreeReplyDto>
-	* @Method 설명 : 모든 댓글을 반환한다.
+	* @Method 설명 : 해당 게시글의 모든 댓글을 반환한다.
 	* @변경이력 :
 	*/
-	@ApiOperation(value = "모든 댓글을 반환한다", response = List.class)
+	@ApiOperation(value = "해당 게시글의 모든 댓글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectReplies/{articleNo}")
 	public List<FreeReplyDto> selectReplies(@PathVariable int articleNo){
 		logger.info("selectReplies - 호출" + new Date());
