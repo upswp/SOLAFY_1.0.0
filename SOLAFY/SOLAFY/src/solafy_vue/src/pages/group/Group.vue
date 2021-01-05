@@ -31,6 +31,13 @@
           icon="verified_user"
           label="수정"
         />
+        <q-tab
+          v-if="myInfo.grade == 3"
+          class="text-red"
+          name="info"
+          icon="info"
+          label="정보"
+        />
       </q-tabs>
 
       <q-separator />
@@ -592,6 +599,21 @@
             </q-tab-panels>
           </q-card>
         </q-tab-panel>
+        <!-- 그룹 수정 tab 끝 -->
+
+        <!-- 일반회원 정보 조회(탈퇴) -->
+        <q-tab-panel name="info">
+          <div class="fit row justify-center content-center">
+            <q-btn
+              style="width : 500px; height : 500px;"
+              color="red"
+              @click="deleteGroupSelf"
+            >
+              그룹 탈퇴
+            </q-btn>
+          </div>
+        </q-tab-panel>
+        <!-- 일반회원 정보 조회(탈퇴) 끝 -->
       </q-tab-panels>
     </q-card>
     <!-- tab bar 끝 -->
@@ -608,6 +630,7 @@ import {
   updateGroup,
   updateGroupApplyConfirm,
   deleteGroupMember,
+  deleteGroupMemberself,
   selectGroupMember
 } from "src/api/Group/group.js";
 import { firebaseAuth } from "src/boot/firebase";
@@ -870,6 +893,18 @@ export default {
           this.myInfo = element;
         }
       });
+    },
+    deleteGroupSelf() {
+      deleteGroupMemberself(
+        this.myInfo,
+        Response => {
+          notify("green", "white", "done_outline", "탈퇴완료");
+          this.$router.push("/main");
+        },
+        error => {
+          notify("red-6", "white", "warning", "탈퇴 실패");
+        }
+      );
     }
   },
 
