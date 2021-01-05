@@ -135,7 +135,9 @@
         </q-card-section>
       </q-card-section>
       <!-- TODO: 공지사항 사용하는 게시판 한정, 관리자 권한의 인원만 사용하도록 함 -->
-      <q-card-section align="right" v-if="this.boardType === `free`"
+      <q-card-section
+        align="right"
+        v-if="this.boardType === `free` && isQualified"
         ><q-checkbox v-model="article.notice" label="공지사항 여부" />
       </q-card-section>
       <q-separator />
@@ -158,6 +160,8 @@ export default {
   data() {
     return {
       loading: false,
+      // 로그인한 회원의 권한에 따른 공지사항 생성 가능 여부 flag
+      isQualified: false,
       // 프로필 사진 주소값 저장 변수
       profileImageUrl: "",
       // 게시판 형식 값을 store에서 가져와 저장하는 변수
@@ -379,10 +383,26 @@ export default {
       this.$router.push({
         name: `${this.boardType}-board-list`
       });
+    },
+    /**
+     * @Method설명 : 현재 로그인 사용자가 관리자 권한이 있는지 판단
+     * @변경이력 :
+     */
+    setIsQualified: function() {
+      var loginUserUid = SessionStorage.getItem("loginUser").uid;
+      Axios.get(`user/selectbyuid/${loginUserUid}`)
+        .then(response => {
+          if (response.data.admin === 1) this.isQualified = true;
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+          this.loading = true;
+        });
     }
   },
   created() {
     this.setMessage();
+    this.setIsQualified();
     this.getProfileImageUrl(SessionStorage.getItem("loginUser").uid);
   }
 };
