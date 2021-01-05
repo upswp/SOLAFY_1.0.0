@@ -497,7 +497,7 @@ export default {
         .then(response => {
           this.item = response.data;
           // ! 기능 확인 필요
-          if (item.problem.uid != currentUserUid) {
+          if (this.item.problem.uid != this.currentUserUid) {
             notify("red", "white", "error", "권한이 없습니다.");
             this.$router.go(-1);
           }
@@ -523,6 +523,7 @@ export default {
           this.selectProblemAnswerByProblemNo();
         })
         .catch(error => {
+          console.log(error);
           notify("red", "white", "error", "문제 정보 가져오기 실패");
           this.$router.go(-1);
         });
