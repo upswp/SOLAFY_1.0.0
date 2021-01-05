@@ -84,19 +84,83 @@ import Axios from "axios";
 import routes from "src/router/routes";
 import { QuasarTiptap, RecommendedExtensions } from "quasar-tiptap";
 import "quasar-tiptap/lib/index.css";
+import { notify } from "src/api/common.js";
 
 export default {
   name: "problemSetListByProblem",
+  components: {
+    QuasarTiptap
+  },
   data() {
     return {
+      // String이던 item.problem.multipleChoice(문제 선지)를 배열로 저장
+      multipleChoice: [],
+      // 문제(객관식) 정답 입력값
+      answerChecklist: [],
+      // 문제(주관식, 서술형) 정답 입력값
+      answerText: "",
+      // 로딩 flag
+      loading: true,
+      // 문제의 채점 결과
+      result: false,
+      // 문제의 채점 결과 List
+      resultList: [],
+      // pagination custumizing
       pagination: {
         sortBy: "desc",
         descending: false,
         page: 1,
         rowsPerPage: 3
-        // rowsNumber: xx if getting data from a server
       },
-
+      // quasar-tiptap 옵션
+      options: {
+        // 글 내용
+        content: "문제를 클릭해주세요",
+        // 수정 가능 여부
+        editable: false,
+        // 툴바 표시 여부
+        showToolbar: false,
+        extensions: [...RecommendedExtensions]
+      },
+      //문제집 정보
+      itemProblemSet: {
+        problemSet: {
+          //문제집 번호
+          problemSetNo: 0,
+          //문제집 타이틀
+          title: "",
+          //문제집 생성일자
+          regiTime: "",
+          //문제집 작성자
+          nickname: ""
+        },
+        //문제집에 해당하는 문제들 List
+        problemList: []
+      },
+      //문제정보
+      itemProblem: {
+        problem: {
+          //문제번호
+          problemNo: 0,
+          //문제 다지선다
+          multipleChoice: "",
+          //문제제목
+          title: "",
+          //문제내용
+          contents: "",
+          //문제 카테고리 번호
+          categoryNo: "",
+          //문제 type
+          type: 0,
+          //문제 생성일자
+          regiTime: "",
+          //문제 작성자
+          nickname: ""
+        },
+        //해쉬태그 List
+        hashTag: []
+      },
+      //문제 현황 table 정보
       listColumns: [
         {
           name: "문제번호",
@@ -111,54 +175,15 @@ export default {
           field: "title",
           align: "center"
         }
-      ],
-
-      itemProblemSet: {
-        problemSet: {
-          problemSetNo: 0,
-          title: "",
-          regiTime: "",
-          nickname: ""
-        },
-        problemList: []
-      },
-
-      multipleChoice: [],
-      itemProblem: {
-        problem: {
-          problemNo: 0,
-          multipleChoice: "",
-          title: "",
-          contents: "",
-          categoryNo: "",
-          type: 0,
-          regiTime: "",
-          nickname: ""
-        },
-
-        hashTag: []
-      },
-      answerChecklist: [],
-      answerText: "",
-      loading: true,
-
-      options: {
-        content: "문제를 클릭해주세요",
-        editable: false,
-        showToolbar: false,
-        extensions: [...RecommendedExtensions]
-      },
-      result: false,
-      resultList: []
+      ]
     };
   },
-  components: {
-    QuasarTiptap
-  },
-  created() {
-    this.selectProblemSetByNo();
-  },
+
   methods: {
+    /**
+     * @Method설명 : 첫번째 문제에 대한 정보 반환
+     * @변경이력 :
+     */
     selectFirstProblemByNo: function() {
       Axios.get("problem/" + this.itemProblemSet.problemList[0].problemNo)
         .then(Response => {
@@ -182,6 +207,10 @@ export default {
           this.loading = false;
         });
     },
+    /**
+     * @Method설명 : 문제 현황 table 클릭시 problemNo에 해당하는 문제 반환
+     * @변경이력 :
+     */
     selectProblemByNo: function(evt, row) {
       var type = this.itemProblem.problem.type;
       //객관식일때
@@ -196,9 +225,9 @@ export default {
           );
           //답이 공란인 상태이면
         } else {
-          this.confirm();
+          this.confirmAnswer();
           // 공란인 상태에서 다른 문제로 넘어가겠다.
-          if (this.confirm()) {
+          if (this.confirmAnswer()) {
             this.resultList[row + 1] = null;
             this.answerChecklist = null;
             //공란인 상태로 안넘어가고 현 페이지에 남아있겠다.
@@ -212,7 +241,7 @@ export default {
         if (this.answerText != null) {
           this.resultList[row + 1] = this.answerText;
         } else {
-          if (this.confirm()) {
+          if (this.confirmAnswer()) {
             this.resultList[row + 1] = null;
             this.answerText = null;
           } else {
@@ -220,7 +249,6 @@ export default {
           }
         }
       }
-
       Axios.get("problem/" + row.problemNo)
         .then(Response => {
           this.itemProblem = Response.data;
@@ -244,8 +272,12 @@ export default {
           this.loading = false;
         });
     },
-    confirm() {
-      console.log("Start confirm!!");
+    /**
+     * @Method설명 : 문제 답안 입력 확인
+     * @변경이력 :
+     */
+    confirmAnswer() {
+      console.log("Start confirmAnswer!!");
       this.$q
         .dialog({
           title: "Confirm",
@@ -263,8 +295,11 @@ export default {
           return false;
         });
     },
+    /**
+     * @Method설명 : 문제집 정보를 problemSetNo에 대해 반환
+     * @변경이력 :
+     */
     selectProblemSetByNo() {
-      //   this.showLoading();
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
           this.$route.params.problemSetNo
@@ -277,19 +312,17 @@ export default {
           // console.log(this.resultList.length + "length");
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "문제집 정보 조회 실패"
-          });
-          console.log("errormsg" + error);
+          notify("red", "white", "error", "문제집 정보 조회 실패");
+          this.$router.go(-1);
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    // 채점후 결과 페이지로 이동
+    /**
+     * @Method설명 :채점후 결과 페이지로 이동
+     * @변경이력 :
+     */
     goToResult() {
       var type = this.itemProblem.problem.type;
       if (
@@ -351,6 +384,9 @@ export default {
         this.itemProblemSet.problemList.length / this.pagination.rowsPerPage
       );
     }
+  },
+  created() {
+    this.selectProblemSetByNo();
   }
 };
 </script>

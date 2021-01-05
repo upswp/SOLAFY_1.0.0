@@ -121,8 +121,8 @@ public class QuestionReplyController {
 	 * @변경이력
 	 */
 	@ApiOperation(value = "답변 글을 삭제하고 결과를 반환한다.", response = String.class)
-	@DeleteMapping(value = "/delteReply/{articleNo}")
-	public ResponseEntity<String> delteReply(@PathVariable int articleNo) throws Exception {
+	@DeleteMapping(value = "/deleteReply/{articleNo}")
+	public ResponseEntity<String> deleteReply(@PathVariable int articleNo) throws Exception {
 		logger.debug("delteReply");
 		if (answerService.deleteAnswer(articleNo))
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);

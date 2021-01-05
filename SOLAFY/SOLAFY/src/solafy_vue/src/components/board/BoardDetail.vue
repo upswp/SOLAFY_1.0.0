@@ -97,7 +97,7 @@
           v-for="(reply, index) in replies"
           :reply="reply"
           :key="index"
-          @replyChanged="showChangedReply()"
+          @replyChanged="getReplyRow()"
         ></reply-row>
         <!-- 댓글 표시칸 컴포넌트 끝 -->
       </q-card-section>
@@ -259,13 +259,5 @@ export default {
       .finally(() => (this.loading = false));
     console.log(this.article.uid, "where it tis");
   }
-
-  /**
-   * TODO: 어디서는 이렇게해서 바로 자신의 DATA처럼 사용하는데, 여기선 this.$store.state.~~ 의 형식으로밖에 불러올수없다.
-   * TODO: (이어서) computed의 특성상 한번 변경되고나서 다시 불러오지 못해서 그럴수도 있다
-   *  */
-  // computed: {
-  //   ...mapState["boardType"]
-  // },
 };
 </script>

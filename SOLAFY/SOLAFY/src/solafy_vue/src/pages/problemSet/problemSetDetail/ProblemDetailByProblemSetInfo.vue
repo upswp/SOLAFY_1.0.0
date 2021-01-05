@@ -13,7 +13,7 @@
               id="btn"
               color="primary"
               label="돌아가기"
-              @click="GoProblemSetList"
+              @click="goToProblemSetList"
             />
           </div>
         </div>
@@ -82,23 +82,25 @@
         <div class="row">
           <div class="col-7"></div>
           <div class="col-5">
-            <q-btn
-              id="btn"
-              color="primary"
-              label="문제집 삭제"
-              @click="ProblemSetDelete"
-            />
-            <q-btn
-              id="btn"
-              color="primary"
-              label="문제집 수정"
-              @click="GoProblemSetUpdate"
-            />
+            <template v-if="item.problemSet.uid == currentUserUid">
+              <q-btn
+                id="btn"
+                color="primary"
+                label="문제집 삭제"
+                @click="ProblemSetDeleteByProblemSetNo"
+              />
+              <q-btn
+                id="btn"
+                color="primary"
+                label="문제집 수정"
+                @click="goToProblemSetUpdate"
+              />
+            </template>
             <q-btn
               id="btn"
               color="primary"
               label="문제풀이 시작"
-              @click="GoProblemSolving"
+              @click="goToProblemSolving"
             />
           </div>
         </div>
@@ -109,12 +111,16 @@
 <script>
 import Axios from "axios";
 import routes from "src/router/routes";
+import { notify } from "src/api/common.js";
+import { firebaseAuth } from "src/boot/firebase";
 
 export default {
   name: "ProblemDetailByProblemSetInfo",
   data() {
     return {
-      current: 3,
+      // 현재 접속중인 사용자의 uid
+      currentUserUid: firebaseAuth.currentUser.uid,
+      // pagination custumizing
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -122,6 +128,24 @@ export default {
         rowsPerPage: 3
         // rowsNumber: xx if getting data from a server
       },
+      //문제집정보
+      item: {
+        problemSet: {
+          //문제집 번호
+          problemSetNo: 0,
+          //문제집 제목
+          title: "",
+          //문제집 작성일자
+          regiTime: "",
+          //문제집 작성자 nickname
+          nickname: "",
+          //문제집 작성자 uid
+          uid: ""
+        },
+        //문제집이 가지고 있는 문제 list
+        problemList: []
+      },
+      //문제집 정보 table 정보
       columns: [
         { name: "title", align: "left", label: "title", field: "title" },
         {
@@ -132,6 +156,7 @@ export default {
           align: "left"
         }
       ],
+      //문제 현황 table 정보
       listColumns: [
         {
           name: "문제번호",
@@ -147,15 +172,7 @@ export default {
           align: "center"
         }
       ],
-      item: {
-        problemSet: {
-          problemSetNo: 0,
-          title: "",
-          regiTime: "",
-          nickname: ""
-        },
-        problemList: []
-      },
+      // 테이블 데이터
       data: [
         {
           title: "문제집 제목",
@@ -173,8 +190,11 @@ export default {
     };
   },
   methods: {
-    //ProblemSet Contents - table 반환
-    selectProblemByNo: function() {
+    /**
+     * @Method설명 :ProblemSet Contents - table 반환
+     * @변경이력 :
+     */
+    selectProblemSetByProblemNo: function() {
       //   this.showLoading();
       Axios.get(
         "/problem/problemset/problemSetSelectByNo/" +
@@ -188,20 +208,18 @@ export default {
           this.data[2].content = this.item.problemSet.regiTime;
         })
         .catch(error => {
-          this.$q.notify({
-            color: "negative",
-            textColor: "white",
-            icon: "error",
-            message: "조회 실패"
-          });
-          this.goToproblemList();
+          notify("red", "white", "error", "조회 실패");
+          this.$router.go(-1);
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    //ProblemSetDelete 반환
-    ProblemSetDelete: function() {
+    /**
+     * @Method설명 :ProblemSet Delete 반환
+     * @변경이력 :
+     */
+    ProblemSetDeleteByProblemSetNo: function() {
       this.showLoading();
       Axios.delete(
         "/problem/problemset/deleteProblemSet/" +
@@ -214,7 +232,7 @@ export default {
             icon: "done",
             message: "삭제 완료"
           });
-          this.GoProblemSetList();
+          this.goToProblemSetList();
         })
         .catch(error => {
           this.$q.notify({
@@ -225,7 +243,10 @@ export default {
           });
         });
     },
-    // show LoadingPage
+    /**
+     * @Method설명 :show LoadingPage
+     * @변경이력 :
+     */
     showLoading() {
       this.$q.loading.show();
 
@@ -235,27 +256,33 @@ export default {
         this.timer = void 0;
       }, 2000);
     },
-    //ProblemDetailByProblem 이동
-    GoProblemSolving: function() {
+    /**
+     * @Method설명 :ProblemDetailByProblem 이동
+     * @변경이력 :
+     */
+    goToProblemSolving: function() {
       this.$router.push({
         name: "ProblemDetailByProblem"
       });
     },
-    //ProblemSetList 이동
-    GoProblemSetList: function() {
+    /**
+     * @Method설명 :ProblemSetList 이동
+     * @변경이력 :
+     */
+    goToProblemSetList: function() {
       this.$router.push({
         name: "ProblemSet"
       });
     },
-    //ProblemSet Update 이동
-    GoProblemSetUpdate: function() {
+    /**
+     * @Method설명 :ProblemSet Update 이동
+     * @변경이력 :
+     */
+    goToProblemSetUpdate: function() {
       this.$router.push({
         name: "ProblemSetUpdate"
       });
     }
-  },
-  created() {
-    this.selectProblemByNo();
   },
   computed: {
     pagesNumber() {
@@ -269,6 +296,9 @@ export default {
       clearTimeout(this.timer);
       this.$q.loading.hide();
     }
+  },
+  created() {
+    this.selectProblemSetByProblemNo();
   }
 };
 </script>

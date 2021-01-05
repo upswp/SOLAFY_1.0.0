@@ -1,9 +1,9 @@
 <template>
-  <!-- 댓글 목록 불러오기 시작! -->
+  <!-- 댓글 목록 불러오는 부분 시작 -->
   <div>
     <div class="q-pa-md" style="max-width: 600px">
-      <!-- 수정버튼이 눌리지 않았다면 -->
-      <div v-if="!modiFlag">
+      <!-- (댓글) 수정 버튼을 누르지 않았을 때 -->
+      <div v-if="!isModify">
         <template>
           <strong>{{ reply.nickname }}</strong
           ><br />
@@ -16,19 +16,19 @@
             autogrow
           >
             <template v-slot:prepend>
-              <!-- TODO: 댓글올린사람의 nickname으로 프로필 사진을 읽어올수있을까? -->
+              <!-- 댓글을 작성한 회원의 프로필 사진 표시 -->
               <q-avatar>
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                <img :src="profileImageUrl" />
               </q-avatar>
             </template>
           </q-input>
           <!-- 작성일자정보 수정/삭제 버튼 시작-->
           <span style="font-size:0.5em">작성일자 : {{ reply.regiTime }}</span>
-          <q-btn style="margin-left:60%" @click="modifyThis" dense flat
+          <q-btn style="margin-left:60%" @click="isModify = true" dense flat
             >수정</q-btn
           >
           /
-          <q-btn @click="deleteThis" dense flat>삭제</q-btn>
+          <q-btn @click="deleteReply" dense flat>삭제</q-btn>
           <!-- 작성일자정보 수정/삭제 버튼 끝 -->
         </template>
       </div>
@@ -45,9 +45,9 @@
           filled
         >
           <template v-slot:prepend>
-            <!-- TODO: 로그인한 사람 본인 글을 수정할테므로 본인 프사 가져옴 -->
+            <!-- 댓글을 수정할 본인의 프로필 사진 표시 -->
             <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <img :src="profileImageUrl" />
             </q-avatar>
           </template>
           <template v-slot:label> </template>
@@ -63,54 +63,91 @@
 
 <script>
 import Axios from "axios";
+import { firebaseAuth, firebaseSt } from "boot/firebase";
+import { SessionStorage, uid } from "quasar";
 import { mapState } from "vuex";
 export default {
   name: "replyrow",
+  // 부모 컴포넌트로부터 props 받은 댓글 1개의 정보
   props: ["reply"],
   data() {
     return {
-      // 짧게 쓰기 위해서 boardType을 내부 data에 저장
+      // 게시판 형식 값을 저장
       boardType: this.$store.state.boardType,
-      modiFlag: false
+      // (댓글) 수정 버튼이 눌렸는지 여부 확인용 flag
+      isModify: false,
+      // 프로필 사진 주소를 저장
+      profileImageUrl: ""
     };
   },
   methods: {
-    // 댓글 수정버튼을 눌러서 바뀌는 Flag
-    modifyThis: function() {
-      this.modiFlag = !this.modiFlag;
-    },
-
-    // 댓글 수정
+    /**
+     * @Method설명 : 댓글 수정 요청 메서드
+     * @변경이력 :
+     */
     updateReply: function() {
       Axios.post(`${this.boardType}reply/updateReply`, this.reply)
         .then(response => {
           // 수정이 완료되면 flag를 갱신
-          this.modifyThis();
+          this.isModify = false;
+          console.log(this.reply);
+          // 부모 컴포넌트(BoardDetail)에 댓글을 갱신 요청
+          // this.getProfileImageUrl();
+          this.$emit("replyChanged", response.data);
         })
         .catch(error => {
           console.log(error);
         });
     },
 
-    // 댓글 삭제
-    deleteThis: function() {
+    /**
+     * @Method설명 : 댓글 삭제 요청 메서드
+     * @변경이력 :
+     */
+    deleteReply: function() {
       console.log(this.reply.replyNo + "글삭제!!");
       if (confirm("정말로 삭제??")) {
         Axios.post(`${this.boardType}reply/deleteReply`, this.reply)
           .then(response => {
-            // 부모 컴포넌트(BoardDetail)에 댓글을 갱신해달라고 한다
-            this.$emit("replyChanged", response.data);
+            // 부모 컴포넌트(BoardDetail)에 댓글을 갱신 요청
+            this.getProfileImageUrl();
+            // TODO : 댓글을 작성한 후에 프로필 사진이 바로 갱신 되지 않는 버그(새로고침으로 일단 기능 완료)
+            this.$router.go({
+              name: `${this.boardType}-board-detail`,
+              params: { articleNo: this.articleNo }
+            });
+            // this.$emit("replyChanged", response.data);
           })
           .catch(error => {
-            console.log(error);
+            console.log(error, "is error");
           });
       }
+    },
+
+    /**
+     * @Method설명 : uid에 해당하는 사용자의 프로필 이미지를 가져오는 메소드
+     * @변경이력 :
+     */
+    getProfileImageUrl: function(uid) {
+      firebaseSt
+        .ref()
+        .child("profileimg/" + uid)
+        .getDownloadURL()
+        .then(url => {
+          console.log(uid, "??", url, " 내용", this.reply.contents);
+          this.profileImageUrl = url;
+        })
+        .catch(error => {
+          // 회원의 프로필 사진을 불러오지 못했을 경우 기본 이미지로 대체
+
+          this.profileImageUrl = "https://cdn.quasar.dev/img/boy-avatar.png";
+          console.log("error is ", error);
+        });
     }
+  },
+  mounted() {
+    this.getProfileImageUrl(this.reply.uid);
   }
-  // TODO: 미제로 남은 vuex state 사용법
-  // computed: {
-  //   ...mapState["boardType"]
-  // }
 };
 </script>
 

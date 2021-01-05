@@ -113,32 +113,31 @@ const linksData = [
   },
   {
     title: "Problem Set",
-    caption: "아영&상우",
+    caption: "아영&상우&기현",
     icon: "history_edu",
     link: "/problemset"
   },
   {
     title: "Practice",
-    caption:
-      "주희가 하는 중... 해도 되는 거 맞겠지... 범석 오빠 자나..? 오빠는 하는 중 아니죠....?",
+    caption: "주희",
     icon: "work",
     link: "/practicelist"
   },
   {
     title: "Free Board",
-    caption: "범석&기현",
+    caption: "범석",
     icon: "dashboard",
     link: "/free"
   },
   {
     title: "Answer Modify Board",
-    caption: "범석&기현",
+    caption: "범석&주희",
     icon: "announcement",
     link: "/answermodify"
   },
   {
     title: "Question Board",
-    caption: "범석&기현",
+    caption: "범석",
     icon: "api",
     link: "/question"
   },
