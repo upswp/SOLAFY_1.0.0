@@ -23,10 +23,10 @@
 	
 	<!--
 		모든 게시글을 반환.
-		게시글번호, 닉네임, 문제번호, 제목, 등록시간만 가져온다.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간을 가져온다.
 	-->
 	<select id="selectAllArticles" resultType="AnswerModifyBoardDto">
-		select articleNo, nickname, problemNo,title, regiTime
+		select articleNo, nickname, problemNo, title, regiTime
 		from answermodifyboard amb join userinfo ui
 		on amb.uid = ui.uid
 		order by articleNo desc;
@@ -46,7 +46,7 @@
 
 	<!--
 		인자값으로 가져온 검색어를 포함하는 제목을 가진 게시글을 반환.
-		게시글번호, 닉네임, 문제번호, 제목, 등록시간만 가져온다.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간을 가져온다.
 	-->
 	<select id="selectArticleByTitle" parameterType="String" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
@@ -56,8 +56,8 @@
 	</select>
 	
 	<!--
-		인자값으로 가져온 닉네임에 맞는 게시글을 반환.
-		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+		인자값으로 가져온 닉네임을 포함하는 게시글을 반환.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간을 가져온다.
 	-->
 	<select id="selectArticleByNickname" parameterType="String" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 
@@ -68,7 +68,7 @@
 	
 	<!--
 		인자값으로 가져온 문제번호에 맞는 게시글을 반환.
-		게시글번호, UID(닉네임), 문제번호, 제목, 등록시간만 가져온다.
+		게시글번호, 닉네임, 문제번호, 제목, 등록시간을 가져온다.
 	-->
 	<select id="selectArticleByProblemNo" parameterType="int" resultType="AnswerModifyBoardDto">
 		select articleNo, nickname, problemNo, title, regiTime 

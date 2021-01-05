@@ -36,8 +36,7 @@
               <!-- 글쓰기 버튼 끝 -->
 
               <!-- 검색어입력칸 시작(검색 옵션에 이어지므로 v-slot:append) -->
-              <template v-slot:append
-                >\
+              <template v-slot:append>
                 <q-icon
                   v-if="keyword !== ''"
                   name="close"

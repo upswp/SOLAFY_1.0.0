@@ -47,7 +47,7 @@ public class AnswerModifyBoardController {
 	/**
 	 * @param answerModifyBoardDto
 	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	 * @Method 설명 : 게시글 등록
+	 * @Method 설명 : 게시글 정보를 받아서 등록한다
 	 * @변경이력 :
 	 */
 	@ApiOperation(value = "답안수정 게시판에 게시글을 등록한다.", response = String.class)
@@ -62,9 +62,8 @@ public class AnswerModifyBoardController {
 	}
 
 	/**
-	 * @return List<AnswerModifyBoardDto> 답안수정 게시판의 모든 게시글 반환 AnswerModifyBoardDto엔
-	 *         articleNo, uid, problemNo, title, regiTime의 정보를 가지고 있다.
-	 * @Method 설명 : 모든 게시글을 반환
+	 * @return List<AnswerModifyBoardDto> 답안수정 게시판의 모든 게시글 반환
+	 * @Method 설명 : 답안수정 게시판의 모든 게시글을 반환
 	 * @변경이력 :
 	 */
 	@ApiOperation(value = "답안수정 게시판의 모든 게시글을 반환한다.", response = List.class)
@@ -95,11 +94,10 @@ public class AnswerModifyBoardController {
 	 * @Method 설명 : 입력한 키워드를 포함하는 제목의 게시글들을 반환한다.
 	 * @변경이력 :
 	 */
-	@ApiOperation(value = "입력한 제목에 해당하는 게시글을 반환한다", response = List.class)
+	@ApiOperation(value = "입력한 키워드를 포함하는 제목의 게시글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectArticleByTitle/{title}")
 	public List<AnswerModifyBoardDto> selectArticleByTitle(@PathVariable String title) {
 		logger.info("selectAtricleByTitle - 호출" + new Date());
-		System.out.println(title);
 		List<AnswerModifyBoardDto> list = answerModifyBoardService.selectArticleByTitle(title);
 		return list;
 	}
@@ -107,10 +105,10 @@ public class AnswerModifyBoardController {
 	/**
 	 * @param nickname
 	 * @return List<AnswerModifyBoardDto> 게시글 list
-	 * @Method 설명 : 입력한 닉네임에 해당하는 작성자의 게시글들을 반환한다.
+	 * @Method 설명 : 입력한 닉네임과 일치하는 작성자의 게시글들을 반환한다.
 	 * @변경이력 :
 	 */
-	@ApiOperation(value = "입력한 닉네임에 해당하는 게시글을 반환한다", response = List.class)
+	@ApiOperation(value = "입력한 닉네임과 일치하는 작성자의 게시글을 반환한다", response = List.class)
 	@GetMapping(value = "/selectArticleByNickname/{nickname}")
 	public List<AnswerModifyBoardDto> selectArticleByNickname(@PathVariable String nickname) {
 		logger.info("selectAtricleByTitle - 호출" + new Date());
@@ -121,7 +119,7 @@ public class AnswerModifyBoardController {
 	/**
 	 * @param nickname
 	 * @return List<AnswerModifyBoardDto> 게시글 list
-	 * @Method 설명 : 입력한 문제번호에 해당하는 작성자의 게시글들을 반환한다.
+	 * @Method 설명 : 입력한 문제번호에 해당하는 게시글들을 반환한다.
 	 * @변경이력 :
 	 */
 	@ApiOperation(value = "입력한 문제번호에 해당하는 게시글을 반환한다", response = List.class)
@@ -135,7 +133,7 @@ public class AnswerModifyBoardController {
 	/**
 	 * @param answerModifyBoardDto articleNo, title, contents의 정보를 가지고 있다.
 	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	 * @Method 설명 : 게시글 수정
+	 * @Method 설명 : 게시글의 수정 정보를 입력받아 게시글 수정한다
 	 * @변경이력 :
 	 */
 	@ApiOperation(value = "답안수정 게시판의 게시글을 수정한다", response = String.class)
@@ -154,7 +152,7 @@ public class AnswerModifyBoardController {
 	/**
 	 * @param articleNo 삭제할 게시글의 게시글번호
 	 * @return 성공여부에 따른 반환값(SUCCESS, FAIL)
-	 * @Method 설명 : 게시글 삭제
+	 * @Method 설명 : 게시글 번호에 해당하는 게시글을 삭제한다
 	 * @변경이력 :
 	 */
 	@ApiOperation(value = "답안수정 게시판의 게시글을 삭제한다", response = String.class)

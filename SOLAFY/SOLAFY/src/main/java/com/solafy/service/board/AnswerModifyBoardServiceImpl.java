@@ -10,26 +10,26 @@ import com.solafy.mapper.board.AnswerModifyBoardMapper;
 import com.solafy.model.AnswerModifyBoardDto;
 
 /**
-* @FileName : FreeBoardServiceImpl.java
-* @Project : SOLAFY
-* @Date : 2020. 12. 20
-* @작성자 : BUMSEOK SEO
-
-* @변경이력 :
-* @프로그램 설명 : 자유게시판 ServiceImpl
-*/
+ * @FileName : FreeBoardServiceImpl.java
+ * @Project : SOLAFY
+ * @Date : 2020. 12. 20
+ * @작성자 : BUMSEOK SEO
+ * 
+ * @변경이력 :
+ * @프로그램 설명 : 자유게시판 ServiceImpl
+ */
 @Service
 public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 
 	@Autowired
 	private AnswerModifyBoardMapper answerModifyBoardMapper;
-	
+
 	@Override
 	public boolean createArticle(AnswerModifyBoardDto answerModifyBoardDto) {
 		int result = answerModifyBoardMapper.createArticle(answerModifyBoardDto);
-		if(result == 1) {
+		if (result == 1) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -57,13 +57,13 @@ public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByNickname(nickname);
 		return list;
 	}
-	
+
 	@Override
 	public List<AnswerModifyBoardDto> selectArticleByUidSubmitter(String nickname_submitter) {
 		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByNickname(nickname_submitter);
 		return list;
 	}
-	
+
 	@Override
 	public List<AnswerModifyBoardDto> selectArticleByProblemNo(int problemNo) {
 		List<AnswerModifyBoardDto> list = answerModifyBoardMapper.selectArticleByProblemNo(problemNo);
@@ -73,7 +73,7 @@ public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 	@Override
 	public boolean updateArticle(AnswerModifyBoardDto answerModifyBoardDto) {
 		int result = answerModifyBoardMapper.updateArticle(answerModifyBoardDto);
-		if(result == 1) {
+		if (result == 1) {
 			return true;
 		}
 		return false;
@@ -82,9 +82,9 @@ public class AnswerModifyBoardServiceImpl implements AnswerModifyBoardService {
 	@Override
 	public boolean deleteArticle(int ArticleNo) {
 		int result = answerModifyBoardMapper.deleteArticle(ArticleNo);
-		if(result == 1) {
+		if (result == 1) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
