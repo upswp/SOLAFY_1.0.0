@@ -237,8 +237,6 @@ export default {
       tab_pre: "객관식",
       // 객관식일 경우 선택된 정답 리스트
       choiceList: [],
-      // 문제 등록 결과
-      result: true,
       // quasar-tiptap에 입력된 content가 html로 변환되어 저장
       html: "",
       // 문제 정보
@@ -440,34 +438,14 @@ export default {
       Axios
         .post("problem/create", this.item)
         .then(response => {
-          this.updateProblemFlag();
-        })
-        .catch(error => {
-          console.log(error);
-          this.result = false;
-        });
-    },
-    /**
-     * @Method설명 : 문제의 flag를 0에서 1로 변경
-     * @변경이력 :
-     */
-    updateProblemFlag() {
-      Axios
-        .put("problem/updateflag/" + firebaseAuth.currentUser.uid)
-        .then(response => {})
-        .catch(error => {
-          console.log(error);
-          this.result = false;
-        })
-        .finally(() => {
-          if (this.result) {
-            notify("positive", "white", "done", "문제 등록 성공");
+          notify("positive", "white", "done", "문제 등록 성공");
             this.$router.push({
               name: "Problem"
             });
-          } else {
-            notify("red", "white", "error", "문제 등록 실패");
-          }
+        })
+        .catch(error => {
+          console.log(error);
+          notify("red", "white", "error", "문제 등록 실패");
         });
     },
     /**
