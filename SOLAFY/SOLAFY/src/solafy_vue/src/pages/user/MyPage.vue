@@ -100,6 +100,7 @@ import { notify } from "src/api/common.js";
 import { firebaseAuth, firebaseSt } from "boot/firebase";
 
 export default {
+  name: "MyPage",
   data() {
     return {
       // data 로딩
@@ -375,7 +376,7 @@ export default {
       });
     }
   },
-  create: function() {
+  created() {
     this.getUserInfo();
     this.getMyProblems();
     this.getMyProblemSets();
